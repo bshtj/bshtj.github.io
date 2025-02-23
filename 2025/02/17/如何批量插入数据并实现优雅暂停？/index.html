@@ -1,0 +1,897 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/wuliannan.png">
+  <link rel="icon" href="/img/wuliannan.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="blog">
+  
+    <meta name="description" content="如何批量插入数据并实现优雅暂停？要实现“当前批量插入循环插入完毕之后终止，不再执行之后的循环”，同时确保线程池状态变为 SHUTDOWN 后不再接收新任务，但已提交的任务会执行完毕，可以通过以下步骤实现： 1. 配置线程池配置一个线程池，并确保它支持优雅关闭。 1234567891011121314151617181920import org.springframework.context.ann">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何批量插入数据并实现优雅暂停？">
+<meta property="og:url" content="https://bshtj.github.io/2025/02/17/%E5%A6%82%E4%BD%95%E6%89%B9%E9%87%8F%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE%E5%B9%B6%E5%AE%9E%E7%8E%B0%E4%BC%98%E9%9B%85%E6%9A%82%E5%81%9C%EF%BC%9F/index.html">
+<meta property="og:site_name" content="bshtj_blog">
+<meta property="og:description" content="如何批量插入数据并实现优雅暂停？要实现“当前批量插入循环插入完毕之后终止，不再执行之后的循环”，同时确保线程池状态变为 SHUTDOWN 后不再接收新任务，但已提交的任务会执行完毕，可以通过以下步骤实现： 1. 配置线程池配置一个线程池，并确保它支持优雅关闭。 1234567891011121314151617181920import org.springframework.context.ann">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-02-17T11:32:33.000Z">
+<meta property="article:modified_time" content="2025-02-23T11:39:01.807Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="java,突发奇想的问题">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>如何批量插入数据并实现优雅暂停？ - bshtj_blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"bshtj.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>bshtj</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="如何批量插入数据并实现优雅暂停？"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-17 19:32" pubdate>
+          2025年2月17日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          35 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">如何批量插入数据并实现优雅暂停？</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="如何批量插入数据并实现优雅暂停？"><a href="#如何批量插入数据并实现优雅暂停？" class="headerlink" title="如何批量插入数据并实现优雅暂停？"></a>如何批量插入数据并实现优雅暂停？</h2><p>要实现“当前批量插入循环插入完毕之后终止，不再执行之后的循环”，同时确保线程池状态变为 <code>SHUTDOWN</code> 后不再接收新任务，但已提交的任务会执行完毕，可以通过以下步骤实现：</p>
+<h3 id="1-配置线程池"><a href="#1-配置线程池" class="headerlink" title="1. 配置线程池"></a>1. 配置线程池</h3><p>配置一个线程池，并确保它支持优雅关闭。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">import</span> org.springframework.context.annotation.Bean;<br><span class="hljs-keyword">import</span> org.springframework.context.annotation.Configuration;<br><span class="hljs-keyword">import</span> org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;<br><br><span class="hljs-meta">@Configuration</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ThreadPoolConfig</span> &#123;<br><br>    <span class="hljs-meta">@Bean(name = &quot;batchInsertThreadPool&quot;)</span><br>    <span class="hljs-keyword">public</span> ThreadPoolTaskExecutor <span class="hljs-title function_">batchInsertThreadPool</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">ThreadPoolTaskExecutor</span> <span class="hljs-variable">executor</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ThreadPoolTaskExecutor</span>();<br>        executor.setCorePoolSize(<span class="hljs-number">10</span>); <span class="hljs-comment">// 核心线程数</span><br>        executor.setMaxPoolSize(<span class="hljs-number">20</span>);  <span class="hljs-comment">// 最大线程数</span><br>        executor.setQueueCapacity(<span class="hljs-number">100</span>); <span class="hljs-comment">// 队列容量</span><br>        executor.setThreadNamePrefix(<span class="hljs-string">&quot;BatchInsertThread-&quot;</span>); <span class="hljs-comment">// 线程名前缀</span><br>        executor.setWaitForTasksToCompleteOnShutdown(<span class="hljs-literal">true</span>); <span class="hljs-comment">// 关闭时等待任务完成</span><br>        executor.setAwaitTerminationSeconds(<span class="hljs-number">60</span>); <span class="hljs-comment">// 等待任务完成的最大时间</span><br>        executor.initialize();<br>        <span class="hljs-keyword">return</span> executor;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-实现批量插入逻辑"><a href="#2-实现批量插入逻辑" class="headerlink" title="2. 实现批量插入逻辑"></a>2. 实现批量插入逻辑</h3><p>编写批量插入的逻辑，并在插入完成后检查线程池状态，决定是否继续插入。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Autowired;<br><span class="hljs-keyword">import</span> org.springframework.jdbc.core.JdbcTemplate;<br><span class="hljs-keyword">import</span> org.springframework.stereotype.Service;<br><br><span class="hljs-keyword">import</span> java.util.List;<br><br><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">BatchInsertService</span> &#123;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> JdbcTemplate jdbcTemplate;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> ThreadPoolTaskExecutor batchInsertThreadPool;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 批量插入数据</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">batchInsert</span><span class="hljs-params">(List&lt;Data&gt; dataList)</span> &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">sql</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;INSERT INTO your_table (column1, column2) VALUES (?, ?)&quot;</span>;<br>        jdbcTemplate.batchUpdate(sql, dataList, dataList.size(), (ps, data) -&gt; &#123;<br>            ps.setString(<span class="hljs-number">1</span>, data.getColumn1());<br>            ps.setString(<span class="hljs-number">2</span>, data.getColumn2());<br>        &#125;);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 检查线程池是否已关闭</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isThreadPoolShutdown</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> batchInsertThreadPool.getThreadPoolExecutor().isShutdown();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-控制批量插入循环"><a href="#3-控制批量插入循环" class="headerlink" title="3. 控制批量插入循环"></a>3. 控制批量插入循环</h3><p>在批量插入的循环中，每次插入后检查线程池状态。如果线程池已关闭，则退出循环。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Autowired;<br><span class="hljs-keyword">import</span> org.springframework.stereotype.Service;<br><br><span class="hljs-keyword">import</span> java.util.List;<br><br><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">DataService</span> &#123;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> BatchInsertService batchInsertService;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> ThreadPoolTaskExecutor batchInsertThreadPool;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 批量插入数据循环</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">batchInsertLoop</span><span class="hljs-params">(List&lt;List&lt;Data&gt;&gt; dataBatches)</span> &#123;<br>        <span class="hljs-keyword">for</span> (List&lt;Data&gt; batch : dataBatches) &#123;<br>            <span class="hljs-comment">// 检查线程池是否已关闭</span><br>            <span class="hljs-keyword">if</span> (batchInsertThreadPool.getThreadPoolExecutor().isShutdown()) &#123;<br>                System.out.println(<span class="hljs-string">&quot;线程池已关闭，停止插入任务。&quot;</span>);<br>                <span class="hljs-keyword">break</span>;<br>            &#125;<br><br>            <span class="hljs-comment">// 提交批量插入任务</span><br>            batchInsertThreadPool.execute(() -&gt; &#123;<br>                batchInsertService.batchInsert(batch);<br>            &#125;);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-实现优雅关闭"><a href="#4-实现优雅关闭" class="headerlink" title="4. 实现优雅关闭"></a>4. 实现优雅关闭</h3><p>编写一个方法，用于关闭线程池并等待任务完成。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Autowired;<br><span class="hljs-keyword">import</span> org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;<br><span class="hljs-keyword">import</span> org.springframework.stereotype.Service;<br><br><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ThreadPoolShutdownService</span> &#123;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> ThreadPoolTaskExecutor batchInsertThreadPool;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 优雅关闭线程池</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">shutdownThreadPoolGracefully</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">// 第一阶段：停止接受新任务</span><br>        batchInsertThreadPool.shutdown();<br><br>        <span class="hljs-comment">// 第二阶段：等待已提交的任务完成</span><br>        <span class="hljs-keyword">while</span> (!batchInsertThreadPool.getThreadPoolExecutor().isTerminated()) &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                Thread.sleep(<span class="hljs-number">100</span>); <span class="hljs-comment">// 每隔100ms检查一次</span><br>            &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>                Thread.currentThread().interrupt();<br>                <span class="hljs-keyword">break</span>;<br>            &#125;<br>        &#125;<br><br>        System.out.println(<span class="hljs-string">&quot;线程池已优雅关闭，所有任务已完成。&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-触发优雅关闭"><a href="#5-触发优雅关闭" class="headerlink" title="5. 触发优雅关闭"></a>5. 触发优雅关闭</h3><p>通过REST接口或其他方式触发线程池的优雅关闭。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">import</span> org.springframework.beans.factory.annotation.Autowired;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.PostMapping;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;<br><span class="hljs-keyword">import</span> org.springframework.web.bind.annotation.RestController;<br><br><span class="hljs-meta">@RestController</span><br><span class="hljs-meta">@RequestMapping(&quot;/thread-pool&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ThreadPoolController</span> &#123;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> ThreadPoolShutdownService threadPoolShutdownService;<br><br>    <span class="hljs-meta">@PostMapping(&quot;/shutdown&quot;)</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">shutdownThreadPool</span><span class="hljs-params">()</span> &#123;<br>        threadPoolShutdownService.shutdownThreadPoolGracefully();<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;线程池正在优雅关闭...&quot;</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="6-测试与验证"><a href="#6-测试与验证" class="headerlink" title="6. 测试与验证"></a>6. 测试与验证</h3><p>启动Spring应用，调用批量插入接口和关闭接口，观察线程池的行为。</p>
+<ul>
+<li><strong>批量插入接口</strong>：提交多个批量插入任务。</li>
+<li><strong>关闭接口</strong>：调用关闭接口后，线程池会停止接受新任务，但会等待已提交的任务完成。</li>
+</ul>
+<h3 id="关键点总结"><a href="#关键点总结" class="headerlink" title="关键点总结"></a>关键点总结</h3><ol>
+<li><strong>线程池****状态检查</strong>：在批量插入循环中，每次插入后检查线程池状态（<code>isShutdown()</code>），如果线程池已关闭，则退出循环。</li>
+<li><strong>优雅关闭</strong>：通过<code>shutdown()</code>方法停止接受新任务，并通过<code>isTerminated()</code>等待任务完成。</li>
+<li><strong>Spring继续运行</strong>：线程池关闭后，Spring应用的其他部分仍然可以正常运行。</li>
+</ol>
+<h2 id="spring和servlet之间有从属关系吗？"><a href="#spring和servlet之间有从属关系吗？" class="headerlink" title="spring和servlet之间有从属关系吗？"></a>spring和servlet之间有从属关系吗？</h2><p>你的问题涉及 <strong>Spring 容器、****Tomcat</strong> <strong>线程池</strong> 以及 <strong>Spring 管理的</strong> <strong><code>ThreadPoolTaskExecutor</code></strong> 之间的关系。我们一步步解析它们的 <strong>从属结构</strong> 和 <strong>线程生命周期</strong>。</p>
+<h3 id="1-Spring-和-Tomcat-线程池-的关系"><a href="#1-Spring-和-Tomcat-线程池-的关系" class="headerlink" title="1. Spring 和 Tomcat 线程池****的关系"></a><strong>1. Spring 和</strong> <strong>Tomcat</strong> <strong>线程池****的关系</strong></h3><p>Spring Web 应用 <strong>运行在</strong> <strong>Tomcat</strong> <strong>之上</strong>，但它和 Tomcat 的线程管理是 <strong>两个独立的体系</strong>。</p>
+<h4 id="1-1-Tomcat-线程池"><a href="#1-1-Tomcat-线程池" class="headerlink" title="1.1 Tomcat 线程池"></a><strong>1.1</strong> <strong>Tomcat</strong> <strong>线程池</strong></h4><ul>
+<li><strong>Tomcat</strong> <strong>是 HTTP 服务器</strong>，它负责接收请求并分配线程来处理。</li>
+<li>Tomcat 的 <strong>线程池</strong>（通常是 <code>org.apache.tomcat.util.threads.ThreadPoolExecutor</code>）维护着 <code>http-nio-8080-exec-*</code> 线程，它们 <strong>执行</strong> <strong>Spring MVC</strong> <strong>Controller</strong> <strong>方法</strong>。</li>
+<li><strong>生命周期</strong>：Tomcat 线程池在 <strong>Tomcat 启动时创建</strong>，在 <strong>Tomcat 关闭时销毁</strong>。</li>
+</ul>
+<h4 id="1-2-Spring-容器和-Bean"><a href="#1-2-Spring-容器和-Bean" class="headerlink" title="1.2 Spring 容器和 Bean"></a><strong>1.2 Spring 容器和 Bean</strong></h4><ul>
+<li>Spring 在 Tomcat 启动时 <strong>加载自己的容器</strong>（<code>ApplicationContext</code>），实例化所有 <strong>单例</strong> <strong>Bean</strong>，包括 <code>ThreadPoolTaskExecutor</code>。</li>
+<li>这些 <strong>Spring Bean 在整个应用中共享</strong>，它们不依赖单个 HTTP 请求，而是<strong>全局管理</strong>的。</li>
+</ul>
+<h4 id="1-3-ThreadPoolTaskExecutor-线程池"><a href="#1-3-ThreadPoolTaskExecutor-线程池" class="headerlink" title="1.3 ThreadPoolTaskExecutor 线程池"></a><strong>1.3</strong> <strong><code>ThreadPoolTaskExecutor</code></strong> <strong>线程池</strong></h4><ul>
+<li><strong><code>ThreadPoolTaskExecutor</code></strong> <strong>是 Spring 维护的****线程池</strong>，它独立于 Tomcat 线程池。</li>
+<li>这个线程池的 <strong>生命周期由 Spring 容器管理</strong>，在 Spring 启动时创建，在 Spring 关闭时销毁。</li>
+<li>当 <code>Controller</code> 里提交任务到 <code>ThreadPoolTaskExecutor</code>，这个任务会在 <strong>Spring</strong> <strong>线程池</strong> 里执行，而不是在 Tomcat 线程池里。</li>
+</ul>
+<h3 id="2-为什么-ThreadPoolTaskExecutor-可以脱离-Tomcat-线程？"><a href="#2-为什么-ThreadPoolTaskExecutor-可以脱离-Tomcat-线程？" class="headerlink" title="2. 为什么 ThreadPoolTaskExecutor 可以脱离 Tomcat 线程？"></a><strong>2. 为什么</strong> <strong><code>ThreadPoolTaskExecutor</code></strong> <strong>可以脱离</strong> <strong>Tomcat</strong> <strong>线程？</strong></h3><p>你提到：</p>
+<blockquote>
+<p><strong>在一个线程中</strong> **<code>new ThreadA()</code>**<strong>，再在另一个线程</strong> **<code>new ThreadB()</code>**<strong>，它们应该是相互隔离的，为什么</strong> <strong><code>ThreadPoolTaskExecutor</code></strong> <strong>不是这样？</strong></p>
+</blockquote>
+<p>答案是：</p>
+<ul>
+<li><strong>Spring</strong> <strong>线程池****是</strong> <strong>“全局”</strong> <strong>的</strong>，它不属于单个 Tomcat 线程，而是由 <strong>Spring 容器管理</strong>，所有 Tomcat 线程都可以访问它。</li>
+<li><strong>Tomcat</strong> <strong>线程只是 “请求处理线程”，并不掌控</strong> **<code>ThreadPoolTaskExecutor</code>**。</li>
+<li><strong>当</strong> <strong>Tomcat</strong> <strong>线程调用</strong> **<code>batchInsertThreadPool.execute()</code><strong><strong>，它只是把任务提交给</strong></strong>线程池**，然后它自己会立即返回，而 <code>ThreadPoolTaskExecutor</code> 负责在自己的线程中执行任务。</li>
+</ul>
+<h3 id="3-从属关系（Spring-vs-Tomcat-vs-线程池-）"><a href="#3-从属关系（Spring-vs-Tomcat-vs-线程池-）" class="headerlink" title="3. 从属关系（Spring vs. Tomcat vs. 线程池****）"></a><strong>3. 从属关系（Spring vs.</strong> <strong>Tomcat</strong> <strong>vs.</strong> <strong>线程池****）</strong></h3><p>可以用下图表示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs Plain">Tomcat 服务器（管理 HTTP 线程池）<br>│<br>├── Tomcat 线程池（http-nio-8080-exec-1, 2, 3, ...）<br>│   ├── 处理 HTTP 请求（调用 Spring Controller）<br>│   ├── 在 Controller 里提交任务给 Spring 线程池<br>│<br>└── Spring 容器（ApplicationContext）<br>    ├── 管理 Spring Bean（包括 ThreadPoolTaskExecutor）<br>    ├── 管理业务逻辑（Service、Repository）<br>    ├── 启动 ThreadPoolTaskExecutor（独立于 Tomcat）<br>    │   ├── 线程：BatchInsertThread-1, 2, 3, ...<br>    │   ├── 运行异步任务<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-示例：-Tomcat-线程如何与-ThreadPoolTaskExecutor-交互"><a href="#4-示例：-Tomcat-线程如何与-ThreadPoolTaskExecutor-交互" class="headerlink" title="4. 示例：****Tomcat 线程如何与 ThreadPoolTaskExecutor 交互"></a><strong>4. 示例：****Tomcat</strong> <strong>线程如何与</strong> <strong><code>ThreadPoolTaskExecutor</code></strong> <strong>交互</strong></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-meta">@RestController</span><br><span class="hljs-meta">@RequestMapping(&quot;/test&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TestController</span> &#123;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> ThreadPoolTaskExecutor batchInsertThreadPool;<br>    <span class="hljs-meta">@GetMapping(&quot;/submitTask&quot;)</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">submitTask</span><span class="hljs-params">()</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;请求线程：&quot;</span> + Thread.currentThread().getName());<br>        batchInsertThreadPool.execute(() -&gt; &#123;<br>            System.out.println(<span class="hljs-string">&quot;执行任务的线程：&quot;</span> + Thread.currentThread().getName());<br>        &#125;);<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;任务已提交&quot;</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>请求</strong> <strong><code>/test/submitTask</code></strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Shell">curl http://localhost:8080/test/submitTask<br></code></pre></td></tr></table></figure>
+
+<p><strong>控制台输出</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs Plain">请求线程：http-nio-8080-exec-1<br>执行任务的线程：BatchInsertThread-1<br></code></pre></td></tr></table></figure>
+
+<p><strong>说明：</strong></p>
+<ul>
+<li>Tomcat 线程 <code>http-nio-8080-exec-1</code> 负责处理 HTTP 请求，执行 <code>Controller</code> 代码。</li>
+<li><code>Controller</code> 把任务提交给 <code>ThreadPoolTaskExecutor</code>，然后立即返回。</li>
+<li><code>ThreadPoolTaskExecutor</code> <strong>在自己的线程</strong> <code>BatchInsertThread-1</code> 里执行任务，<strong>不再依赖</strong> <strong>Tomcat</strong> <strong>线程</strong>。</li>
+</ul>
+<h3 id="5-为什么-ThreadPoolTaskExecutor-不会受到-Tomcat-线程的限制？"><a href="#5-为什么-ThreadPoolTaskExecutor-不会受到-Tomcat-线程的限制？" class="headerlink" title="5. 为什么 ThreadPoolTaskExecutor 不会受到 Tomcat 线程的限制？"></a><strong>5. 为什么</strong> <strong><code>ThreadPoolTaskExecutor</code></strong> <strong>不会受到</strong> <strong>Tomcat</strong> <strong>线程的限制？</strong></h3><ul>
+<li><strong>线程池****是 Spring 容器管理的全局 Bean</strong>，所有 Tomcat 线程都可以访问它。</li>
+<li><strong>任务是提交给<strong><strong>线程池</strong></strong>，而不是运行在</strong> <strong>Tomcat</strong> <strong>线程里</strong>，所以 Tomcat 线程和 <code>ThreadPoolTaskExecutor</code> 线程是分开的。</li>
+<li><strong>Spring</strong> <strong>线程池****的生命周期不依赖于单个 HTTP 请求</strong>，即使 Tomcat 线程结束，Spring 线程池仍然可以运行。</li>
+</ul>
+<h3 id="6-线程池-shutdown-为什么能影响所有任务？"><a href="#6-线程池-shutdown-为什么能影响所有任务？" class="headerlink" title="6. 线程池 shutdown() 为什么能影响所有任务？"></a><strong>6. 线程池</strong> <strong><code>shutdown()</code></strong> <strong>为什么能影响所有任务？</strong></h3><blockquote>
+<p><strong>不同</strong> <strong>REST API</strong> <strong>的线程为什么可以互相控制</strong> **<code>ThreadPoolTaskExecutor</code>**<strong>？</strong></p>
+</blockquote>
+<p>原因是：</p>
+<ol>
+<li><strong>所有请求共享同一个</strong> <strong><code>ThreadPoolTaskExecutor</code></strong> <strong>实例</strong>（Spring 容器管理的单例 Bean）。</li>
+<li><strong><code>shutdown()</code></strong> <strong>作用于整个<strong><strong>线程池</strong></strong>，而不是单个任务</strong>，所以不管是哪个请求触发的 <code>shutdown()</code>，它都会让整个线程池停止。</li>
+<li><strong>结论</strong></li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>作用</th>
+<th>线程管理方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tomcat 线程池</td>
+<td>处理 HTTP 请求（Controller）</td>
+<td>Tomcat 管理</td>
+</tr>
+<tr>
+<td>Spring 容器</td>
+<td>管理 Bean 和 ThreadPoolTaskExecutor</td>
+<td>Spring 管理</td>
+</tr>
+<tr>
+<td>ThreadPoolTaskExecutor</td>
+<td>处理异步任务</td>
+<td>Spring 管理</td>
+</tr>
+</tbody></table>
+<p>✅ <strong>Tomcat</strong> <strong>线程和</strong> <strong><code>ThreadPoolTaskExecutor</code></strong> <strong>线程是完全独立的</strong>，但它们可以互相交互。 </p>
+<p>✅ <strong>所有 HTTP 请求共享</strong> **<code>ThreadPoolTaskExecutor</code>**，所以 <code>shutdown()</code> 会影响所有提交的任务。</p>
+<h2 id="多个servlet线程与spring的单例模式之间会造成线程冲突吗？"><a href="#多个servlet线程与spring的单例模式之间会造成线程冲突吗？" class="headerlink" title="多个servlet线程与spring的单例模式之间会造成线程冲突吗？"></a>多个servlet线程与spring的单例模式之间会造成线程冲突吗？</h2><p>不会，<strong>除非</strong> <strong><code>OrderService</code></strong> <strong>里有共享的可变状态（如全局变量）</strong>，否则不会发生线程冲突。</p>
+<h3 id="1-Spring-单例-Bean-并发访问的本质"><a href="#1-Spring-单例-Bean-并发访问的本质" class="headerlink" title="1. Spring 单例 Bean 并发访问的本质"></a><strong>1. Spring</strong> <strong>单例</strong> <strong>Bean 并发访问的本质</strong></h3><h4 id="1-每个请求的线程是独立的"><a href="#1-每个请求的线程是独立的" class="headerlink" title="(1) 每个请求的线程是独立的"></a><strong>(1) 每个请求的线程是独立的</strong></h4><p>Spring 的 <code>@Service</code> Bean 默认是<strong>单例模式</strong>，但<strong>它的方法是被不同的</strong> <strong>Tomcat</strong> <strong>线程调用的</strong>，而每个 Tomcat 线程都有自己的<strong>独立****调用栈</strong>，不会共享方法里的局部变量。</p>
+<p>比如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OrderService</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">createOrder</span><span class="hljs-params">(String userId)</span> &#123;<br>        System.out.println(Thread.currentThread().getName() + <span class="hljs-string">&quot; 正在处理订单：&quot;</span> + userId);<br>        <span class="hljs-type">int</span> <span class="hljs-variable">total</span> <span class="hljs-operator">=</span> <span class="hljs-number">100</span>; <span class="hljs-comment">// 这是一个局部变量，每个线程都有自己的副本</span><br>        total++;<br>        System.out.println(Thread.currentThread().getName() + <span class="hljs-string">&quot; 订单完成，total = &quot;</span> + total);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果 5 个用户同时访问这个方法，Tomcat 可能会分配 5 个线程：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs Plain">http-nio-8080-exec-1 正在处理订单：A<br>http-nio-8080-exec-2 正在处理订单：B<br>http-nio-8080-exec-3 正在处理订单：C<br>http-nio-8080-exec-4 正在处理订单：D<br>http-nio-8080-exec-5 正在处理订单：E<br></code></pre></td></tr></table></figure>
+
+<p>每个线程都会有自己独立的 <code>total</code> 变量，<strong>互不影响</strong>，因此不会有线程冲突。</p>
+<h4 id="2-什么时候会发生线程冲突？"><a href="#2-什么时候会发生线程冲突？" class="headerlink" title="(2) 什么时候会发生线程冲突？"></a><strong>(2) 什么时候会发生线程冲突？</strong></h4><p>如果 <code>OrderService</code> 里有<strong>共享的可变全局变量</strong>，那么多个线程可能会同时修改它，导致<strong>数据错乱</strong>。</p>
+<p>例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OrderService</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> <span class="hljs-variable">orderCount</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; <span class="hljs-comment">// 共享变量</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">createOrder</span><span class="hljs-params">(String userId)</span> &#123;<br>        orderCount++; <span class="hljs-comment">// 线程不安全操作</span><br>        System.out.println(Thread.currentThread().getName() + <span class="hljs-string">&quot; 订单处理完毕，orderCount = &quot;</span> + orderCount);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果 5 个线程同时执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs Plain">http-nio-8080-exec-1 订单处理完毕，orderCount = 1<br>http-nio-8080-exec-2 订单处理完毕，orderCount = 2<br>http-nio-8080-exec-3 订单处理完毕，orderCount = 3<br>http-nio-8080-exec-4 订单处理完毕，orderCount = 4<br>http-nio-8080-exec-5 订单处理完毕，orderCount = 5<br></code></pre></td></tr></table></figure>
+
+<p><strong>问题：</strong></p>
+<ul>
+<li><code>orderCount++</code> 不是原子操作，多个线程可能会同时读取 <code>orderCount</code>，导致最终值不准确（可能丢失部分更新）。</li>
+<li>这是线程安全问题，因为 <code>orderCount</code> 是多个线程共享的可变变量。</li>
+</ul>
+<h3 id="2-如何避免线程冲突？"><a href="#2-如何避免线程冲突？" class="headerlink" title="2. 如何避免线程冲突？"></a><strong>2. 如何避免线程冲突？</strong></h3><h4 id="✅-方案-1：避免共享可变变量"><a href="#✅-方案-1：避免共享可变变量" class="headerlink" title="✅ 方案 1：避免共享可变变量"></a><strong>✅ 方案 1：避免共享可变变量</strong></h4><p>如果 <code>orderCount</code> 只是一个业务逻辑内部的计数，不应该作为全局变量，可以把它改成<strong>局部变量</strong>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OrderService</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">createOrder</span><span class="hljs-params">(String userId)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">orderCount</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; <span class="hljs-comment">// 线程安全，局部变量不会被共享</span><br>        orderCount++;<br>        System.out.println(Thread.currentThread().getName() + <span class="hljs-string">&quot; 订单处理完毕，orderCount = &quot;</span> + orderCount);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>这样每个线程都有自己独立的</strong> <strong><code>orderCount</code></strong> <strong>变量，就不会有冲突。</strong></p>
+<h4 id="✅-方案-2：使用-ThreadLocal"><a href="#✅-方案-2：使用-ThreadLocal" class="headerlink" title="✅ 方案 2：使用 ThreadLocal"></a><strong>✅ 方案 2：使用</strong> <strong><code>ThreadLocal</code></strong></h4><p>如果需要在同一个线程中共享数据，但不想让不同线程相互干扰，可以用 <code>ThreadLocal</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OrderService</span> &#123;<br>    <span class="hljs-keyword">private</span> ThreadLocal&lt;Integer&gt; orderCount = ThreadLocal.withInitial(() -&gt; <span class="hljs-number">0</span>);<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">createOrder</span><span class="hljs-params">(String userId)</span> &#123;<br>        orderCount.set(orderCount.get() + <span class="hljs-number">1</span>);<br>        System.out.println(Thread.currentThread().getName() + <span class="hljs-string">&quot; 订单处理完毕，orderCount = &quot;</span> + orderCount.get());<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong><code>ThreadLocal</code></strong> <strong>的作用：</strong></p>
+<ul>
+<li><strong>每个线程都会有自己独立的</strong> <strong><code>orderCount</code></strong> <strong>变量</strong>，不会和其他线程共享。</li>
+<li><strong>适用于线程内部存储数据</strong>，比如用户会话信息、事务 ID 等。</li>
+</ul>
+<h4 id="✅-方案-3：使用-synchronized-（不推荐）"><a href="#✅-方案-3：使用-synchronized-（不推荐）" class="headerlink" title="✅ 方案 3：使用 **synchronized**（不推荐）"></a><strong>✅ 方案 3：使用</strong> **<code>synchronized</code>**（不推荐）</h4><p>如果确实需要在多个线程间共享变量，可以使用 <strong>同步锁</strong>，但这样会降低并发性能：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OrderService</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> <span class="hljs-variable">orderCount</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">synchronized</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">createOrder</span><span class="hljs-params">(String userId)</span> &#123; <span class="hljs-comment">// 方法加锁</span><br>        orderCount++;<br>        System.out.println(Thread.currentThread().getName() + <span class="hljs-string">&quot; 订单处理完毕，orderCount = &quot;</span> + orderCount);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>问题：</strong></p>
+<ul>
+<li><code>synchronized</code> 会<strong>让方法变成串行执行</strong>，一个线程执行时，其他线程必须等待，会导致性能下降。</li>
+<li><strong>不推荐在高并发场景下使用</strong> **<code>synchronized</code>**。</li>
+</ul>
+<h4 id="✅-方案-4：使用-AtomicInteger"><a href="#✅-方案-4：使用-AtomicInteger" class="headerlink" title="✅ 方案 4：使用 AtomicInteger"></a><strong>✅ 方案 4：使用</strong> <strong><code>AtomicInteger</code></strong></h4><p><code>AtomicInteger</code> 通过 <strong>CAS（Compare And Swap）</strong> 操作保证线程安全：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">import</span> java.util.concurrent.atomic.AtomicInteger;<br><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OrderService</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-type">AtomicInteger</span> <span class="hljs-variable">orderCount</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">AtomicInteger</span>(<span class="hljs-number">0</span>);<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">createOrder</span><span class="hljs-params">(String userId)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> orderCount.incrementAndGet(); <span class="hljs-comment">// 线程安全自增</span><br>        System.out.println(Thread.currentThread().getName() + <span class="hljs-string">&quot; 订单处理完毕，orderCount = &quot;</span> + count);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>优点：</strong></p>
+<ul>
+<li><code>incrementAndGet()</code> 是原子操作，多个线程同时调用不会导致数据丢失。</li>
+<li>性能比 <code>synchronized</code> 更高。</li>
+</ul>
+<ol>
+<li><strong>结论</strong></li>
+</ol>
+<p>❌ <strong>会引发线程冲突的情况</strong></p>
+<ul>
+<li><strong>Service 里的全局变量是可变的（非线程安全操作）</strong></li>
+<li><strong>多个线程同时修改这个共享变量</strong></li>
+</ul>
+<p>✅ <strong>不会有线程冲突的情况</strong></p>
+<ul>
+<li><strong>方法里只有</strong>局部变量</li>
+<li><strong>Tomcat</strong> <strong>分配的每个线程都有自己的</strong>调用栈</li>
+<li><strong>使用</strong> <code>ThreadLocal</code><strong>、</strong><code>AtomicInteger</code>等解决共享变量问题</li>
+</ul>
+<p>🚀 <strong>Spring</strong> <strong><code>@Service</code></strong> 是单例的，但方法调用是并发的，不会天然有线程冲突，只有在共享全局变量时才需要额外注意线程安全。</p>
+<h2 id="什么时候要调整-scope为多例"><a href="#什么时候要调整-scope为多例" class="headerlink" title="什么时候要调整@scope为多例"></a>什么时候要调整@scope为多例</h2><p>在 Spring 中，<strong>默认的 Bean</strong> <strong>作用域</strong>（Scope）是单例<strong>（</strong>Singleton<strong>）</strong>，即<strong>Spring 容器</strong>在应用启动时创建一个<strong>唯一的实例</strong>，并在整个应用程序范围内共享该实例。</p>
+<p>但在某些情况下，我们需要使用 <code>@Scope</code> <strong>改变 Bean 的作用域</strong>，使其不再是单例模式，例如<strong>每个请求、每个线程、甚至每次调用都创建新的实例</strong>。</p>
+<h3 id="1-什么时候需要使用-Scope-改变默认单例？"><a href="#1-什么时候需要使用-Scope-改变默认单例？" class="headerlink" title="1. 什么时候需要使用 @Scope 改变默认单例？"></a><strong>1. 什么时候需要使用</strong> <strong><code>@Scope</code></strong> <em>改变默认</em>单例？</h3><h4 id="✅-场景-1：需要为每个-HTTP-请求创建新的-Bean"><a href="#✅-场景-1：需要为每个-HTTP-请求创建新的-Bean" class="headerlink" title="✅ 场景 1：需要为每个 HTTP 请求创建新的 Bean"></a><strong>✅ 场景 1：需要为每个 HTTP 请求创建新的 Bean</strong></h4><blockquote>
+<p><strong>适用</strong> <strong><code>@Scope(&quot;request&quot;)</code></strong> 适用于：Controller、用户信息、登录状态等与请求相关的 Bean</p>
+</blockquote>
+<p>在 Web 应用中，每个 HTTP 请求可能需要一个<strong>独立的 Bean 实例</strong>，比如<strong>存储当前请求的用户信息</strong>。</p>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a><strong>示例</strong></h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-meta">@Component</span><br><span class="hljs-meta">@Scope(&quot;request&quot;)</span> <span class="hljs-comment">// 每个 HTTP 请求都会创建新的 UserInfo 实例</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserInfo</span> &#123;<br>    <span class="hljs-keyword">private</span> String username;<br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">UserInfo</span><span class="hljs-params">()</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;创建新的 UserInfo 实例：&quot;</span> + <span class="hljs-built_in">this</span>);<br>    &#125;<br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getUsername</span><span class="hljs-params">()</span> &#123; <span class="hljs-keyword">return</span> username; &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setUsername</span><span class="hljs-params">(String username)</span> &#123; <span class="hljs-built_in">this</span>.username = username; &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a><strong>使用</strong></h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-meta">@RestController</span><br><span class="hljs-meta">@RequestMapping(&quot;/user&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UserController</span> &#123;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> UserInfo userInfo;<br>    <span class="hljs-meta">@GetMapping(&quot;/set&quot;)</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">setUser</span><span class="hljs-params">(<span class="hljs-meta">@RequestParam</span> String name)</span> &#123;<br>        userInfo.setUsername(name);<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;User set: &quot;</span> + name;<br>    &#125;<br>    <span class="hljs-meta">@GetMapping(&quot;/get&quot;)</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getUser</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Current User: &quot;</span> + userInfo.getUsername();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>📌 结果</strong></p>
+<ul>
+<li><code>GET /user/set?name=Alice</code> → <strong>创建新的</strong> <strong><code>UserInfo</code></strong> <strong>实例</strong></li>
+<li><code>GET /user/get</code> → <strong>返回 Alice</strong></li>
+<li>但如果换一个请求（比如新用户 <code>Bob</code>），Spring 会创建一个<strong>新的</strong> <strong><code>UserInfo</code></strong> <strong>实例</strong>。</li>
+</ul>
+<h4 id="✅-场景-2：每个会话（Session）创建一个新的-Bean"><a href="#✅-场景-2：每个会话（Session）创建一个新的-Bean" class="headerlink" title="✅ 场景 2：每个会话（Session）创建一个新的 Bean"></a><strong>✅ 场景 2：每个会话（Session）创建一个新的 Bean</strong></h4><blockquote>
+<p><strong>适用</strong> <strong><code>@Scope(&quot;session&quot;)</code></strong> <strong>适用于：存储用户登录信息（比如购物车、用户认证信息等）</strong></p>
+</blockquote>
+<p>当用户登录后，我们通常需要在<strong>整个会话（Session）中保存用户状态</strong>，例如用户购物车、登录信息等。</p>
+<h4 id="示例-1"><a href="#示例-1" class="headerlink" title="示例"></a><strong>示例</strong></h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-meta">@Component</span><br><span class="hljs-meta">@Scope(&quot;session&quot;)</span> <span class="hljs-comment">// 每个用户的 Session 共享一个实例</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ShoppingCart</span> &#123;<br>    <span class="hljs-keyword">private</span> List&lt;String&gt; items = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">addItem</span><span class="hljs-params">(String item)</span> &#123; items.add(item); &#125;<br>    <span class="hljs-keyword">public</span> List&lt;String&gt; <span class="hljs-title function_">getItems</span><span class="hljs-params">()</span> &#123; <span class="hljs-keyword">return</span> items; &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="使用-1"><a href="#使用-1" class="headerlink" title="使用"></a><strong>使用</strong></h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-meta">@RestController</span><br><span class="hljs-meta">@RequestMapping(&quot;/cart&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ShoppingCartController</span> &#123;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> ShoppingCart shoppingCart;<br>    <span class="hljs-meta">@GetMapping(&quot;/add&quot;)</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">addItem</span><span class="hljs-params">(<span class="hljs-meta">@RequestParam</span> String item)</span> &#123;<br>        shoppingCart.addItem(item);<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Item added: &quot;</span> + item;<br>    &#125;<br>    <span class="hljs-meta">@GetMapping(&quot;/list&quot;)</span><br>    <span class="hljs-keyword">public</span> List&lt;String&gt; <span class="hljs-title function_">getItems</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> shoppingCart.getItems();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>📌 结果</strong></p>
+<ul>
+<li><strong>用户 A（Session 1）</strong> → <code>GET /cart/add?item=Apple</code> → <code>GET /cart/list</code> → <code>[&quot;Apple&quot;]</code></li>
+<li><strong>用户 B（Session 2）</strong> → <code>GET /cart/list</code> → <code>[]</code>（因为 B 是新的会话）</li>
+</ul>
+<h4 id="✅-场景-3：每个线程创建一个独立的-Bean"><a href="#✅-场景-3：每个线程创建一个独立的-Bean" class="headerlink" title="✅ 场景 3：每个线程创建一个独立的 Bean"></a><strong>✅ 场景 3：每个线程创建一个独立的 Bean</strong></h4><blockquote>
+<p><strong>适用</strong> <strong><code>@Scope(&quot;prototype&quot;)</code></strong> <strong>或</strong> <strong><code>@Scope(&quot;thread&quot;)</code></strong> <strong>适用于：<strong><strong>多线程</strong></strong>任务、线程隔离数据</strong></p>
+</blockquote>
+<p>在一些并发任务中，我们希望<strong>每个线程有自己的 Bean 实例</strong>，而不是所有线程共享同一个实例。</p>
+<h4 id="示例-2"><a href="#示例-2" class="headerlink" title="示例"></a><strong>示例</strong></h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-meta">@Component</span><br><span class="hljs-meta">@Scope(&quot;prototype&quot;)</span> <span class="hljs-comment">// 每次调用都会创建新的实例</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TaskProcessor</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">TaskProcessor</span><span class="hljs-params">()</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;创建新的 TaskProcessor：&quot;</span> + <span class="hljs-built_in">this</span>);<br>    &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">process</span><span class="hljs-params">()</span> &#123;<br>        System.out.println(Thread.currentThread().getName() + <span class="hljs-string">&quot; 处理任务：&quot;</span> + <span class="hljs-built_in">this</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="使用-2"><a href="#使用-2" class="headerlink" title="使用"></a><strong>使用</strong></h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TaskService</span> &#123;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> TaskProcessor taskProcessor;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">executeTask</span><span class="hljs-params">()</span> &#123;<br>        taskProcessor.process();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="多线程调用"><a href="#多线程调用" class="headerlink" title="多线程调用"></a>多线程调用</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-meta">@RestController</span><br><span class="hljs-meta">@RequestMapping(&quot;/task&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TaskController</span> &#123;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> TaskService taskService;<br>    <span class="hljs-meta">@GetMapping(&quot;/start&quot;)</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">startTask</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(taskService::executeTask).start();<br>        <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(taskService::executeTask).start();<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Tasks started!&quot;</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>📌 结果</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs Plain">Thread-1 处理任务：TaskProcessor@12345<br>Thread-2 处理任务：TaskProcessor@67890<br></code></pre></td></tr></table></figure>
+
+<p><strong>每个线程都有自己的</strong> <strong><code>TaskProcessor</code></strong> <strong>实例，互不干扰。</strong></p>
+<h4 id="✅-场景-4：Bean-具有状态，每次使用都应该创建新实例"><a href="#✅-场景-4：Bean-具有状态，每次使用都应该创建新实例" class="headerlink" title="✅ 场景 4：Bean 具有状态，每次使用都应该创建新实例"></a><strong>✅ 场景 4：Bean 具有状态，每次使用都应该创建新实例</strong></h4><blockquote>
+<p><strong>适用</strong> <strong><code>@Scope(&quot;prototype&quot;)</code></strong> <strong>适用于：任务处理器、算法计算等短生命周期对象</strong></p>
+</blockquote>
+<p>如果某个 Bean 有<strong>内部状态</strong>，并且不能被多个线程或请求共享，就需要 <code>prototype</code> 作用域。</p>
+<h4 id="示例-3"><a href="#示例-3" class="headerlink" title="示例"></a><strong>示例</strong></h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-meta">@Component</span><br><span class="hljs-meta">@Scope(&quot;prototype&quot;)</span> <span class="hljs-comment">// 每次调用都会创建新实例</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OrderProcessor</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> <span class="hljs-variable">processCount</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">processOrder</span><span class="hljs-params">()</span> &#123;<br>        processCount++;<br>        System.out.println(<span class="hljs-string">&quot;订单处理次数：&quot;</span> + processCount + <span class="hljs-string">&quot; 实例：&quot;</span> + <span class="hljs-built_in">this</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="使用-3"><a href="#使用-3" class="headerlink" title="使用"></a><strong>使用</strong></h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OrderService</span> &#123;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> ApplicationContext context;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">processNewOrder</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">OrderProcessor</span> <span class="hljs-variable">orderProcessor</span> <span class="hljs-operator">=</span> context.getBean(OrderProcessor.class);<br>        orderProcessor.processOrder();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="调用"><a href="#调用" class="headerlink" title="调用"></a><strong>调用</strong></h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-meta">@RestController</span><br><span class="hljs-meta">@RequestMapping(&quot;/order&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OrderController</span> &#123;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> OrderService orderService;<br>    <span class="hljs-meta">@GetMapping(&quot;/process&quot;)</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">processOrder</span><span class="hljs-params">()</span> &#123;<br>        orderService.processNewOrder();<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Order processed!&quot;</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>📌 结果</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs Plain">订单处理次数：1 实例：OrderProcessor@12345<br>订单处理次数：1 实例：OrderProcessor@67890<br></code></pre></td></tr></table></figure>
+
+<p>每次调用 <code>processNewOrder()</code> 都会创建一个新的 <code>OrderProcessor</code> 实例，避免了状态共享导致的数据错误。</p>
+<h3 id="2-Scope-作用范围总结"><a href="#2-Scope-作用范围总结" class="headerlink" title="2.@Scope 作用范围总结"></a><strong>2.<code>@Scope</code></strong> <strong>作用范围总结</strong></h3><table>
+<thead>
+<tr>
+<th>作用域</th>
+<th>说明</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>singleton</td>
+<td>默认作用域，Spring 只创建一个实例</td>
+<td>大多数无状态 Service、DAO</td>
+</tr>
+<tr>
+<td>prototype</td>
+<td>每次请求都会创建新实例</td>
+<td>任务处理器、状态 Bean</td>
+</tr>
+<tr>
+<td>request</td>
+<td>每个 HTTP 请求创建一个实例</td>
+<td>存储当前请求数据</td>
+</tr>
+<tr>
+<td>session</td>
+<td>每个用户 Session 创建一个实例</td>
+<td>存储用户登录状态</td>
+</tr>
+<tr>
+<td>application</td>
+<td>整个 Web 应用共享一个实例</td>
+<td>全局配置 Bean</td>
+</tr>
+<tr>
+<td>websocket</td>
+<td>每个 WebSocket 连接创建一个实例</td>
+<td>WebSocket 会话管理</td>
+</tr>
+</tbody></table>
+<h3 id="3-结论"><a href="#3-结论" class="headerlink" title="3.结论"></a><strong>3.结论</strong></h3><p><strong>🌟 什么时候用</strong> <strong><code>@Scope</code></strong> 改变默认单例模式？</p>
+<ol>
+<li><strong>如果 Bean 需要保存 HTTP 请求的状态</strong>，使用 <code>@Scope(&quot;request&quot;)</code></li>
+<li><strong>如果 Bean 需要在整个用户 Session 共享</strong>，使用 <code>@Scope(&quot;session&quot;)</code></li>
+<li><strong>如果 Bean 需要在每个线程中独立使用</strong>，使用 <code>@Scope(&quot;prototype&quot;)</code></li>
+<li><strong>如果 Bean 具有状态，每次调用都需要新实例</strong>，使用 <code>@Scope(&quot;prototype&quot;)</code></li>
+</ol>
+<p><strong>🚀 Spring 默认使用</strong> <strong><code>singleton</code></strong> <strong>是因为它节省</strong>内存<strong>，提高性能，但在某些情况下，我们需要使用</strong> <strong><code>@Scope</code></strong> 来改变作用域<strong>，以保证</strong>线程安全和数据隔离。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/java-%E7%AA%81%E5%8F%91%E5%A5%87%E6%83%B3%E7%9A%84%E9%97%AE%E9%A2%98/" class="print-no-link">#java,突发奇想的问题</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>如何批量插入数据并实现优雅暂停？</div>
+      <div>https://bshtj.github.io/2025/02/17/如何批量插入数据并实现优雅暂停？/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年2月17日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/05/29/How-to-quickly-typeset-existing-modules-in-QFluentWidgets-based-on-crtl_c+v/" title="如何基于crtl c+v快速排版QFluentWidgets中已有模块">
+                        <span class="hidden-mobile">如何基于crtl c+v快速排版QFluentWidgets中已有模块</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

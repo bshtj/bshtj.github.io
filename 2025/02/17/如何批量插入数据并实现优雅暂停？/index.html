@@ -27,7 +27,7 @@
 <meta property="og:description" content="如何批量插入数据并实现优雅暂停？要实现“当前批量插入循环插入完毕之后终止，不再执行之后的循环”，同时确保线程池状态变为 SHUTDOWN 后不再接收新任务，但已提交的任务会执行完毕，可以通过以下步骤实现： 1. 配置线程池配置一个线程池，并确保它支持优雅关闭。 1234567891011121314151617181920import org.springframework.context.ann">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-02-17T11:32:33.000Z">
-<meta property="article:modified_time" content="2025-02-23T11:42:47.951Z">
+<meta property="article:modified_time" content="2025-02-23T12:53:33.626Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="java">
 <meta property="article:tag" content="突发奇想的问题">
@@ -299,15 +299,15 @@
 <li><strong>关闭接口</strong>：调用关闭接口后，线程池会停止接受新任务，但会等待已提交的任务完成。</li>
 </ul>
 <h3 id="关键点总结"><a href="#关键点总结" class="headerlink" title="关键点总结"></a>关键点总结</h3><ol>
-<li><strong>线程池****状态检查</strong>：在批量插入循环中，每次插入后检查线程池状态（<code>isShutdown()</code>），如果线程池已关闭，则退出循环。</li>
+<li><strong>线程池状态检查</strong>：在批量插入循环中，每次插入后检查线程池状态（<code>isShutdown()</code>），如果线程池已关闭，则退出循环。</li>
 <li><strong>优雅关闭</strong>：通过<code>shutdown()</code>方法停止接受新任务，并通过<code>isTerminated()</code>等待任务完成。</li>
 <li><strong>Spring继续运行</strong>：线程池关闭后，Spring应用的其他部分仍然可以正常运行。</li>
 </ol>
-<h2 id="spring和servlet之间有从属关系吗？"><a href="#spring和servlet之间有从属关系吗？" class="headerlink" title="spring和servlet之间有从属关系吗？"></a>spring和servlet之间有从属关系吗？</h2><p>你的问题涉及 <strong>Spring 容器、****Tomcat</strong> <strong>线程池</strong> 以及 <strong>Spring 管理的</strong> <strong><code>ThreadPoolTaskExecutor</code></strong> 之间的关系。我们一步步解析它们的 <strong>从属结构</strong> 和 <strong>线程生命周期</strong>。</p>
-<h3 id="1-Spring-和-Tomcat-线程池-的关系"><a href="#1-Spring-和-Tomcat-线程池-的关系" class="headerlink" title="1. Spring 和 Tomcat 线程池****的关系"></a><strong>1. Spring 和</strong> <strong>Tomcat</strong> <strong>线程池****的关系</strong></h3><p>Spring Web 应用 <strong>运行在</strong> <strong>Tomcat</strong> <strong>之上</strong>，但它和 Tomcat 的线程管理是 <strong>两个独立的体系</strong>。</p>
+<h2 id="spring和servlet之间有从属关系吗？"><a href="#spring和servlet之间有从属关系吗？" class="headerlink" title="spring和servlet之间有从属关系吗？"></a>spring和servlet之间有从属关系吗？</h2><p>你的问题涉及 <strong>Spring 容器</strong>、<strong>Tomcat线程池</strong>以及 <strong>Spring 管理的 <code>ThreadPoolTaskExecutor</code></strong> 之间的关系。我们一步步解析它们的 <strong>从属结构</strong> 和 <strong>线程生命周期</strong>。</p>
+<h3 id="1-Spring-和-Tomcat-线程池的关系"><a href="#1-Spring-和-Tomcat-线程池的关系" class="headerlink" title="1. Spring 和 Tomcat 线程池的关系"></a><strong>1. Spring 和</strong> <strong>Tomcat</strong> <strong>线程池</strong>的关系</h3><p>Spring Web 应用 <strong>运行在</strong> <strong>Tomcat</strong> <strong>之上</strong>，但它和 Tomcat 的线程管理是 <strong>两个独立的体系</strong>。</p>
 <h4 id="1-1-Tomcat-线程池"><a href="#1-1-Tomcat-线程池" class="headerlink" title="1.1 Tomcat 线程池"></a><strong>1.1</strong> <strong>Tomcat</strong> <strong>线程池</strong></h4><ul>
 <li><strong>Tomcat</strong> <strong>是 HTTP 服务器</strong>，它负责接收请求并分配线程来处理。</li>
-<li>Tomcat 的 <strong>线程池</strong>（通常是 <code>org.apache.tomcat.util.threads.ThreadPoolExecutor</code>）维护着 <code>http-nio-8080-exec-*</code> 线程，它们 <strong>执行</strong> <strong>Spring MVC</strong> <strong>Controller</strong> <strong>方法</strong>。</li>
+<li>Tomcat 的 <strong>线程池</strong>（通常是 <code>org.apache.tomcat.util.threads.ThreadPoolExecutor</code>）维护着 <code>http-nio-8080-exec-</code> 线程，它们 <strong>执行</strong> <strong>Spring MVC</strong> <strong>Controller</strong> <strong>方法</strong>。</li>
 <li><strong>生命周期</strong>：Tomcat 线程池在 <strong>Tomcat 启动时创建</strong>，在 <strong>Tomcat 关闭时销毁</strong>。</li>
 </ul>
 <h4 id="1-2-Spring-容器和-Bean"><a href="#1-2-Spring-容器和-Bean" class="headerlink" title="1.2 Spring 容器和 Bean"></a><strong>1.2 Spring 容器和 Bean</strong></h4><ul>
@@ -321,18 +321,18 @@
 </ul>
 <h3 id="2-为什么-ThreadPoolTaskExecutor-可以脱离-Tomcat-线程？"><a href="#2-为什么-ThreadPoolTaskExecutor-可以脱离-Tomcat-线程？" class="headerlink" title="2. 为什么 ThreadPoolTaskExecutor 可以脱离 Tomcat 线程？"></a><strong>2. 为什么</strong> <strong><code>ThreadPoolTaskExecutor</code></strong> <strong>可以脱离</strong> <strong>Tomcat</strong> <strong>线程？</strong></h3><p>你提到：</p>
 <blockquote>
-<p><strong>在一个线程中</strong> **<code>new ThreadA()</code>**<strong>，再在另一个线程</strong> **<code>new ThreadB()</code>**<strong>，它们应该是相互隔离的，为什么</strong> <strong><code>ThreadPoolTaskExecutor</code></strong> <strong>不是这样？</strong></p>
+<p><strong>在一个线程中</strong> **<code>new ThreadA()</code><strong>，再在另一个线程</strong><code>new ThreadB()</code>**，它们应该是相互隔离的，为什么 <strong><code>ThreadPoolTaskExecutor</code></strong> <strong>不是这样？</strong></p>
 </blockquote>
 <p>答案是：</p>
 <ul>
-<li><strong>Spring</strong> <strong>线程池****是</strong> <strong>“全局”</strong> <strong>的</strong>，它不属于单个 Tomcat 线程，而是由 <strong>Spring 容器管理</strong>，所有 Tomcat 线程都可以访问它。</li>
+<li><strong>Spring</strong> <strong>线程池</strong>是 <strong>“全局”</strong> <strong>的</strong>，它不属于单个 Tomcat 线程，而是由 <strong>Spring 容器管理</strong>，所有 Tomcat 线程都可以访问它。</li>
 <li><strong>Tomcat</strong> <strong>线程只是 “请求处理线程”，并不掌控</strong> **<code>ThreadPoolTaskExecutor</code>**。</li>
-<li><strong>当</strong> <strong>Tomcat</strong> <strong>线程调用</strong> **<code>batchInsertThreadPool.execute()</code><strong><strong>，它只是把任务提交给</strong></strong>线程池**，然后它自己会立即返回，而 <code>ThreadPoolTaskExecutor</code> 负责在自己的线程中执行任务。</li>
+<li><strong>当</strong> <strong>Tomcat</strong> <strong>线程调用</strong> <strong><code>batchInsertThreadPool.execute()</code><strong>，它只是把任务提交给</strong>线程池</strong>，然后它自己会立即返回，而 <code>ThreadPoolTaskExecutor</code> 负责在自己的线程中执行任务。</li>
 </ul>
-<h3 id="3-从属关系（Spring-vs-Tomcat-vs-线程池-）"><a href="#3-从属关系（Spring-vs-Tomcat-vs-线程池-）" class="headerlink" title="3. 从属关系（Spring vs. Tomcat vs. 线程池****）"></a><strong>3. 从属关系（Spring vs.</strong> <strong>Tomcat</strong> <strong>vs.</strong> <strong>线程池****）</strong></h3><p>可以用下图表示：</p>
+<h3 id="3-从属关系（Spring-vs-Tomcat-vs-线程池）"><a href="#3-从属关系（Spring-vs-Tomcat-vs-线程池）" class="headerlink" title="3. 从属关系（Spring vs. Tomcat vs. 线程池）"></a><strong>3. 从属关系（Spring vs.</strong> <strong>Tomcat</strong> <strong>vs.</strong> <strong>线程池</strong>）</h3><p>可以用下图表示：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs Plain">Tomcat 服务器（管理 HTTP 线程池）<br>│<br>├── Tomcat 线程池（http-nio-8080-exec-1, 2, 3, ...）<br>│   ├── 处理 HTTP 请求（调用 Spring Controller）<br>│   ├── 在 Controller 里提交任务给 Spring 线程池<br>│<br>└── Spring 容器（ApplicationContext）<br>    ├── 管理 Spring Bean（包括 ThreadPoolTaskExecutor）<br>    ├── 管理业务逻辑（Service、Repository）<br>    ├── 启动 ThreadPoolTaskExecutor（独立于 Tomcat）<br>    │   ├── 线程：BatchInsertThread-1, 2, 3, ...<br>    │   ├── 运行异步任务<br></code></pre></td></tr></table></figure>
 
-<h3 id="4-示例：-Tomcat-线程如何与-ThreadPoolTaskExecutor-交互"><a href="#4-示例：-Tomcat-线程如何与-ThreadPoolTaskExecutor-交互" class="headerlink" title="4. 示例：****Tomcat 线程如何与 ThreadPoolTaskExecutor 交互"></a><strong>4. 示例：****Tomcat</strong> <strong>线程如何与</strong> <strong><code>ThreadPoolTaskExecutor</code></strong> <strong>交互</strong></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-meta">@RestController</span><br><span class="hljs-meta">@RequestMapping(&quot;/test&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TestController</span> &#123;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> ThreadPoolTaskExecutor batchInsertThreadPool;<br>    <span class="hljs-meta">@GetMapping(&quot;/submitTask&quot;)</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">submitTask</span><span class="hljs-params">()</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;请求线程：&quot;</span> + Thread.currentThread().getName());<br>        batchInsertThreadPool.execute(() -&gt; &#123;<br>            System.out.println(<span class="hljs-string">&quot;执行任务的线程：&quot;</span> + Thread.currentThread().getName());<br>        &#125;);<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;任务已提交&quot;</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="4-示例：Tomcat-线程如何与-ThreadPoolTaskExecutor-交互"><a href="#4-示例：Tomcat-线程如何与-ThreadPoolTaskExecutor-交互" class="headerlink" title="4. 示例：Tomcat 线程如何与 ThreadPoolTaskExecutor 交互"></a><strong>4. 示例：</strong>Tomcat <strong>线程如何与</strong> <strong><code>ThreadPoolTaskExecutor</code></strong> <strong>交互</strong></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-meta">@RestController</span><br><span class="hljs-meta">@RequestMapping(&quot;/test&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TestController</span> &#123;<br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> ThreadPoolTaskExecutor batchInsertThreadPool;<br>    <span class="hljs-meta">@GetMapping(&quot;/submitTask&quot;)</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">submitTask</span><span class="hljs-params">()</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;请求线程：&quot;</span> + Thread.currentThread().getName());<br>        batchInsertThreadPool.execute(() -&gt; &#123;<br>            System.out.println(<span class="hljs-string">&quot;执行任务的线程：&quot;</span> + Thread.currentThread().getName());<br>        &#125;);<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;任务已提交&quot;</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p><strong>请求</strong> <strong><code>/test/submitTask</code></strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Shell">curl http://localhost:8080/test/submitTask<br></code></pre></td></tr></table></figure>
@@ -347,17 +347,17 @@
 <li><code>ThreadPoolTaskExecutor</code> <strong>在自己的线程</strong> <code>BatchInsertThread-1</code> 里执行任务，<strong>不再依赖</strong> <strong>Tomcat</strong> <strong>线程</strong>。</li>
 </ul>
 <h3 id="5-为什么-ThreadPoolTaskExecutor-不会受到-Tomcat-线程的限制？"><a href="#5-为什么-ThreadPoolTaskExecutor-不会受到-Tomcat-线程的限制？" class="headerlink" title="5. 为什么 ThreadPoolTaskExecutor 不会受到 Tomcat 线程的限制？"></a><strong>5. 为什么</strong> <strong><code>ThreadPoolTaskExecutor</code></strong> <strong>不会受到</strong> <strong>Tomcat</strong> <strong>线程的限制？</strong></h3><ul>
-<li><strong>线程池****是 Spring 容器管理的全局 Bean</strong>，所有 Tomcat 线程都可以访问它。</li>
-<li><strong>任务是提交给<strong><strong>线程池</strong></strong>，而不是运行在</strong> <strong>Tomcat</strong> <strong>线程里</strong>，所以 Tomcat 线程和 <code>ThreadPoolTaskExecutor</code> 线程是分开的。</li>
-<li><strong>Spring</strong> <strong>线程池****的生命周期不依赖于单个 HTTP 请求</strong>，即使 Tomcat 线程结束，Spring 线程池仍然可以运行。</li>
+<li><strong>线程池</strong>是 Spring 容器管理的全局 Bean，所有 Tomcat 线程都可以访问它。</li>
+<li><strong>任务是提交给线程池，而不是运行在Tomcat 线程里</strong>，所以 Tomcat 线程和 <code>ThreadPoolTaskExecutor</code> 线程是分开的。</li>
+<li><strong>Spring 线程池的生命周期不依赖于单个 HTTP 请求</strong>，即使 Tomcat 线程结束，Spring 线程池仍然可以运行。</li>
 </ul>
 <h3 id="6-线程池-shutdown-为什么能影响所有任务？"><a href="#6-线程池-shutdown-为什么能影响所有任务？" class="headerlink" title="6. 线程池 shutdown() 为什么能影响所有任务？"></a><strong>6. 线程池</strong> <strong><code>shutdown()</code></strong> <strong>为什么能影响所有任务？</strong></h3><blockquote>
-<p><strong>不同</strong> <strong>REST API</strong> <strong>的线程为什么可以互相控制</strong> **<code>ThreadPoolTaskExecutor</code>**<strong>？</strong></p>
+<p><strong>不同</strong> <strong>REST API</strong> <strong>的线程为什么可以互相控制</strong> **<code>ThreadPoolTaskExecutor</code>**？</p>
 </blockquote>
 <p>原因是：</p>
 <ol>
 <li><strong>所有请求共享同一个</strong> <strong><code>ThreadPoolTaskExecutor</code></strong> <strong>实例</strong>（Spring 容器管理的单例 Bean）。</li>
-<li><strong><code>shutdown()</code></strong> <strong>作用于整个<strong><strong>线程池</strong></strong>，而不是单个任务</strong>，所以不管是哪个请求触发的 <code>shutdown()</code>，它都会让整个线程池停止。</li>
+<li><strong><code>shutdown()</code></strong> <strong>作用于整个线程池</strong>，而不是单个任务，所以不管是哪个请求触发的 <code>shutdown()</code>，它都会让整个线程池停止。</li>
 <li><strong>结论</strong></li>
 </ol>
 <table>
@@ -387,7 +387,7 @@
 <p>✅ <strong>Tomcat</strong> <strong>线程和</strong> <strong><code>ThreadPoolTaskExecutor</code></strong> <strong>线程是完全独立的</strong>，但它们可以互相交互。 </p>
 <p>✅ <strong>所有 HTTP 请求共享</strong> **<code>ThreadPoolTaskExecutor</code>**，所以 <code>shutdown()</code> 会影响所有提交的任务。</p>
 <h2 id="多个servlet线程与spring的单例模式之间会造成线程冲突吗？"><a href="#多个servlet线程与spring的单例模式之间会造成线程冲突吗？" class="headerlink" title="多个servlet线程与spring的单例模式之间会造成线程冲突吗？"></a>多个servlet线程与spring的单例模式之间会造成线程冲突吗？</h2><p>不会，<strong>除非</strong> <strong><code>OrderService</code></strong> <strong>里有共享的可变状态（如全局变量）</strong>，否则不会发生线程冲突。</p>
-<h3 id="1-Spring-单例-Bean-并发访问的本质"><a href="#1-Spring-单例-Bean-并发访问的本质" class="headerlink" title="1. Spring 单例 Bean 并发访问的本质"></a><strong>1. Spring</strong> <strong>单例</strong> <strong>Bean 并发访问的本质</strong></h3><h4 id="1-每个请求的线程是独立的"><a href="#1-每个请求的线程是独立的" class="headerlink" title="(1) 每个请求的线程是独立的"></a><strong>(1) 每个请求的线程是独立的</strong></h4><p>Spring 的 <code>@Service</code> Bean 默认是<strong>单例模式</strong>，但<strong>它的方法是被不同的</strong> <strong>Tomcat</strong> <strong>线程调用的</strong>，而每个 Tomcat 线程都有自己的<strong>独立****调用栈</strong>，不会共享方法里的局部变量。</p>
+<h3 id="1-Spring-单例-Bean-并发访问的本质"><a href="#1-Spring-单例-Bean-并发访问的本质" class="headerlink" title="1. Spring 单例 Bean 并发访问的本质"></a><strong>1. Spring</strong> <strong>单例</strong> <strong>Bean 并发访问的本质</strong></h3><h4 id="1-每个请求的线程是独立的"><a href="#1-每个请求的线程是独立的" class="headerlink" title="(1) 每个请求的线程是独立的"></a><strong>(1) 每个请求的线程是独立的</strong></h4><p>Spring 的 <code>@Service</code> Bean 默认是<strong>单例模式</strong>，但<strong>它的方法是被不同的</strong> <strong>Tomcat</strong> <strong>线程调用的</strong>，而每个 Tomcat 线程都有自己的<strong>独立调用栈</strong>，不会共享方法里的局部变量。</p>
 <p>比如：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OrderService</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">createOrder</span><span class="hljs-params">(String userId)</span> &#123;<br>        System.out.println(Thread.currentThread().getName() + <span class="hljs-string">&quot; 正在处理订单：&quot;</span> + userId);<br>        <span class="hljs-type">int</span> <span class="hljs-variable">total</span> <span class="hljs-operator">=</span> <span class="hljs-number">100</span>; <span class="hljs-comment">// 这是一个局部变量，每个线程都有自己的副本</span><br>        total++;<br>        System.out.println(Thread.currentThread().getName() + <span class="hljs-string">&quot; 订单完成，total = &quot;</span> + total);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
@@ -562,6 +562,27 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%96%91%E6%83%91/" class="category-chain-item">疑惑</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
   
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
@@ -625,12 +646,18 @@
                   <article class="post-prev col-6">
                     
                     
+                      <a href="/2025/02/23/vue3/" title="vue3">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">vue3</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/05/29/How-to-quickly-typeset-existing-modules-in-QFluentWidgets-based-on-crtl_c+v/" title="如何基于crtl c+v快速排版QFluentWidgets中已有模块">
-                        <span class="hidden-mobile">如何基于crtl c+v快速排版QFluentWidgets中已有模块</span>
+                      <a href="/2025/02/11/JUC-%E5%90%8C%E6%AD%A5/" title="JUC_同步">
+                        <span class="hidden-mobile">JUC_同步</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

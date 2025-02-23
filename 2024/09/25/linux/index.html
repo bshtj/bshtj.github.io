@@ -1,0 +1,1462 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/wuliannan.png">
+  <link rel="icon" href="/img/wuliannan.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="blog">
+  
+    <meta name="description" content="linuxlinux运维工程师  规划 优化 监控  linux嵌入式工程师：掌握linux下驱动的开发。 linux应用领域桌面领域（不强） 服务器领域（最常见）：linux稳定高效 嵌入式领域（常见）：运行稳定，可根据软件进行裁剪，内核最小可以到几百KB。应用于如机顶盒，手机，PDA，智能家居。 linux介绍linux吉祥物，企鹅Tux。 Linux之父 Linux Torvalds也是Gi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux">
+<meta property="og:url" content="https://bshtj.github.io/2024/09/25/linux/index.html">
+<meta property="og:site_name" content="bshtj_blog">
+<meta property="og:description" content="linuxlinux运维工程师  规划 优化 监控  linux嵌入式工程师：掌握linux下驱动的开发。 linux应用领域桌面领域（不强） 服务器领域（最常见）：linux稳定高效 嵌入式领域（常见）：运行稳定，可根据软件进行裁剪，内核最小可以到几百KB。应用于如机顶盒，手机，PDA，智能家居。 linux介绍linux吉祥物，企鹅Tux。 Linux之父 Linux Torvalds也是Gi">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MThhN2I2NmNmNDJlZTc0OTM3N2FiNWVmYzcyNWYzYzVfMTNNZ3UxeHlQZk1ic0VwWFUwOFBOd0tSWlJHcEMxWWhfVG9rZW46RFB0d2JCRlRyb0l4MXB4Y3I1N2N4SEVFblZnXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NzVhMDI2ZmJlNWY5ZDEyZGNmMjE4ZmE4MzE5YmMzMjFfQVdrd2t0RGc1Tm5sbWs4VUFFYWF5c2I4M0hrRmRnMTVfVG9rZW46TGViWmJzdkpWb0RZY254bGNEc2NrYUlrbmpzXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NmU4ZjczNDU1NjI1ZDI3ZTEzMzg5ZmY2MTdkNjEwYmNfUGdpQ2lUUm9ZSHlkanp6UjcyVUNCQkFzd3d1SUNsODFfVG9rZW46TktHU2JuY3Z2b1NBcDR4a0lLOGNzMk9obmJoXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZGQ5ODViNzMxZjI3NDQ5ZDVjNGQ5NmI2YmQ4ZGVkMGFfWnl0TmtOQWpsOXcwVEJpcTFOVm9xVlQwOTZNZVV0bzZfVG9rZW46WTJIZ2JwRVVqb0Y4dDZ4dTFxY2N4WFdabldnXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NDBmNTVlZWMyNWExZDk2M2RlMzZmNTE2MzBkZGJjOTNfWDc0WmxZdmhPeTZobmxrd1hNYzBJS0FWakxyNXB5TEVfVG9rZW46UGlCMWJoNnBKbzRKNzl4R05iQWNaeEVEblpmXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MDZiMTM2N2EwN2NkZGZmMWJmM2MxNjA4NTVjNjE3ZTBfaE9BckZDSWd0eVp0Tnd6WG5EUlk1WEp1cDdqSzJhRTBfVG9rZW46RHVMTWI1TFpIb1QyeXJ4UXF3RWN4YmNzbkgxXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2U0ZjVhODVmODgxNjI5NmJiMmRjNTE1MWMyYmI1YjZfRFNveXFaRzJmdnluNkp0cGxyQ0NFblUySnU3a3FIRTNfVG9rZW46RFNsYmJ6Vk1Ib054MWp4WFhhY2M2clVIbm9iXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=N2U4ZDE3MmZkMGQwMWU2NGZjNjdlMDMxZmYwMGRhMTRfM2lxRVJrbkd5dnVHWTJuQkIwMHZReVBIa1ZOOXNCNFlfVG9rZW46S0NTM2JqNHZob21MQ3l4OGFRTmN1OGtubk1nXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MWNkODZiNDk2N2MzZTU1Njc3ODM0YWM1MmU0NWVjODNfdDRnNmo2Zlo1Uk5rWVNFRVBYRW9hU21GQW15N0pHbHZfVG9rZW46RTlRQWJURzRkbzJ6dk54ZmFOSGNrSUtZbllmXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MjZiZDM0YWM1ODQwZmFkMGQ5NTU3OGQ1MzYxOWEzZjdfa1Nta1JmNTJIa3ZZYlJTekRrWHNsRXhpalJRbXpsbEdfVG9rZW46R2gyOGJ2bnljb2hZWmN4ck5UcWNicDhqbkJlXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MGZhN2ZmYThjMTM0ZWU2Y2FlYjZlOTI5NjEyOGViMmJfdDNUMjQyUG1zMWZrQjA5TmZtVGo3U0RpWmtCVWhkY1lfVG9rZW46TTZwd2JxRWtub2FPYVB4T0xUY2NRRnlabnVmXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZGFmOTdmZDJkMzIzNzBlMTZiNzM4ZGRlNzZiYmQ0MDVfa2hOMXZyeHpzQUFLd0JxbW9QWlBZQk1sd0F4NGVwYTNfVG9rZW46SEM2NGJIcER6b284YzV4NmR3NWNUZ2hWbmVnXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=M2U0OWRiZGFmOTg0MzQzZDIxYzgwNjFkZGFkNGFkOWJfclpobTZzbHhQWHBWYXFCODlpQ3E4NDZGM3F1N2VlUXNfVG9rZW46Q3NTYmI2Qkhvb2k2bVF4dk1JZWN3R0JCbk1iXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NDYyZDI1ZDJiZTIxNmZiYWY4NjQ2M2M4OTI1MmM2Zjdfc0Z5endFNzA3ejVIMUNnYUFPcVJtNjdDblpxTEU0djFfVG9rZW46SzFsUmJNSEZXbzFvd0h4YXoxcWN2QkJEbjNmXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NDdlZjg4ZjAwZmJjYzA3MTE4ZjRlMDFlNTJlMWU2ZmRfekVVbjlOUjJGcDhQdkhrSHhxNUNpSzNiOG1wdVE4UzVfVG9rZW46WVhOUGJYUENBb3RKWjN4VDNSQ2NJalYzblBlXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDg2Y2E5YTQxNTBmZTIxZTAwYmZjNWIyYWJkZTJhNjBfMjRhc0ZCT2ozVVNMYjF5VnpmOTltVHh0OFFHWFZBdUVfVG9rZW46VUo2M2JIdzlqb0w2NGd4U0FkemNxQkdpbkliXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MjZkZDMxOWJkOTJjYzQ2MzFlNzRkYjQ1MGU2OTRmMTZfaVBaRUs0aWtWQmpqVTJLNVg3bU5uNU55ZGFqZ2RnS0dfVG9rZW46QU5PZGJWbUpab2pQbVZ4aFh5eGNoUkZsbkpoXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NzRkNjY4MzI2MWMzYjY2NmIxMDc2OGIzZjNmYmMwMzZfQlZkelZxQzFEMVJ0eEo0dUNJOW5vdGhjYWhFU25xdlJfVG9rZW46WHphOWJwTGtzb05RdUN4U3BFOGNDTzBXbmViXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=Mjg5MGJmMDA5OTNjZWQ2ZjY0NmY1YjYyMmY1Y2JlZTRfejdBN01VSXUyVEd0M1BPdlJmRnU1eDlBNXRiT1AzVVJfVG9rZW46RkRaVmJvcTRQb29Vb1F4WVRXSmNIVDRIbmIxXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=M2M4N2EyMzYwNjJjNWJmYmY5OWYyODdmZjFlOGYxNzFfdXZCTE5rbGNhV0VOMkRrbmFDT3ZLa0Y2bnN6VjYyNUFfVG9rZW46VHBxV2IxeUx2b3lteG54OGc2dWNBZzFabnVXXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjA0ZTkyZTU4MTM0NmYzMmI5YjQ3NzY0NTBmZjRkYjNfZnlDRzlYekFFZmtRYjNSYVFjYVBEZFpHUk9MbkRwdXJfVG9rZW46TTJyS2JWbmN4b3Fabzl4TDZ0OGNHcVB6bm9kXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=OWQ0MDJiOThkMjkwZWI2MGU1Y2E3MmE0NGRhMjUyYjNfQmNJQzFpSXpWOWhzZmhQNjJRd0dnU2ZuNE5YOVZQRzhfVG9rZW46VURJeWJnUmV1bzVGVE94TDVYSmNGbVd4bjFjXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ODBmMWE5YWU5MDY4ZmJjOTZjMTU3MWZkYTRhODliYjNfbFBpU0lvRnh5d2RTdUlrZDF5NFVNMzRReWdBdGh0OU9fVG9rZW46VXYxU2JmbEczb0lpMHJ4QW1ydGNaSUdLbkFmXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YTMwNmE3NTZlZjZhNTdiOTA5OTU4NzBlNDMzYzk4NDNfNDZaeXRjaThHSmdWa1BpdlhlcTFNcVFvMm1hY3NOMjNfVG9rZW46Q3lmc2Jva1ltb1p5MUl4OEJ1ZmNHdmZybldmXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YmRhNjM5NjdmOTg4ODM4MmQwY2Q4MGQ5MjQ1Yjc4ZmNfbmlKSGQ3dUZ5Q1hWTkt4dnFiOGVwaEVsSDVXemdDZFRfVG9rZW46UjAyc2J6aDlib0VOeDN4YjAzb2NBeHFvbjdnXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MTJkOGE5MDQ3MjcyNzc3ZDcyNjhhOTgzMGM0YzVhNzFfb29oMGtIRW00c1h5SWxqZDd6QzE2QmU5c2tnbDNQblRfVG9rZW46SW1WUWJER3Zyb3IwMVF4TW5SVWNGWlI5bnZiXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZGFhYTdjMTI1NDgyNWZkMWFhMTQ4ZjJmZjZlZDcwYWFfU245elJra3VrdHphMHhMNlI3VTgyYzBvMElhNVV1SjZfVG9rZW46Umh1TWJ1cE5Fb00zeU94MTQ1MGNjTUh0bkdkXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2M1NGQ4YzM2MDA2ZDlmNzNjNjViY2IzNDhmNTE3YTJfNnV4OEU2ZkhFMWRFSWF2OEFzUFFBTGJnSVVCYWNjcmVfVG9rZW46T3RYQ2J0QjBzb0VaT3B4NXBCT2NQZmNGbjhjXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YTE2NmQ0ZDE0MDJhMTVkMDY2OTQ1ZjhhNTZmOGVlMWVfbHNKSUlwQXNhaDkxS2JPTVlJNGpLNWVhRmdzU0E3SEVfVG9rZW46TFFXTWJ5UGcwb3dmbEd4Wk9ISWNZUjhoblBjXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MTI0MmZhNDZiYWIyM2NmNjI5NzBiNzYzNTJjODRkOTJfVFo4OEtlWEswSUNiUjNsd1FKRXROT2FFejY2em9ObGFfVG9rZW46UGprMmJJQjdQb1BzVDZ4R2tCYWN4SlR3bkFkXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NzY1NTcxODY4ODc1MzY3YzNlNThhODc3YmVjODYyNDhfZVJsSmJmVHowUmI0ZTBtZGZmMUVnTUdBZ3NVNldnTVhfVG9rZW46SkFzSWJObFpPb1Nmc0t4QkNhUWNaSXlGbmluXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MTFhMjFlMjkyNWU4MmI5NjFjYTBjMTc1YzczNGM0MGJfRDc0ZURlMzJjT2h0YmZDYWN1ckFrMkFNQWpuSVNXWG5fVG9rZW46QU9sOGI1ZlhOb0pUTWd4RXVqaGM1YzlwbnN4XzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NGU0ZDRjYzY3OWFjMTdiZDFlMTk4ODBjMTVmZDkxNDhfY0x1TlJ1TmRDRkJsbnl6Z3llRXVuN3g2SzhBNTNpeVhfVG9rZW46V3RaSGIzampYb0RRdVB4UzQ0U2M3M01WblpkXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NzcxMTkyMGRjOWE2MjFmZDU3ZmE2ZTQ0ZmQ5ZjYwZmFfNDdHM0EzQk1EemdObVhIWDZodGRyYTBPSFJQMGFYWjdfVG9rZW46WTFqN2JNcEI1b1M2aVR4YlFmeWNRZTBKbkpiXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YTI0YmI3OTJmZTc3NzY3OTk1MDg0ZTFjODQ0MTMwMGVfMmEzM0VVMkxVZjhNQWkwVWxMOVdsNlZMWkttNzVXMEJfVG9rZW46RVdET2IzMko4b1dyTGl4c3FzZ2NZQjlUbmxjXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTZlMWY5MDEwY2Q1NzcxNWIzNDc0MTk1YjEwOTA3ODBfUVhISGxOSlVMZnRJbU9Fd3lQMUgxdjNvQ2dMYWNJaFZfVG9rZW46UldBYWJ4RE1Db1ZUWnJ4QkY4VGNGNXNlbms0XzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZmQyYjVhNjQ2YjA1OWI4N2ZlMzJmZDBiN2I4N2VjYmVfQzM1aE9MalBXNjlBZ2Y2cHRwcXFnc0JqTmxrakJscElfVG9rZW46UXVmMmJKYkF1bzBlaVR4dFNDWmNTZjN3bjlLXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDM1ODg1MmM5ZjA2NjkyMDdmMGE3OWVjYzY4YjU2NTJfMDd5U0dkQTZ0ZlF6OVZBVTNBRkFqbXl3MUE3a1FvejJfVG9rZW46TGNCMGJaTmRvb2NZUXF4ZlE0dWNxNW1WblhkXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NjAwMGJhNmY3MjNhYWZkZThkMGQ4ZmEyNTU0OTk5NjRfR3gyQjdoeERubWJrbHZrZGcwcTVUZk5LTGpyVlBoOElfVG9rZW46WEh1ZmJlaXlXb043OWV4aDFNRWNsUDlIbkplXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MDJhMDA2MzIzN2VmZjllZTkxMmUzZDBhMGFjYmQyOGNfT3BXdnNldVlRa2VBQWRFU1ZpYjBJaDdQZUNubUtNeWdfVG9rZW46UTVsaGIxaEJlb2lNMGh4cjNENWM4U2xwbjdlXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YzZmNzM1MzExMGM2NjllNWNlNmVkYTdiNmM0Njc4NzVfdlA1WEthWWd0Z0Nsd2E3U0RIUmlxWGxMR3VjOUtuZUxfVG9rZW46WE1Nb2JLN1R3b3RqQld4OFBTd2M4VVFlblBjXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MWRhMjYzNjQ4YzVhZTFiMjE2ODdjM2NjODQ3ZjJmNTBfQjNkVnRpTE50TnI0N2RReGFkWTZVc1dad0ROaVFOZVBfVG9rZW46TDlEdWJEbzQwb0pzOEZ4TjV4NmNYVDlBbkk1XzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZGY1NjkwMGNjOGZkNGM2MWEzNWU5YmJiYWJiNjJiNmNfaUxkVXJ2a3BKTVg3a0t5dm5Fc3JmRkJGT3o5dHZKYzhfVG9rZW46WEtzVmJCRVZBbzdpaVF4VFZDYmNUUEJpbk9oXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NmU2NWE3MjBiZDg3YmM4NGQ5OTQyMWRkNjVjNDRkZGNfYkJwcDUyc0pKR3FHTDAyaVhUakNSN2xBaWxWNm9mY21fVG9rZW46T25rVGIyWFNlb25aNnF4VklSdmNkdjVtblNmXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDdkNjFjM2QwY2U4ZWE0ZWFiODIyZTc5ZDdkMjBiNzlfOExhaGdOQWx3djYySlJualFTbklaN2pGc1B0Z29iUzlfVG9rZW46S3dVRGJZQ0dBb2lkcEF4Nkl0OWNkVXVKblRoXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NGMyNmNiOGE1ZTRjOGNlMDVlMzBiMGZjZTUyZWRhMDZfTG1BdFJaWjBtRDZXQjFFUnFSWlJYQ1N1VmJIdmJ3dTdfVG9rZW46VHZzQmJIT2Fnb243b0V4UGlyQWNhaWFZblZmXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=N2I4OWEzNjYwYzFlMzlmM2U1NzIxMDdiOWFmMjg1NThfQmhTaFdNS3pOZzlhcTZQT2Q1bzFUVlRKVm83NU43ZE1fVG9rZW46WGdtV2JCMHBQb3hrR0R4dGVlSGNmbkxZbmhlXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MWQ3NWQ5ZGU5M2VjOGIyNmFlYWNkOGVlYTFlOWY1NWNfOFpsaE9iN0NlVUNXRndHcEJZWUF0SmlEdFRNSlNVYnNfVG9rZW46TFE0RWJab1dFb2w0VWl4MTAwY2NWMWxkbmVmXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ODdiOWFlMzgxOTYxOTQwZDM2ZGFhMTY1Mzg5Njg5NTJfWXhZOVdsNkVnRFdlOEE3YUMydzNuV3piVGlOSTRjZElfVG9rZW46Q3FkZmI1aVFFb3RkREJ4ZXg0cmN0Z29WbnZkXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZmJiODczMjI5NjU2ZTg5NzU5ZjNhZmE0MGUyMjIyZGJfV21BaEhwTmdVSnRBMURGc3p0Q2Rqa1JaRTlTR2c3NnpfVG9rZW46STRieGJIZW5Jb2diSkN4RnY4VmN4OUk1blliXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjkyNjlmOTU1ZmQzMTkwMDlhZTg3Y2FlNWZhNTc5OWNfNXNrS2h0SkxYOFQ4NldXdHpTZ2lhNFhRQThEd1pNYjBfVG9rZW46QlJ4R2IzWFptb0RRS0p4UUJyZ2NDN3A4bjFjXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=Mzk4MTVjMDk0ZGQzNTNlMThlNjdhODFkMzNiOGM4ZTFfd3REczdsUmcwcjlvb2lrbndXWnQ2c1BTUXIyZGZObkNfVG9rZW46R3JGbGJyaE9mb2wyRWJ4NEpNN2NZNmNjblNoXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=Yzc1NDc1ZDY2Y2U3NTA0NDE2YzBkOWFiOTE5MTMwMmZfWEJPcm5UR25kazFudGU4d2s4Unl4UFdvQVFWWmNmcFZfVG9rZW46U2VXTWJyclE1b2NzTE14ZWxQU2M5dWtrbjdjXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZWFkNWYyNDY3MjhiZTkwYTYzMDk5OGU4YzFmZDMyYjlfMnp1eDRaZHdVSWVXcHVqWUFha0hsZzJRc3hFNnNJVm1fVG9rZW46VVBIdGI4OGt6bzBPclF4WGVUQWNhZTRQbmJnXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YzJmOTY0NTlmOTdhYTIxYjhjMjQwYWU1MTk2Y2E3MDdfMVoxaGlMS2E3SFFkbUg3ZXhLN0hRam80aVdPM3pzSWJfVG9rZW46SFpxd2I4b245b2Z0ck14cm5QTWNWdmxZblhkXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2NkNTkyOTRkYWFiNjU5N2QwMDBhNzI5N2I0ZmMzMDRfZGJpMEVwQ2xZUWprUDlDaHBKNmJEWmpYN0tNaXIwcFpfVG9rZW46SmFDcWI0UUdDb214Vm94SDVpeGNwekp0blRjXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+<meta property="article:published_time" content="2024-09-25T13:20:41.000Z">
+<meta property="article:modified_time" content="2025-02-23T13:22:42.212Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="韩顺平">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MThhN2I2NmNmNDJlZTc0OTM3N2FiNWVmYzcyNWYzYzVfMTNNZ3UxeHlQZk1ic0VwWFUwOFBOd0tSWlJHcEMxWWhfVG9rZW46RFB0d2JCRlRyb0l4MXB4Y3I1N2N4SEVFblZnXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA">
+  
+  
+  
+  <title>linux - bshtj_blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"bshtj.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>bshtj</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="linux"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-09-25 21:20" pubdate>
+          2024年9月25日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          18k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          152 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">linux</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="linux"><a href="#linux" class="headerlink" title="linux"></a><strong>linux</strong></h2><p>linux运维工程师</p>
+<ul>
+<li>规划</li>
+<li>优化</li>
+<li>监控</li>
+</ul>
+<p>linux嵌入式工程师：掌握linux下驱动的开发。</p>
+<h3 id="linux应用领域"><a href="#linux应用领域" class="headerlink" title="linux应用领域"></a><strong>linux应用领域</strong></h3><p>桌面领域（不强） <strong>服务器领域</strong>（最常见）：linux稳定高效 <strong>嵌入式领域</strong>（常见）：运行稳定，可根据软件进行裁剪，内核最小可以到几百KB。应用于如机顶盒，手机，PDA，智能家居。</p>
+<h3 id="linux介绍"><a href="#linux介绍" class="headerlink" title="linux介绍"></a><strong>linux介绍</strong></h3><p>linux吉祥物，企鹅Tux。 Linux之父 Linux Torvalds也是Git创造者。 linux发行版：Ubuntu（乌班图），RedHat（红帽），CentOS，Debain（蝶变） <strong>注意linux是一个kernel</strong>，发行版是在内核的基础上开发之后在发行，例如开发python的一般会用ubuntu。</p>
+<h3 id="linux和Unix"><a href="#linux和Unix" class="headerlink" title="linux和Unix"></a><strong>linux和Unix</strong></h3><p>Unix由 Ken tompsom和Dennis richres合作使用C语言写，一开始有大公司基于Unix开发心得操作系统，如BSD，IBM AIX，Sun Solaris，AT&amp;T system V，但是这些都是只针对大型主机和服务器，因为服务器部署需要大量资金，一般人用不了。</p>
+<p>因此stallman看不下去了，提出每个人都应有阅读软件源代码并修改的权利，提出了GNU计划。</p>
+<p>linux就诞生于GNU计划，Linux Torvalds（linux之父）就参加了这个计划，贡献了linux内核。</p>
+<p>所以linux的完整叫法应该是GNU&#x2F;LINUX。</p>
+<p>linus是基于AT&amp;T system V衍生出的Minix基础上开发的，适用于x86的个人计算机（拜托了大型主机或服务器）。</p>
+<h2 id="linux分区"><a href="#linux分区" class="headerlink" title="linux分区"></a><strong>linux分区</strong></h2><p>linux系统分区可以分为3个部分</p>
+<ul>
+<li>boot分区（引导分区）</li>
+<li>交换分区（swap）</li>
+<li>根分区（root）</li>
+</ul>
+<p>一般而言，放的文件主要是在root分区。</p>
+<p>swap分区的作用是临时充当内存（如果内存已经存不下了就放在swap分区，类似虚拟地址）</p>
+<h2 id="网络连接的3种模式"><a href="#网络连接的3种模式" class="headerlink" title="网络连接的3种模式"></a><strong>网络连接的3种模式</strong></h2><p>假设有三个人abc在同一个教室，他们的ip地址如下</p>
+<p>a 192.168.0.20</p>
+<p>b 192.168.0.30</p>
+<p>c 192.168.0.50</p>
+<h3 id="1-桥接模式"><a href="#1-桥接模式" class="headerlink" title="1.桥接模式"></a><strong>1.桥接模式</strong></h3><p>桥接模式，虚拟系统费可以和外部系统进行通信，但是容易造成ip冲突。</p>
+<p>例如：</p>
+<p>如果按照桥接模式进行设置，a的linux的网络ip的网段和192.168.0.20这个网段的ip，如192.168.0.50</p>
+<h3 id="2-NAT模式"><a href="#2-NAT模式" class="headerlink" title="2.NAT模式"></a><strong>2.NAT模式</strong></h3><p>NAT（网络地址转换模式），虚拟地址可以和外部通讯，不造成ip冲突。</p>
+<p>例如：</p>
+<p>b按NAT模式配虚拟系统ip为192.168.100.88,在他的主机上会生成另一个ip如192.168.100.99,他们两个ip可以互通，虚拟系统可以和外部通讯，且用的不是同一个网段。</p>
+<h3 id="3-主机模式"><a href="#3-主机模式" class="headerlink" title="3.主机模式"></a><strong>3.主机模式</strong></h3><p>主机模式就是一个独立的系统，不和外部发生联系。</p>
+<h2 id="虚拟机克隆"><a href="#虚拟机克隆" class="headerlink" title="虚拟机克隆"></a><strong>虚拟机克隆</strong></h2><p>如果你一件安装了一台linux超过系统，还想要更多的，只需拷贝一份安装好的虚拟机文件安装到其他地方即可，再用VMWare打开即可（打开.VMX）。</p>
+<h2 id="虚拟机快照"><a href="#虚拟机快照" class="headerlink" title="虚拟机快照"></a><strong>虚拟机快照</strong></h2><p>将虚拟机返回之前的某一个状态，在vmware右键管理快照。</p>
+<h2 id="虚拟机的迁移和删除"><a href="#虚拟机的迁移和删除" class="headerlink" title="虚拟机的迁移和删除"></a><strong>虚拟机的迁移和删除</strong></h2><p>移动只需要剪切就可以了</p>
+<p>使用vmware进行移除，点击菜单-&gt;从磁盘删除。</p>
+<h2 id="共享文件夹"><a href="#共享文件夹" class="headerlink" title="共享文件夹"></a><strong>共享文件夹</strong></h2><p>在mnt&#x2F;hfgs中 但是实际开发中，一般使用<strong>远程连接</strong></p>
+<h2 id="linux的文件目录"><a href="#linux的文件目录" class="headerlink" title="linux的文件目录"></a><strong>linux的文件目录</strong></h2><h3 id="理解"><a href="#理解" class="headerlink" title="理解"></a><strong>理解</strong></h3><p>linux的文件系统是采用级层式的树状目录机构，在此结构中的最上层是根目录“&#x2F;”，然后在此目录下再创建其他的目录。</p>
+<p>深刻理解linux树状文件目录是非常重要的。(框架需要背)</p>
+<p>记住一句经典的话：在Linux世界里，一切皆文件。</p>
+<p>注：linux会将硬件映射成文件来进行管理。</p>
+<h3 id="具体的目录结构-不用背，知道即可"><a href="#具体的目录结构-不用背，知道即可" class="headerlink" title="具体的目录结构(不用背，知道即可)"></a><strong>具体的目录结构(不用背，知道即可)</strong></h3><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MThhN2I2NmNmNDJlZTc0OTM3N2FiNWVmYzcyNWYzYzVfMTNNZ3UxeHlQZk1ic0VwWFUwOFBOd0tSWlJHcEMxWWhfVG9rZW46RFB0d2JCRlRyb0l4MXB4Y3I1N2N4SEVFblZnXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>&#x2F;bin （常用） (&#x2F;usr&#x2F;bin、&#x2F;usr&#x2F;local&#x2F;bin)：</p>
+<p>是Binary的缩写，这个目录存放着最经常使用的指令，如cd指令。</p>
+<p>&#x2F;sbin (&#x2F;usr&#x2F;sbin、&#x2F;usr&#x2F;local&#x2F;sbin)：</p>
+<p>s是Super User的意思，这里存放的是系统管理员使用的系统管理程序。</p>
+<p>&#x2F;home（常用）：</p>
+<p>存放普通用户的根目录，在Linux中每个用户都有一个自己的目录，一般该目录名是以用户的账号命名。可以在终端用下面命令创建和删除linux用户：</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p>&#x2F;root（常用）： 该目录为系统管理员，也称作超级权限者的用户主目录 &#x2F;lib：系统开机所需要最基本的动态连接共享库，其作用类似于Windows里的DLL文件。几乎所有的应用程序都需要用到这些共享库。 &#x2F;lost+found这个目录一般情况下是空的，当系统非法关机后，这里就存放了一些文件(lost+found目录一般是隐藏的，通过在终端，在根目录输入ls可以查看到) &#x2F;etc （常用）：所有的系统管理所需要的配置文件和子目录，比如安装mysql数据库，则数据库的配置文件会默认放在etc下面。当然etc也有系统的一些配置文件。 &#x2F;usr （常用）: 这是一个非常重要的目录，用户的很多应用程序和文件都放在这个目录下，类似于windows下的program files目录(windows下安装的程序默认的目录)。 &#x2F;boot （常用）：存放的是启动Linux时的一些核心文件，包括一些连接文件以及镜像文件。 &#x2F;proc (不能动)：这个目录是一个虚拟的目录，它是系统内存的映射，访问这个目录来获取系统信息。 &#x2F;srv  (不能动): service缩写，该目录存放一些服务启动之后需要提取的数据。 &#x2F;sys  (不能动): 这是linux2.6内核的一个很大的变化。该目录下安装了2.6内核中新出现的一个文件系统sysfs。 &#x2F;tmp: 这个目录是用来存放一些临时文件的。 &#x2F;dev：类似于windows的设备管理器，把所有的硬件用文件的形式存储，如cpu，硬盘等 &#x2F;media （常用）：linux系统会自动识别一些设备，如U盘、光驱等等，当识别后，linux会把识别的设备挂载到这个目录下。 &#x2F;mnt （常用）：系统提供该目录是为了让用户临时挂载别的文件系统的，我们可以将外部的存储挂载在&#x2F;mnt&#x2F;上，然后进入该目录就可以查看里面的内容了。如之前的共享文件夹d:&#x2F;myshare &#x2F;opt：这是给主机额外<strong>安装软件</strong>所存放的目录。如安装ORACLE数据库就可以放到该目录下。默认为空。 &#x2F;usr&#x2F;local （常用）：这是另一个给主机额外安装软件安装的目录。(软件安装好存放的目录)一般是通过编译源码方式安装的程序。 &#x2F;var （常用）：这个目录中存放着不断扩充着的东西，习惯将经常被修改的目录放在该目录下。包括各种<strong>日志文件</strong>。 &#x2F;selinux (security-enhanced linux): SELinux是一种安全子系统，它能控制程序只访问特定文件，有三种工作模式，可自行设置。</p>
+<h2 id="远程登录linux"><a href="#远程登录linux" class="headerlink" title="远程登录linux"></a><strong>远程登录linux</strong></h2><p>将来开发的时候，linux是部署到公网上的，余姚远程登录进行管理。</p>
+<p>怎么登录？工具-xshell</p>
+<p>怎么上传下载文件？工具-xftp</p>
+<p>首先演示xshell，配置好虚拟机汇总的ifconfig显示的ip，点击确定建立会话连接</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NzVhMDI2ZmJlNWY5ZDEyZGNmMjE4ZmE4MzE5YmMzMjFfQVdrd2t0RGc1Tm5sbWs4VUFFYWF5c2I4M0hrRmRnMTVfVG9rZW46TGViWmJzdkpWb0RZY254bGNEc2NrYUlrbmpzXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>xftp类似，想要传输右键文件点击传输即可。</p>
+<h2 id="vi和vim编辑器"><a href="#vi和vim编辑器" class="headerlink" title="vi和vim编辑器"></a><strong>vi和vim编辑器</strong></h2><p>Linux系统会内置vi文本编辑器。  </p>
+<p>Vim具有程序编程的能力，可以看作是Vi的增强版本，可以主动地以字体颜色辨别语法的正确性，方便程序设计。代码补全、编译及错误跳转等方便编程的功能特别丰富，再程序员中被广泛使用。</p>
+<h3 id="vi和vim常用的三种模式"><a href="#vi和vim常用的三种模式" class="headerlink" title="vi和vim常用的三种模式"></a><strong>vi和vim常用的三种模式</strong></h3><h4 id="正常模式："><a href="#正常模式：" class="headerlink" title="正常模式："></a><strong>正常模式：</strong></h4><p>以vim打开一个档案就直接进入一般模式(默认模式)。在这个模式中，你可以使用<strong>上下左右</strong>按键来移动光标，你可以使用<strong>删除字符</strong>或<strong>删除整行</strong>来处理档案内容，也可以使用<strong>复制、粘贴</strong>来处理你的文件数据。</p>
+<h4 id="插入模式："><a href="#插入模式：" class="headerlink" title="插入模式："></a><strong>插入模式：</strong></h4><p>按下i，I，o，O，a，A，r，R等任何一个字母之后才会进入编辑模式，<strong>一般来说按i即可</strong>。</p>
+<h4 id="命令行模式："><a href="#命令行模式：" class="headerlink" title="命令行模式："></a><strong>命令行模式：</strong></h4><p>先输入esc，再输入冒号”:”或“&#x2F;”，就能切换到命令行模式。在这个模式中，可以提供你相关指令，完成读取、写入(w)、替换、离开vim(q)、显示行号、写入并退出(wq)等动作。 <strong>wq是保存并退出，q是直接退出</strong>，具体如下</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NmU4ZjczNDU1NjI1ZDI3ZTEzMzg5ZmY2MTdkNjEwYmNfUGdpQ2lUUm9ZSHlkanp6UjcyVUNCQkFzd3d1SUNsODFfVG9rZW46TktHU2JuY3Z2b1NBcDR4a0lLOGNzMk9obmJoXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="vi和vim快捷键"><a href="#vi和vim快捷键" class="headerlink" title="vi和vim快捷键"></a><strong>vi和vim快捷键</strong></h3><p>拷贝当前行：在一般模式下输入yy ；拷贝当前行向下的5行：在一般模式下输入5yy ；并粘贴(输入p) 删除当前行：在一般模式下输入dd ；删除当前行向下的5行：在一般模式下输入5dd 在文件中查找某个单词：在<strong>命令行模式</strong>下输入&#x2F;单词，回车就会对单词进行查找，<strong>输入n就是查找下一个单词的位置</strong> 设置文件的行号，取消文件的行号：在<strong>命令行模式</strong>下，输入“:set nu”和“:set nonu” 编辑&#x2F;etc&#x2F;profile文件，在一般模式下，使用快捷键到该文档的最末行<strong>G</strong>和最首行<strong>gg</strong> 在一个文件中输入“hello”，然后又撤销这个动作：在<strong>一般模式</strong>下，输入<strong>u</strong> 编辑&#x2F;etc&#x2F;profile文件，并将光标移动到20行：在<strong>一般模式</strong>下，<strong>输入“20“再输入”shift+g”</strong> 更多的看整理的文档</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZGQ5ODViNzMxZjI3NDQ5ZDVjNGQ5NmI2YmQ4ZGVkMGFfWnl0TmtOQWpsOXcwVEJpcTFOVm9xVlQwOTZNZVV0bzZfVG9rZW46WTJIZ2JwRVVqb0Y4dDZ4dTFxY2N4WFdabldnXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="关机-重启命令"><a href="#关机-重启命令" class="headerlink" title="关机&amp;重启命令"></a><strong>关机&amp;重启命令</strong></h2><p>暂时无法在飞书文档外展示此内容</p>
+<h2 id="用户登录和注销"><a href="#用户登录和注销" class="headerlink" title="用户登录和注销"></a><strong>用户登录和注销</strong></h2><p>一般而言，登录时尽量少用root账号登录，因为他是张傲管理员，有最大权限。</p>
+<p>可以利用普通用户登录在使用su-用户名切换为管理员模式。</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p>如何退出（注销）该用户呢？</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p><strong>logout只有在运行级别3有效（shell）</strong></p>
+<h2 id="用户管理"><a href="#用户管理" class="headerlink" title="用户管理"></a><strong>用户管理</strong></h2><p>用户管理<strong>要求在root的权限下进行添加</strong></p>
+<h3 id="添加用户"><a href="#添加用户" class="headerlink" title="添加用户"></a><strong>添加用户</strong></h3><p>添加一个用户mlan，默认该目录的家目录是在home&#x2F;milan。</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p>也可以通过 </p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p>将其目录指定在一个指定的文件夹中。</p>
+<h3 id="修改密码"><a href="#修改密码" class="headerlink" title="修改密码"></a><strong>修改密码</strong></h3><p>例如给milan修改密码</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p>注意，如果不指定密码，默认修改当前用户的密码，要指定用户名。</p>
+<h3 id="删除目录"><a href="#删除目录" class="headerlink" title="删除目录"></a><strong>删除目录</strong></h3><p>例如给删除milan，分两种情况。</p>
+<p>第一种，保留家目录如&#x2F;home&#x2F;milan</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p>第二种，连同家目录一起删除（这一部分要慎重，会连同用户的资料一起消失），一般情况下建议保留（**-r 代表recursive，递归删除**）。</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<h3 id="查询用户信息"><a href="#查询用户信息" class="headerlink" title="查询用户信息"></a><strong>查询用户信息</strong></h3><p>查询root用户信息</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p>会显示uid，gid和组。</p>
+<h3 id="切换用户"><a href="#切换用户" class="headerlink" title="切换用户"></a><strong>切换用户</strong></h3><p>已经讲过</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p>小细节，权限高到权限低的用户不用输入密码，反之要输入密码。</p>
+<p>使用exit或者logout退出。</p>
+<h3 id="查看当前用户"><a href="#查看当前用户" class="headerlink" title="查看当前用户"></a><strong>查看当前用户</strong></h3><p>暂时无法在飞书文档外展示此内容</p>
+<p>会告诉我第一次登录用户名称是什么，登录的时间，登录的ip。（<strong>显示的全是第一次登录的用户信息</strong>）</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p>这个只输出用户名（而且是当前用户而不是第一次登录的用户）</p>
+<h3 id="用户组"><a href="#用户组" class="headerlink" title="用户组"></a><strong>用户组</strong></h3><p>类似于角色，系统可以对有共性（可以理解为是权限）的角色进行统一管理。</p>
+<h4 id="新增组"><a href="#新增组" class="headerlink" title="新增组"></a><strong>新增组</strong></h4><p>新增组wudang</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<h4 id="删除组"><a href="#删除组" class="headerlink" title="删除组"></a><strong>删除组</strong></h4><p>删除组wudang</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<h4 id="增加用户直接上组"><a href="#增加用户直接上组" class="headerlink" title="增加用户直接上组"></a><strong>增加用户直接上组</strong></h4><p>如果新加了一个用户（如milan）且没有分配组的话，会默认创建一个叫milan的组，并把milan放进去（<strong>之前介绍可可以通过id username查看</strong>） 如果想要新增用户能够直接上组，可以通过以下方式</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<h4 id="修改用户的组"><a href="#修改用户的组" class="headerlink" title="修改用户的组"></a><strong>修改用户的组</strong></h4><p>暂时无法在飞书文档外展示此内容</p>
+<h4 id="用户和组相关的文件"><a href="#用户和组相关的文件" class="headerlink" title="用户和组相关的文件"></a><strong>用户和组相关的文件</strong></h4><ul>
+<li><strong>复习一下：&#x2F;etc存所有的系统管理所需要的配置文件和子目录</strong> &#x2F;etc&#x2F;passwd文件 用户（user）的配置文件，记录用户的各种信息 每行的含义：<strong>用户名：口令(写为x是因为你看不到，加密了)：用户标识号（uid）：组标识号（gid）：注释性描述：主目录（家目录）：登录Shell(我们用的一般是bash)</strong> 举个例子</li>
+</ul>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p>补充：cd指令，linux内核无法识别，要通过shell翻译解释，而shell的种类很多，有bash，tcsh，csh等等</p>
+<ul>
+<li>&#x2F;etc&#x2F;shadow文件</li>
+</ul>
+<p>口令的配置文件</p>
+<p>每行的含义：登录名：加密口令：最后一次修改时间：最小时间间隔：最大时间间隔：警告时间：不活动时间：失效时间：标志</p>
+<p>注意：</p>
+<p>1.每次输入的口令，会在shadow文件中验证</p>
+<p>2.最后一次修改时间：最小时间间隔：最大时间间隔：警告时间：不活动时间：失效时间：标志都是用一种特殊的标识表示的，你是看不懂的</p>
+<ul>
+<li>&#x2F;etc&#x2F;group文件</li>
+</ul>
+<p>组（group）的配置文件，记录Linux包含的组的信息</p>
+<p>每行含义：组名：口令：组标识号：组内用户列表</p>
+<p>注意：组内用户列表看不到，它隐藏了</p>
+<h2 id="linux实操篇——实用指令"><a href="#linux实操篇——实用指令" class="headerlink" title="linux实操篇——实用指令"></a><strong>linux实操篇——实用指令</strong></h2><h3 id="linux运行级别"><a href="#linux运行级别" class="headerlink" title="linux运行级别"></a><strong>linux运行级别</strong></h3><h4 id="基本级别说明："><a href="#基本级别说明：" class="headerlink" title="基本级别说明："></a><strong>基本级别说明：</strong></h4><p>0：关机 1：单用户【<strong>找回丢失密码</strong>】 2：多用户状态没有网络服务（用的很少） 3：多用户状态有网络服务（用的最多的，不带图形界面，节省资源；支持多用户且有网络服务-在实际生产环境中使用最多） 4：系统未使用保留给用户（用的比较少） 5：图形界面（启动后默认进入的级别，是多用户的） 6：系统重启 常用运行级别是3和5，也可以指定默认运行级别，后面演示</p>
+<h4 id="应用实例"><a href="#应用实例" class="headerlink" title="应用实例"></a><strong>应用实例</strong></h4><p>命令：init [0123456]</p>
+<p>应用案例：通过init来切换不同的运行级别，比如修改级别为3：则命令为init 3</p>
+<h4 id="CentOS7运行级别说明"><a href="#CentOS7运行级别说明" class="headerlink" title="CentOS7运行级别说明"></a><strong>CentOS7运行级别说明</strong></h4><p>在centos7以前，我们是在&#x2F;etc&#x2F;inittab文件中进行修改，它里面有个数字。</p>
+<p>到了centos7，进行了简化，在&#x2F;etc&#x2F;inittab文件中有如下：</p>
+<p>multi-user.target：analogous to runlevel 3 (多用户，等价于级别3)</p>
+<p>graphical.target：analogous to runlevel 5 (图形化，等价于级别5)</p>
+<h4 id="To-view-current-default-target-run-（以下指令可以查看当前运行级别）"><a href="#To-view-current-default-target-run-（以下指令可以查看当前运行级别）" class="headerlink" title="To view current default target, run:（以下指令可以查看当前运行级别）"></a><strong>To view current default target, run:（以下指令可以查看当前运行级别）</strong></h4><p>systemctl get-default</p>
+<h4 id="To-set-a-default-target-run-（以下指令可以设置默认运行级别）"><a href="#To-set-a-default-target-run-（以下指令可以设置默认运行级别）" class="headerlink" title="To set a default target, run:（以下指令可以设置默认运行级别）"></a><strong>To set a default target, run:（以下指令可以设置默认运行级别）</strong></h4><p>systemctl set-default TARGET.target</p>
+<h3 id="找回root密码"><a href="#找回root密码" class="headerlink" title="找回root密码"></a><strong>找回root密码</strong></h3><p>注意：不同版本找回密码的方式可能有一些小区别</p>
+<p>1.首先，启动系统，进入开机界面，在界面中按”e“进入编辑界面。如图</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NDBmNTVlZWMyNWExZDk2M2RlMzZmNTE2MzBkZGJjOTNfWDc0WmxZdmhPeTZobmxrd1hNYzBJS0FWakxyNXB5TEVfVG9rZW46UGlCMWJoNnBKbzRKNzl4R05iQWNaeEVEblpmXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>2.进入编辑界面，使用键盘的上下键将光标往下移动，找到以”Linux16“开头内容所在的行数，在行的最后面输入：init&#x3D;&#x2F;bin&#x2F;sh。如图</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MDZiMTM2N2EwN2NkZGZmMWJmM2MxNjA4NTVjNjE3ZTBfaE9BckZDSWd0eVp0Tnd6WG5EUlk1WEp1cDdqSzJhRTBfVG9rZW46RHVMTWI1TFpIb1QyeXJ4UXF3RWN4YmNzbkgxXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>3.接着，输入完成后，直接按快捷键：Ctrl+x进入单用户模式。</p>
+<p>4.接着，在光标闪烁的位置中输入：mount -o remount,rw &#x2F; （注意：各个单词间有空格），完成后按键盘的回车键，如图。</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2U0ZjVhODVmODgxNjI5NmJiMmRjNTE1MWMyYmI1YjZfRFNveXFaRzJmdnluNkp0cGxyQ0NFblUySnU3a3FIRTNfVG9rZW46RFNsYmJ6Vk1Ib054MWp4WFhhY2M2clVIbm9iXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>5.在新的一行最后面输入：passwd，完成后按键盘的回车键(Enter)。输入密码，然后再次确认密码即可（密码长度最好是8位以上，但不是必须的），密码修改成功后，会显示passwd。。。的样式，说明密码修改成功。</p>
+<p>6.接着，在光标闪烁的位置中(最后一行中)输入：touch &#x2F;.autorelabel（注意：touch与 &#x2F;之间有一个空格），完成后按键盘的回车键（Enter）。</p>
+<p>7.继续在光标闪烁的位置中，输入：exec &#x2F;sbin&#x2F;init（注意： exec与 &#x2F;之间有一个空格），完成后按键盘的回车键（Enter），等待系统自动修改密码（这个过程时间可能有点长，耐心等待），完成后，系统会自动重启，新的密码生效了</p>
+<h3 id="帮助指令"><a href="#帮助指令" class="headerlink" title="帮助指令"></a><strong>帮助指令</strong></h3><h4 id="man获取帮助信息"><a href="#man获取帮助信息" class="headerlink" title="man获取帮助信息"></a><strong>man获取帮助信息</strong></h4><p><strong>man的全名是manual</strong> 基本语法：man【命令或配置文件】（功能描述：获取帮助信息） 案例：查看ls命令的帮助信息：man ls 注意： 1.如果帮助信息太长，没有显示完全，那么按空格键，会继续往下显示。 2.ls中常用的选项 -a：列出所有文件，包括以”.“开头的隐含文件（在linux中，隐含文件是以”.“开头的，a代表all）。 -l：单行输出。 举个例子</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p>这一行显示的是一个目录的详细信息，通常是通过 ls -l 命令获取的。各个字段的含义如下：</p>
+<ol>
+<li><p>drwx——：表示文件类型和权限。</p>
+<ul>
+<li>d 表示这是一个目录。</li>
+<li>rwx 表示所有者（root）有读、写和执行权限。</li>
+<li>—— 表示与组用户和其他用户没有任何权限。</li>
+</ul>
+</li>
+<li><p>14：表示目录中包含的硬链接数（即子目录数量加上当前目录 . 和父目录 .. 的链接）。</p>
+</li>
+<li><p>root：表示目录的所有者用户名。</p>
+</li>
+<li><p>root：表示目录所属的用户组名。</p>
+</li>
+<li><p>4096：表示目录的大小，单位为字节（这里是 4096 字节）。</p>
+</li>
+<li><p>9月 28 16:42：表示最后修改时间，格式为“月份 日 时:分”。</p>
+</li>
+<li><p>.cache：这是目录的名称。</p>
+</li>
+</ol>
+<p>3.按h寻求man指令的帮助，按q退出man指令。<br>4.选项可以组合使用，如-la（顺序无所谓，也可以是-al），则表示单行输出，且包含所有隐藏文件<br>5.ls -al默认是查看当前目录的，如果要查看root目录下的文件，则可以用ls -al &#x2F;root</p>
+<h4 id="help指令"><a href="#help指令" class="headerlink" title="help指令"></a><strong>help指令</strong></h4><p>基本语法：help命令（功能描述：获得shell内置命令的帮助信息）</p>
+<p>注意：</p>
+<p>help命令只能显示shell内置命令的帮助信息，而linux系统中绝大多数命令是外部命令。而通过man命令查看其它命令的详细文档。没有内部与外部命令的区分，因为 man 工具是显示系统手册页中的内容，man 得到的内容比 help 更多更详细。</p>
+<p>案例：查看shell内置的cd命令的帮助信息: help cd</p>
+<h3 id="文件目录类"><a href="#文件目录类" class="headerlink" title="文件目录类"></a><strong>文件目录类</strong></h3><h4 id="pwd指令"><a href="#pwd指令" class="headerlink" title="pwd指令"></a><strong>pwd指令</strong></h4><p>基本语法：pwd （功能描述：显示当前工作目录的绝对路径）</p>
+<p>应用实例：案例：显示当前工作目录的绝对路径</p>
+<h4 id="ls指令"><a href="#ls指令" class="headerlink" title="ls指令"></a><strong>ls指令</strong></h4><p>基本语法：ls【选项】【目录或是文件】</p>
+<p>常用选项</p>
+<p>-a：显示当前目录所有的文件和目录，包括隐藏的</p>
+<p>-l：以列表的方式显示信息</p>
+<p>应用实例</p>
+<p>案例：查看当前目录的所有内容信息：ls</p>
+<h4 id="cd指令"><a href="#cd指令" class="headerlink" title="cd指令"></a><strong>cd指令</strong></h4><p>基本语法：cd【参数】(功能描述：切换到指定目录)</p>
+<p>理解：绝对路径和相对路径</p>
+<p>cd ~或cd：回到自己的家目录，比如你是root，cd ~，则到&#x2F;root，如果是tom，cd ~，则到&#x2F;home&#x2F;tom</p>
+<p>cd .. 回到当前目录的上一级目录</p>
+<p>应用实例</p>
+<p>案例1：使用绝对路径切换到root目录：cd &#x2F;root</p>
+<p>案例2：使用相对路径到&#x2F;root目录：比如在&#x2F;home&#x2F;tom，cd …&#x2F;…&#x2F;root</p>
+<p>案例3：表示回到当前目录的上一级目录：cd …</p>
+<p>案例4：回到家目录：cd ~</p>
+<h4 id="mkdir指令-make-directory"><a href="#mkdir指令-make-directory" class="headerlink" title="mkdir指令(make directory)"></a><strong>mkdir指令(make directory)</strong></h4><p>mkdier指令用于创建目录</p>
+<p>基本语法：mkdir 【选项】 要创建的目录</p>
+<p>常用选项</p>
+<p>-p：创建多级目录</p>
+<p>应用案例</p>
+<p>案例1：创建一个目录&#x2F;home&#x2F;dog：mkdir &#x2F;home&#x2F;dog</p>
+<p>案例2：创建多级目录&#x2F;home&#x2F;animal&#x2F;tiger：mkdir -p &#x2F;home&#x2F;animal&#x2F;tiger</p>
+<h4 id="rmdir指令"><a href="#rmdir指令" class="headerlink" title="rmdir指令"></a><strong>rmdir指令</strong></h4><p><strong>rm是remove的意思</strong> rmdir指令删除空目录 基本语法 rmdir 【选项】要删除的空目录 应用实例 案例：删除一个空目录 &#x2F;home&#x2F;dog：rmdir &#x2F;home&#x2F;dog 使用细节 rmdir 删除的是空目录，如果目录下有内容时无法删除的。 提示：如果需要删除非空目录，需要使用 ’rm -rf 要删除的目录‘（-rf表示强制递归） 比如：rm -rf &#x2F;home&#x2F;animal 注意： 1.使用rm -rf进行删除时，要非常谨慎。 2.rm指令单独只能删除文件，加上参数-r可以删除包含文件的文件夹。但是在删除前shell会询问。</p>
+<h4 id="touch指令"><a href="#touch指令" class="headerlink" title="touch指令"></a><strong>touch指令</strong></h4><p>touch指令创建空文件</p>
+<p>基本语法</p>
+<p>touch文件名称</p>
+<p>应用实例</p>
+<p>案例：在&#x2F;home目录下，创建一个空文件 hello.txt：touch hello.txt</p>
+<h4 id="cp指令"><a href="#cp指令" class="headerlink" title="cp指令"></a><strong>cp指令</strong></h4><p>cp指令拷贝文件到指定目录</p>
+<p>基本语法</p>
+<p>cp 【选项】 source dest</p>
+<p>常用选项</p>
+<p>-r：递归复制整个文件夹</p>
+<p>应用实例：</p>
+<p>案例1：将&#x2F;home&#x2F;hello.txt拷贝到&#x2F;home&#x2F;bbb目录下：在&#x2F;home目录下，cp hello.txt bbb</p>
+<p>案例2：递归复制整个文件夹，比如将&#x2F;home&#x2F;bbb整个目录，拷贝到&#x2F;opt：cp -r &#x2F;home&#x2F;bbb &#x2F;opt（这样拷贝是将整个目录，包括目录bbb本身，都拷贝到&#x2F;opt下的）</p>
+<p>使用细节</p>
+<p>强制覆盖不提示的方法：\cp：如上面的指令如果要强制覆盖，则为\cp -r &#x2F;home&#x2F;bbb &#x2F;opt</p>
+<h4 id="rm指令"><a href="#rm指令" class="headerlink" title="rm指令"></a><strong>rm指令</strong></h4><p>说明：rm指令移除文件或目录</p>
+<p>基本语法</p>
+<p>rm 【选项】要删除的文件或目录</p>
+<p>常用选项</p>
+<p>-r：递归删除整个文件夹</p>
+<p>-f：强制删除不提示</p>
+<p>应用实例</p>
+<p>案例1：将&#x2F;home&#x2F;hello.txt删除：rm &#x2F;home&#x2F;hello.txt ，在提示中选择y</p>
+<p>案例2：递归删除整个目录 &#x2F;home&#x2F;bbb：rm -r &#x2F;home&#x2F;bbb（删除整个目录，但每删其中的一个文件都会提示）</p>
+<p>使用细节：</p>
+<p>强制删除不提示的方法：带上-f参数即可</p>
+<h4 id="mv指令"><a href="#mv指令" class="headerlink" title="mv指令"></a><strong>mv指令</strong></h4><p>mv<strong>移动文件与目录</strong>或<strong>重命名</strong> 基本语法 mv oldNameFile newNameFile （功能描述：重命名） mv &#x2F;temp&#x2F;movefile &#x2F;targetFolder（功能描述：移动文件） 注意： 1.重命名是在同一个目录下 2.移动是在不同的目录下 应用实例 案例1：将&#x2F;home&#x2F;cat.txt文件重新命名为pig.txt：在&#x2F;home目录下，mv cat.txt pig.txt 案例2：将&#x2F;home&#x2F;pig.txt文件移动到&#x2F;root目录下：在home目录下，mv cat.txt &#x2F;root 案例3：移动整个目录，比如将&#x2F;opt&#x2F;bbb移动到&#x2F;home下，并重命名为uuu：mv &#x2F;opt&#x2F;bbb &#x2F;home&#x2F;uuu（<strong>注意，&#x2F;home目录下本来没有&#x2F;uuu目录</strong>） 注意： 对案例3，如果&#x2F;home目录下本来有&#x2F;uuu目录，则mv &#x2F;opt&#x2F;bbb &#x2F;home&#x2F;uuu命令会把&#x2F;bbb目录移到&#x2F;home&#x2F;uuu目录下</p>
+<h4 id="cat指令"><a href="#cat指令" class="headerlink" title="cat指令"></a><strong>cat指令</strong></h4><p>cat查看文件内容（与vim的区别是，cat只能查看，不能修改，更安全）</p>
+<p>基本语法</p>
+<p>cat [选项] 要查看的文件</p>
+<p>常用选项</p>
+<p>-n：显示行号</p>
+<p>应用实例：</p>
+<p>案例1：&#x2F;etc&#x2F;profile 文件内容，并显示行号：cat -n &#x2F;etc&#x2F;profile</p>
+<p>使用细节</p>
+<p>cat只能浏览文件，而不能修改文件，为了浏览方便，一般会带上 管道命令：| more</p>
+<p>补充：管道命令有点类似于，将前面的结果，再交给下一个指令进行处理，管道命令就是一个竖杠，再带一个其他命令</p>
+<h4 id="more指令"><a href="#more指令" class="headerlink" title="more指令"></a><strong>more指令</strong></h4><p>more指令是一个基于VI编辑器的文本过滤器，它以全屏幕的方式按页显示文本文件的内容。more指令中内置了若干快捷键（交互的指令），详见操作说明</p>
+<p>基本语法</p>
+<p>more要查看的文件</p>
+<p>操作说明，如图</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=N2U4ZDE3MmZkMGQwMWU2NGZjNjdlMDMxZmYwMGRhMTRfM2lxRVJrbkd5dnVHWTJuQkIwMHZReVBIa1ZOOXNCNFlfVG9rZW46S0NTM2JqNHZob21MQ3l4OGFRTmN1OGtubk1nXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>应用实例</p>
+<p>案例：采用more查看文件&#x2F;etc&#x2F;profile</p>
+<h4 id="less指令"><a href="#less指令" class="headerlink" title="less指令"></a><strong>less指令</strong></h4><p>less指令用来分屏查看文件内容，它的功能与more指令类似，但是比more指令更加强大，支持各种显示终端。less指令在显示文件内容时，并不是一次将整个文件加载之后才显示，而是根据显示需要加载内容，对于显示大型文件具有较高的效率。</p>
+<p>基本语法</p>
+<p>less要查看的文件</p>
+<p>操作说明</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MWNkODZiNDk2N2MzZTU1Njc3ODM0YWM1MmU0NWVjODNfdDRnNmo2Zlo1Uk5rWVNFRVBYRW9hU21GQW15N0pHbHZfVG9rZW46RTlRQWJURzRkbzJ6dk54ZmFOSGNrSUtZbllmXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>应用实例</p>
+<p>案例：采用less查看一个大文本文件：less &#x2F;opt&#x2F;杂文.txt</p>
+<h4 id="echo指令"><a href="#echo指令" class="headerlink" title="echo指令"></a><strong>echo指令</strong></h4><p>echo输出内容到控制台</p>
+<p>基本语法</p>
+<p>echo [选项] [输出内容]</p>
+<p>应用实例</p>
+<p>案例1：使用echo指令输出环境变量，比如输出环境变量$PATH：echo $PATH ；输出主机名$HOSTNAME: echo $HOSTNAME</p>
+<p>案例2：使用echo指令输出hello,world！：echo ‘hello，world~“（引号可加可不加）</p>
+<h4 id="head指令"><a href="#head指令" class="headerlink" title="head指令"></a><strong>head指令</strong></h4><p>head用于显示文件的开头部分内容，默认情况下head指令显示文件的前10行内容</p>
+<p>基本语法</p>
+<p>head 文件（功能描述：查看文件头10行内容）</p>
+<p>head -n 5文件 （功能描述：查看文件头5行内容，5可以是任意行数）</p>
+<p>应用实例</p>
+<p>案例：查看&#x2F;etc&#x2F;profile的前面5行代码：head -n 5 &#x2F;etc&#x2F;profile（去掉-n 5，默认看前10行）</p>
+<p>注意：空行也算一行</p>
+<h4 id="tail指令"><a href="#tail指令" class="headerlink" title="tail指令"></a><strong>tail指令</strong></h4><p>tail用于输出文件中尾部的内容，默认情况下tail指令显示文件的前10行内容。</p>
+<p>基本语法</p>
+<p>1.tail 文件 (功能描述：查看文件尾10行内容）</p>
+<p>2.tail -n 5 文件 （功能描述：查看文件尾5行内容，5可以是任意行数)</p>
+<p>3.tail -f 文件 （功能描述：实时追踪该文档的所有更新）</p>
+<p>应用实例</p>
+<p>案例1：查看&#x2F;etc&#x2F;profile最后5行的代码：tail -n 5 &#x2F;etc&#x2F;profile</p>
+<p>案例2：实时监控mydate.txt，看看当该文件有变化时，是否看到，实时追加hello,world</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p>此时在另一个终端</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p>此时第一个终端输出hello</p>
+<p>注意：</p>
+<p>退出监控是ctrl+C</p>
+<h4 id="指令和-指令"><a href="#指令和-指令" class="headerlink" title="&gt;指令和&gt;&gt;指令"></a><strong>&gt;指令和&gt;&gt;指令</strong></h4><p>关于&gt;输出重定向和&gt;&gt;追加</p>
+<p>基本语法</p>
+<p>1.ls -l &gt;文件 （功能描述：列表的内容写入文件a.txt中（覆盖写））</p>
+<p>2.ls -al &gt;&gt;文件 （功能描述：列表的内容追加到文件aa.txt的末尾）</p>
+<p>3.cat 文件1&gt;文件2 （功能描述：将文件1的内容覆盖到文件2的内容）</p>
+<p>4.echo ’内容‘ &gt;&gt; 文件 （功能描述：将内容追加到文件中）</p>
+<p>应用实例</p>
+<p>案例1：将&#x2F;home目录下的文件列表写入&#x2F;home&#x2F;info.txt中，覆盖写入：ls -l &#x2F;home &gt; &#x2F;home&#x2F;info.txt（如果没有info.txt，则会创建）</p>
+<p>案例2：将当前日历信息追加到&#x2F;home&#x2F;mycal文件中：cal &gt;&gt; &#x2F;home&#x2F;mycal</p>
+<h4 id="ln指令"><a href="#ln指令" class="headerlink" title="ln指令"></a><strong>ln指令</strong></h4><p>软链接也称为符号链接，类似于windows里的快捷方式，主要存放了链接其他文件的路径</p>
+<p>基本语法</p>
+<p>ln -s 【原文件或目录】 【软链接名】 （功能描述：给原文件创建一个软链接）</p>
+<p>应用实例</p>
+<p>案例1：在&#x2F;home目录下创建一个软链接myroot，连接到&#x2F;root目录：ln -s &#x2F;root &#x2F;home&#x2F;myroot</p>
+<p>案例2：删除软连接myroot：rm &#x2F;home&#x2F;myroot（会提示是否删除符号链接）</p>
+<p>注意：</p>
+<p>如果rm &#x2F;home&#x2F;myroot&#x2F;，会提示无法删除&#x2F;home&#x2F;myroot&#x2F;，是一个目录</p>
+<p>细节说明</p>
+<p>当我们使用pwd指令查看目录时，仍然看到的是软链接所在目录</p>
+<h4 id="history指令"><a href="#history指令" class="headerlink" title="history指令"></a><strong>history指令</strong></h4><p>查看已经执行过的历史指令，也可以执行历史指令 基本语法 history（功能描述：查看已经执行过的历史命令） 应用实例 案例1：显示所有的历史命令：history 案例2：显示最近使用过的10个指令：history 10 案例3：执行历史编号为5的指令：**!5** （可以输入负数，表示倒数的指令）</p>
+<h3 id="时间日期类"><a href="#时间日期类" class="headerlink" title="时间日期类"></a><strong>时间日期类</strong></h3><h4 id="date指令-显示当前日期"><a href="#date指令-显示当前日期" class="headerlink" title="date指令-显示当前日期"></a><strong>date指令-显示当前日期</strong></h4><p>基本语法 1.date （功能描述：显示当前时间） 2.date +%Y （功能描述：显示当前年份） 3.date +%m （功能描述：显示当前月份） 4.date +%d （功能描述：显示当前是哪一天） 5.date ’+%Y-%m-%d %H:%M:%S‘ （功能描述：显示年月日时分秒，<strong>这里的-和:是为了分隔，你用+也是一样的，只不过会显示+罢了,但是最好还是按照规范输出</strong>。） 应用实例 案例1：显示当前时间信息：date （2023年 01月 06日 星期五 09:58:54 CST） 案例2：显示当前时间年月日：date ’+%Y-%m-%d‘ 案例3：显示当前时间年月日时分秒：date ‘+%Y-%m-%d %H:%M:%S’</p>
+<h4 id="date指令-设置日期"><a href="#date指令-设置日期" class="headerlink" title="date指令-设置日期"></a><strong>date指令-设置日期</strong></h4><p>基本语法</p>
+<p>date -s 字符串时间</p>
+<p>应用实例</p>
+<p>案例1：设置系统当前时间，比如设置成2021-11-11 11:22:22：date -s ‘2021-11-11 11:22:22’</p>
+<h4 id="cal指令"><a href="#cal指令" class="headerlink" title="cal指令"></a><strong>cal指令</strong></h4><p>查看日历指令</p>
+<p>基本语法</p>
+<p>cal 【选项】（功能描述：不加选项，显示本月日历）</p>
+<p>应用实例</p>
+<p>案例1：显示当前日历：cal</p>
+<p>案例2：显示2020年日历：cal 2020</p>
+<h3 id="搜索查找类"><a href="#搜索查找类" class="headerlink" title="搜索查找类"></a><strong>搜索查找类</strong></h3><h4 id="find指令"><a href="#find指令" class="headerlink" title="find指令"></a><strong>find指令</strong></h4><p>find指令将从指定目录向下<strong>递归</strong>地遍历其各个子目录，将满足条件的文件或者目录显示在终端。 基本语法 find 【搜索范围】【选项】 搜索返回写路径，如&#x2F;home是搜索home 文件夹之下的。<strong>如果是整个系统下，则用&#x2F;</strong> 选项说明</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MjZiZDM0YWM1ODQwZmFkMGQ5NTU3OGQ1MzYxOWEzZjdfa1Nta1JmNTJIa3ZZYlJTekRrWHNsRXhpalJRbXpsbEdfVG9rZW46R2gyOGJ2bnljb2hZWmN4ck5UcWNicDhqbkJlXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>应用案例</p>
+<p>案例1：按文件名：根据名称查找&#x2F;home目录下的hello.txt文件：find &#x2F;home -name hello.txt(没找到就没有信息)</p>
+<p>案例2：按拥有者：查找&#x2F;opt目录下，用户名称为nobody的文件：find &#x2F;opt -user nobody</p>
+<p>案例3：查找整个linux系统下大于200M的文件（+n大于 -n小于 n等于，单位有k,M,G）：find &#x2F; -size +200M</p>
+<p>补充：</p>
+<p>ls -lh，h表示人可以看清楚的形式展示，此时显示的文件大小会自动转化为人可以看明白的xx M</p>
+<h4 id="locate指令"><a href="#locate指令" class="headerlink" title="locate指令"></a><strong>locate指令</strong></h4><p>locate指令可以快速定位文件路径。<strong>locate指令利用事先建立的系统中所有文件名称及路径的locate数据库实现快速定位给定的文件</strong>。locate指令无需遍历整个文件系统，查询速度较快。为了保证查询结果的准确度，管理员必须定期更新locate时刻。 基本语法: locate 搜索文件 特别说明: <strong>由于locate指令基于数据库进行查询，所以第一次运行前，必须使用updatedb指令创建locate数据库</strong> 应用实例 案例1：请使用locate指令快速定位hello.txt文件所在目录</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<h4 id="which指令"><a href="#which指令" class="headerlink" title="which指令"></a><strong>which指令</strong></h4><p>可以查看某个指令在哪个目录下，比如ls指令在哪个目录：which ls</p>
+<p>从而显示这个指令的代码在那个路径中。</p>
+<h4 id="grep指令和管道符号"><a href="#grep指令和管道符号" class="headerlink" title="grep指令和管道符号|"></a><strong>grep指令和管道符号|</strong></h4><p>grep过滤查找，管道符，“|”，表示将前一个命令的处理结果传递给后面的命令处理</p>
+<p>基本语法</p>
+<p>grep 【选项】 查找内容 源文件</p>
+<p>常用选项</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MGZhN2ZmYThjMTM0ZWU2Y2FlYjZlOTI5NjEyOGViMmJfdDNUMjQyUG1zMWZrQjA5TmZtVGo3U0RpWmtCVWhkY1lfVG9rZW46TTZwd2JxRWtub2FPYVB4T0xUY2NRRnlabnVmXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>应用实例</p>
+<p>案例1：请在hello.txt文件中，查找’yes‘所在行，并显示行号</p>
+<p>方法1：cat &#x2F;home&#x2F;hello.txt | grep -n ’yes‘</p>
+<p>方法2：grep -n ’yes‘ &#x2F;home&#x2F;hello.txt</p>
+<h3 id="压缩和解压类"><a href="#压缩和解压类" class="headerlink" title="压缩和解压类"></a><strong>压缩和解压类</strong></h3><h4 id="gzip-gunzip指令"><a href="#gzip-gunzip指令" class="headerlink" title="gzip&#x2F;gunzip指令"></a><strong>gzip&#x2F;gunzip指令</strong></h4><p>gzip用于压缩文件，gunzip用于解压的 基本语法 gzip文件 （功能描述：压缩文件，只能将文件压缩为*.gz文件）* <em>gunzip文件.gz （功能描述：解压缩文件命令）</em> <em>应用实例</em> <em>案例1：gzip压缩，将&#x2F;home下的hello.txt文件进行压缩：gzip &#x2F;home&#x2F;hello.txt</em> <em>案例2：gunzip压缩，将&#x2F;home下的hello.txt.gz文件进行解压缩：gunzip &#x2F;home&#x2F;hello.txt.gz</em></p>
+<h4 id="zip-unzip指令"><a href="#zip-unzip指令" class="headerlink" title="zip&#x2F;unzip指令"></a><em><strong>zip&#x2F;unzip指令</strong></em></h4><p><em>zip用于压缩文件（</em><em><strong>或目录</strong></em><em>），unzip用于解压的，这个在项目打包发布中很有用的</em> <em>基本语法</em> <em>zip 【选项】xxx.zip 将要压缩的内容（功能描述：压缩文件和目录的命令）</em> <em>unzip【选项】 xxx.zip （功能描述：解压缩文件）</em> <em>zip常用选项</em> <em>-r：递归压缩，即压缩目录</em> <em>unzip的常用选项</em> <em>-d&lt;目录&gt;：指定解压后文件的存放目录</em> <em>应用实例</em> <em>案例1：将&#x2F;home下的所有文件进行压缩成myhome.zip：zip -r myhome.zip &#x2F;home(将home目录</em><em><strong>及</strong></em><em>其包含的文件和子文件夹都压缩）</em> <em>案例2：将myhome.zip解压到&#x2F;opt&#x2F;tmp目录下</em></p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<h4 id="tar指令"><a href="#tar指令" class="headerlink" title="tar指令"></a><em><strong>tar指令</strong></em></h4><p><em>tar指令是打包指令，最后打包后的文件是.tar.gz的文件</em> <em>基本语法</em> <em>tar 【选项】xxx.tar.gz 打包的内容 （功能描述：打包目录，压缩后的文件格式.tar.gz）</em> <em>选项说明</em></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZGFmOTdmZDJkMzIzNzBlMTZiNzM4ZGRlNzZiYmQ0MDVfa2hOMXZyeHpzQUFLd0JxbW9QWlBZQk1sd0F4NGVwYTNfVG9rZW46SEM2NGJIcER6b284YzV4NmR3NWNUZ2hWbmVnXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><em><strong>-z表示指定gzip格式压缩或解压</strong></em> <em><strong>-v  verbose</strong></em> <em>应用实例</em> <em>案例1：压缩多个文件，将&#x2F;home&#x2F;pig.txt和&#x2F;home&#x2F;cat.txt压缩成pc.tar.gz：</em> <em>tar -zcvf pc.tar.gz &#x2F;home&#x2F;pig.txt &#x2F;home&#x2F;cat.txt</em> <em>(压缩时候在绝对路径下压缩，会把&#x2F;home目录也压缩进去，在相对路径下压缩则不会这样）</em> <em>案例2：将&#x2F;home的文件夹压缩成myhome.tar.gz:</em> <em>tar -zcvf myhome.tar.gz &#x2F;home</em> <em>案例3：将pc.tar.gz解压到当前目录</em> <em>tar -zxvf pc.tar.gz</em> <em>案例4：将myhome.tar.gz解压到&#x2F;opt&#x2F;tmp2目录下</em></p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p><em>注意：</em> <em>1.-C 目标目录表示指定目标目录</em> <em>2.任何压缩方法，被压缩文件路径最好使用相对路径，否则会自动压缩绝对路径多创文件夹</em> <em>补充：打包解包是针对.tar文件而言的，.tar文件就是将多个文件合并成一个单文件，解压和压缩是针对.gz文件而言，-c是打包成.tar文件，-x是把.tar包解开，-z会根据带的x还是c来决定解压还是压缩</em></p>
+<h2 id="Linux实操篇-组管理和权限管理"><a href="#Linux实操篇-组管理和权限管理" class="headerlink" title="Linux实操篇-组管理和权限管理"></a><em><strong>Linux实操篇-组管理和权限管理</strong></em></h2><h3 id="Linux组基本介绍"><a href="#Linux组基本介绍" class="headerlink" title="Linux组基本介绍"></a><em><strong>Linux组基本介绍</strong></em></h3><p><em>在linux中的每个用户必须属于一个组，不能独立于组外。在linux中每个文件有所有者、所在组、其他组的概念。</em> <em>1.所有者（谁创建谁就是所有者，但是后续可以修改）</em> <em>2.所在组（创建者所属用户组，但后续可以修改）</em> <em>3.其他组</em> <em>4.改变用户所在的组</em></p>
+<h3 id="文件-目录-所有者"><a href="#文件-目录-所有者" class="headerlink" title="文件&#x2F;目录 所有者"></a><em><strong>文件&#x2F;目录 所有者</strong></em></h3><p><em>一般为文件的创建者，谁创建了该文件，就自然地成为该文件的所有者。</em></p>
+<h4 id="查看文件的所有者"><a href="#查看文件的所有者" class="headerlink" title="查看文件的所有者"></a><em><strong>查看文件的所有者</strong></em></h4><p><em>指令：ls -ahl</em> <em>应用实例</em></p>
+<h4 id="修改文件所有者（ch-ange-own-er）"><a href="#修改文件所有者（ch-ange-own-er）" class="headerlink" title="修改文件所有者（ch-ange own-er）"></a><em><strong>修改文件所有者（ch-ange own-er）</strong></em></h4><p><em>指令：chown 用户名 文件名</em> <em>应用案例</em> <em>要求：使用root创建一个文件apple.txt，然后将其所有者修改成tom：</em></p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p><em>注意：</em><em><strong>改变所有者，所在组不会变</strong></em></p>
+<h3 id="组的创建"><a href="#组的创建" class="headerlink" title="组的创建"></a><em><strong>组的创建</strong></em></h3><h4 id="基本指令"><a href="#基本指令" class="headerlink" title="基本指令"></a><em><strong>基本指令</strong></em></h4><p><em>groupadd 组名</em></p>
+<h4 id="应用实例-1"><a href="#应用实例-1" class="headerlink" title="应用实例"></a><em><strong>应用实例</strong></em></h4><p><em>创建一个组，monster：groupadd monster</em> <em>创建一个用户fox，并放入monster组中：-useradd -g monster fox</em></p>
+<h4 id="文件-目录-所在组"><a href="#文件-目录-所在组" class="headerlink" title="文件&#x2F;目录 所在组"></a><em><strong>文件&#x2F;目录 所在组</strong></em></h4><p><em>当某个用户创建了一个文件后，这个文件的所在组就是该用户所在的组。(默认）</em></p>
+<h4 id="查看文件-目录所在组"><a href="#查看文件-目录所在组" class="headerlink" title="查看文件&#x2F;目录所在组"></a><em><strong>查看文件&#x2F;目录所在组</strong></em></h4><p><em>基本指令</em> <em>ls -ahl</em> <em>应用实例</em> <em>使用fox创建一个文件，看看该文件属于哪个组？</em> <em>-rw-r–r–. 1 fox monster 0 1月 7 12:50 ok.txt</em></p>
+<h4 id="修改文件-目录所在的组"><a href="#修改文件-目录所在的组" class="headerlink" title="修改文件&#x2F;目录所在的组"></a><em><strong>修改文件&#x2F;目录所在的组</strong></em></h4><p><em>基本指令</em> <em>chgrp 组名 文件名</em> <em>应用实例</em> <em>使用roo他用户创建文件orange.txt，看看当前这个文件属于哪个组，然后将这个文件所在组，修改到fruit组。</em></p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p><em>看看当前这个文件属于哪个组 -&gt; root组</em></p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<h3 id="其他组"><a href="#其他组" class="headerlink" title="其他组"></a><em><strong>其他组</strong></em></h3><p><em>除文件的所有者和所在组的用户外，系统的其他用户都是文件的其他组</em></p>
+<h3 id="改变用户所在组"><a href="#改变用户所在组" class="headerlink" title="改变用户所在组"></a><em><strong>改变用户所在组</strong></em></h3><p><em>在添加用户时，可以指定将该用户添加到哪个组中，同样的，用root的管理权限可以改变某个用户所在的组。</em></p>
+<h4 id="改变用户所在组-1"><a href="#改变用户所在组-1" class="headerlink" title="改变用户所在组"></a><em><strong>改变用户所在组</strong></em></h4><p><em>1.usermod -g 新组名 用户名</em> <em>2.usermod -d 目录名 用户名 改变该用户登录的初始目录（特别说明：用户需要有进入到新目录的权限）</em></p>
+<h4 id="应用实例-2"><a href="#应用实例-2" class="headerlink" title="应用实例"></a><em><strong>应用实例</strong></em></h4><p><em>将zwj这个用户从原来所在组，修改到wudang组：usermod -g wudang zwj</em></p>
+<h3 id="权限的基本介绍"><a href="#权限的基本介绍" class="headerlink" title="权限的基本介绍"></a><em><strong>权限的基本介绍</strong></em></h3><p><em>ls -l中显示的内容如下：</em> <em>第一列一共有10位，分别用0-9表示，下面是0-9位的说明：</em> <em>1.第0位确定文件类型（d，-，l，c，b）</em> <em>l是链接，相当于windows的快捷方式</em> <em>d是目录，相当于windows的文件夹</em> <em>-是普通文件</em> <em>c是字符设备文件，鼠标，键盘（cd &#x2F;dev可以看到）</em> <em>b是块设备，比如硬盘（cd &#x2F;dev可以看到）</em> <em>2.第1-3位确定所有者（该文件的所有者）拥有该文件的权限。 —User</em> <em>3.第4-6位确定所在组（同用户组的）拥有该文件的权限。—Group</em> <em>4.第7-9位确定其他用户拥有该文件的权限。—Other</em></p>
+<h3 id="rwx权限详解-难点）"><a href="#rwx权限详解-难点）" class="headerlink" title="rwx权限详解(难点）"></a><em><strong>rwx权限详解(难点）</strong></em></h3><h4 id="rwx作用到文件"><a href="#rwx作用到文件" class="headerlink" title="rwx作用到文件"></a><em><strong>rwx作用到文件</strong></em></h4><p><em>1.[r]代表可读（read）：可以读取，查看</em> <em>2.[w]代表可写（write）：可以修改，但是不代表可以删除该文件，删除一个文件的前提条件是对该文件所在的目录有写权限，才能删除该文件</em> <em>3.[x]代表可执行（execute）：可以被执行</em></p>
+<h4 id="rwx作用到目录"><a href="#rwx作用到目录" class="headerlink" title="rwx作用到目录"></a><em><strong>rwx作用到目录</strong></em></h4><p><em>1.[r]代表可读（read）：可以读取，ls查看目录内容</em> <em>2.[w]代表可写（write）：可以修改，对目录内创建+删除+重命名目录</em> <em>3.[x]代表可执行（execute）：可以进入该目录</em></p>
+<h3 id="文件及目录权限实际案例"><a href="#文件及目录权限实际案例" class="headerlink" title="文件及目录权限实际案例"></a><em><strong>文件及目录权限实际案例</strong></em></h3><h4 id="ls-l中显示的内容如下："><a href="#ls-l中显示的内容如下：" class="headerlink" title="ls -l中显示的内容如下："></a><em><strong>ls -l中显示的内容如下：</strong></em></h4><p><em>-rwxrw-r– 1 root root 1213 Feb 2 09:39 abc</em> <em>10个字符确定不同用户能对文件干什么</em> <em>第一个字符代表文件类型：-代表该文件是普通文件</em> <em>其余字符每3个一组（rwx）读（r）写（w）执行（x）</em> <em>第一组rwx：文件拥有者的权限是读、写和执行</em> <em>第二组rw-：所在组的用户的权限是读、写但不能执行</em> <em>第三组r–： 其他组的用户的权限是读不能写和执行</em> <em>可用数字表示：r&#x3D;4，w&#x3D;2，x&#x3D;1，因此rwx&#x3D;4+2+1&#x3D;7，数字可以进行组合</em> <em>其他说明</em> <em>1 文件：该数一定为1 目录：该数对应子目录数</em> <em>root 所有者</em> <em>root 所在组</em> <em>1213 大小（字节），如果是文件夹，显示4096字节</em> <em>Feb 2 09:39 最后修改日期</em> <em>abc 文件名</em></p>
+<h3 id="修改权限-chmod"><a href="#修改权限-chmod" class="headerlink" title="修改权限-chmod"></a><em><strong>修改权限-chmod</strong></em></h3><h4 id="基本说明"><a href="#基本说明" class="headerlink" title="基本说明"></a><em><strong>基本说明</strong></em></h4><p><em>通过chmod指令，可以修改文件或目录的权限</em></p>
+<h4 id="第一种方式：-、-、-变更权限"><a href="#第一种方式：-、-、-变更权限" class="headerlink" title="第一种方式：+、-、&#x3D;变更权限"></a><em><strong>第一种方式：+、-、&#x3D;变更权限</strong></em></h4><p><em>u:所有者 g：所有组 o：其他人 a：所有人（u、g、o的总和）</em> <em>1.chmod u&#x3D;rwx,g&#x3D;rx,o&#x3D;x 文件&#x2F;目录名</em> <em>2.chmod o+w 文件&#x2F;目录名</em> <em>3.chmod a-x 文件&#x2F;目录名</em> <em>案例演示</em> <em>1.给abc文件的所有者读写执行的权限，给所在组读执行权限，给其他组读执行权限：chmod u&#x3D;rwx, g&#x3D;rx,o&#x3D;rx abc</em> <em>2.给abc文件的所有者除去执行的权限，增加组写的权限:chmod u-x g+w abc</em> <em>3.给abc文件的所有用户添加读的权限:chmod a+r abc</em> <em>注意：当文件可执行的时候，它的颜色会变成绿色</em></p>
+<h4 id="第二种方式：通过数字变更权限"><a href="#第二种方式：通过数字变更权限" class="headerlink" title="第二种方式：通过数字变更权限"></a><em><strong>第二种方式：通过数字变更权限</strong></em></h4><p><em>r&#x3D;4 w&#x3D;2 x&#x3D;1 rwx&#x3D;4+2+1&#x3D;7</em> <em>chmod u&#x3D;rwx,g&#x3D;rx,o&#x3D;x 文件目录名 相当于chmod 751 文件目录名</em> <em>案例演示</em> <em>要求：将&#x2F;home&#x2F;abc.txt 文件的权限修改成rwxr-xr-x，使用给数字的方式实现：</em> <em>chmod 755 &#x2F;home&#x2F;abc.txt</em></p>
+<h3 id="修改文件所有者-chown"><a href="#修改文件所有者-chown" class="headerlink" title="修改文件所有者-chown"></a><em><strong>修改文件所有者-chown</strong></em></h3><h4 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a><em><strong>基本介绍</strong></em></h4><p><em>chown newowner 文件&#x2F;目录 (功能描述：改变所有者）</em> <em>chown newowner:newgroup 文件&#x2F;目录 （功能描述：改变所有者和所在组）</em> <em>-R 如果是目录，则使其下所有子文件或目录递归生效</em> <em>案例演示</em> <em>请将&#x2F;home&#x2F;abc.txt文件的所有者修改成tom：chown tom &#x2F;home&#x2F;abc.txt</em> <em>请将&#x2F;home&#x2F;test目录下所有的文件和目录的所有者都修改成tom：chown -R tom &#x2F;home&#x2F;test</em></p>
+<h3 id="修改文件-目录所在组-chgrp"><a href="#修改文件-目录所在组-chgrp" class="headerlink" title="修改文件&#x2F;目录所在组-chgrp"></a><em><strong>修改文件&#x2F;目录所在组-chgrp</strong></em></h3><p><em>基本介绍</em> <em>chgrp newgroup 文件&#x2F;目录 改变所在组</em> <em>案例演示</em> <em>请将&#x2F;home&#x2F;abc.txt文件的所在组修改成shaolin(少林)：chgrp shaolin &#x2F;home&#x2F;abc.txt</em> <em>请将&#x2F;home&#x2F;test目录下所有的文件和目录的所在组都修改成shaolin（少林）：chgrp -R shaolin &#x2F;home&#x2F;test</em></p>
+<h2 id="Linux实操篇-定时任务调度"><a href="#Linux实操篇-定时任务调度" class="headerlink" title="Linux实操篇-定时任务调度"></a><em><strong>Linux实操篇-定时任务调度</strong></em></h2><h3 id="crond任务调度"><a href="#crond任务调度" class="headerlink" title="crond任务调度"></a><em><strong>crond任务调度</strong></em></h3><p><em>crontab 进行 定时任务的设置</em></p>
+<h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a><em><strong>概述</strong></em></h4><p><em>任务调度：是指系统在某个时间执行的特定的命令或程序。</em> <em>任务调度分类：1.系统工作：有些重要的工作必须周而复始地执行。如病毒扫描等</em> <em>个别用户工作：个别用户可能希望执行某些程序，比如对mysql数据库的备份</em> <em>示意图：</em></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=M2U0OWRiZGFmOTg0MzQzZDIxYzgwNjFkZGFkNGFkOWJfclpobTZzbHhQWHBWYXFCODlpQ3E4NDZGM3F1N2VlUXNfVG9rZW46Q3NTYmI2Qkhvb2k2bVF4dk1JZWN3R0JCbk1iXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a><em><strong>基本语法</strong></em></h4><p><em>crontab 【选项】</em></p>
+<h4 id="常用选项"><a href="#常用选项" class="headerlink" title="常用选项"></a><em><strong>常用选项</strong></em></h4><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NDYyZDI1ZDJiZTIxNmZiYWY4NjQ2M2M4OTI1MmM2Zjdfc0Z5endFNzA3ejVIMUNnYUFPcVJtNjdDblpxTEU0djFfVG9rZW46SzFsUmJNSEZXbzFvd0h4YXoxcWN2QkJEbjNmXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="快速入门"><a href="#快速入门" class="headerlink" title="快速入门"></a><em><strong>快速入门</strong></em></h4><p><em>设置任务调度文件：&#x2F;etc&#x2F;crontab</em> <em>设置个人任务调度。执行crontab -e命令</em> <em>接着输入任务到调度文件</em> <em>如：</em>&#x2F;1     ls -l &#x2F;etc&#x2F; &gt; &#x2F;tmp&#x2F;to.txt（注意：<em>之间有空格）</em> <em>意思说每小时的每分钟执行ls -l &#x2F;etc&#x2F; &gt; &#x2F;tmp&#x2F;to.txt命令</em> <em>参数细节说明</em> <em>5个占位符的说明</em></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NDdlZjg4ZjAwZmJjYzA3MTE4ZjRlMDFlNTJlMWU2ZmRfekVVbjlOUjJGcDhQdkhrSHhxNUNpSzNiOG1wdVE4UzVfVG9rZW46WVhOUGJYUENBb3RKWjN4VDNSQ2NJalYzblBlXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><em>特殊符号的说明</em></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDg2Y2E5YTQxNTBmZTIxZTAwYmZjNWIyYWJkZTJhNjBfMjRhc0ZCT2ozVVNMYjF5VnpmOTltVHh0OFFHWFZBdUVfVG9rZW46VUo2M2JIdzlqb0w2NGd4U0FkemNxQkdpbkliXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><em>特定时间执行任务案例</em></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MjZkZDMxOWJkOTJjYzQ2MzFlNzRkYjQ1MGU2OTRmMTZfaVBaRUs0aWtWQmpqVTJLNVg3bU5uNU55ZGFqZ2RnS0dfVG9rZW46QU5PZGJWbUpab2pQbVZ4aFh5eGNoUkZsbkpoXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="应用实例-3"><a href="#应用实例-3" class="headerlink" title="应用实例"></a><em><strong>应用实例</strong></em></h4><p><em>案例1：每隔1分钟，就将当前的日期信息，追加到&#x2F;tmp&#x2F;mydate文件中：</em>     date &gt;&gt; &#x2F;tmp&#x2F;mydate 案例2：每隔1分钟，将当前日期和日历都追加到&#x2F;home&#x2F;mycal文件中: 方案1：写两条指令到crontab中 方案2：写一个完成两条指令的脚本，然后让crond定时执行</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p><em>案例3：每天凌晨2：00将mysql数据库testdb，备份到文件中。提示：指令为mysqldump -u root -p密码 数据库 &gt;&gt; &#x2F;home&#x2F;db.bak</em></p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<h4 id="crond相关指令"><a href="#crond相关指令" class="headerlink" title="crond相关指令"></a><strong>crond相关指令</strong></h4><p>crontab -r：终止任务调度（其实就是删除）</p>
+<p>crontab -l：列出当前有哪些任务调度</p>
+<p>service crond restart 【重启任务调度】</p>
+<h3 id="at定时任务"><a href="#at定时任务" class="headerlink" title="at定时任务"></a><strong>at定时任务</strong></h3><h4 id="基本介绍-1"><a href="#基本介绍-1" class="headerlink" title="基本介绍"></a><strong>基本介绍</strong></h4><p>1.at命令是一次性定时计划任务，at的守护进程atd会以后台模式运行，检查作业队列来运行。</p>
+<p>2.默认情况下，atd守护进程每60秒检查作业队列，有作业时，会检查作业运行时间，如果时间与当前时间匹配，则运行此作业。</p>
+<p>3.at命令是一次性定时计划任务，执行完一个任务后不再执行此任务了</p>
+<p>4.在使用at命令的时候，一定要保证atd进程的启动，可以使用相关指令来查看</p>
+<p>指令ps -ef（检测当前所有正在运行的进程有哪些）</p>
+<p>指令ps -ef | grep atd （过滤其中的atd相关指令)&#x2F;&#x2F;可以检测atd是否在运行</p>
+<p>5.示意图</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NzRkNjY4MzI2MWMzYjY2NmIxMDc2OGIzZjNmYmMwMzZfQlZkelZxQzFEMVJ0eEo0dUNJOW5vdGhjYWhFU25xdlJfVG9rZW46WHphOWJwTGtzb05RdUN4U3BFOGNDTzBXbmViXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="at命令格式"><a href="#at命令格式" class="headerlink" title="at命令格式"></a><strong>at命令格式</strong></h3><p>at 【选项]】【时间】</p>
+<p>Crtl + D 结束at命令的输入（按两次)</p>
+<h3 id="at命令选项"><a href="#at命令选项" class="headerlink" title="at命令选项"></a><strong>at命令选项</strong></h3><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=Mjg5MGJmMDA5OTNjZWQ2ZjY0NmY1YjYyMmY1Y2JlZTRfejdBN01VSXUyVEd0M1BPdlJmRnU1eDlBNXRiT1AzVVJfVG9rZW46RkRaVmJvcTRQb29Vb1F4WVRXSmNIVDRIbmIxXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="at时间定义"><a href="#at时间定义" class="headerlink" title="at时间定义"></a><strong>at时间定义</strong></h3><p>at指定时间的方法:</p>
+<p>1.接受在当天的hh:mm(小时：分钟）式的时间指定。假如该时间已过去，那么就放在第二天执行。例如：04：00</p>
+<p>2.使用midnight（深夜），noon（中午），teatime（饮茶时间，一般是下午4点）等比较模糊的词语来指定时间。</p>
+<p>3.采用12小时计时制，即在时间后面加上AM（上午）或PM（下午）来说明是上午还是下午。例如：12pm</p>
+<p>4.指定命令执行的具体日期，指定格式为month day（月 日）或mm&#x2F;dd&#x2F;yy（月&#x2F;日&#x2F;年）或dd.mm.yy（日.月.年），指定的日期必须跟在指定时间的后面。例如：04：00 2021-03-1</p>
+<p>5.使用相对计时法。指定格式为：now + count time-units，now就是当前时间，time-units是时间单位，这里能够使minutes（分钟）、hours（小时）、days（天）、weeks（星期）。count是时间的数量，几天，几小时。例如：now + 5 minutes</p>
+<p>6.直接使用today（今天）、tomorrow（明天）来指定完成命令的时间。</p>
+<h3 id="应用案例"><a href="#应用案例" class="headerlink" title="应用案例"></a><strong>应用案例</strong></h3><p>案例1：2天后的下午5点执行&#x2F;bin&#x2F;ls &#x2F;home</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p>案例2：atq命令来查看系统中没有执行的工作任务：atq</p>
+<p>案例3：明天17点钟，输出时间到指定文件内，比如&#x2F;root&#x2F;date100.log</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p>案例4：2分钟后，输出时间到指定文件内，比如&#x2F;root&#x2F;date200.log</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p>案例5：删除已经设置的任务，atrm 编号（也可以使用at -d 任务编号：来删除设置的任务）</p>
+<p>注意：当出现at&gt;，要输入指令时，退格会失效，要退格，需要使用ctrl+退格</p>
+<h2 id="Linux实操篇-Linux磁盘分区、挂载"><a href="#Linux实操篇-Linux磁盘分区、挂载" class="headerlink" title="Linux实操篇-Linux磁盘分区、挂载"></a><strong>Linux实操篇-Linux磁盘分区、挂载</strong></h2><h3 id="Linux分区"><a href="#Linux分区" class="headerlink" title="Linux分区"></a><strong>Linux分区</strong></h3><h4 id="原理介绍"><a href="#原理介绍" class="headerlink" title="原理介绍"></a><strong>原理介绍</strong></h4><p>1.Linux来说无论有几个分区，分给哪一目录使用，它归根结底就只有一个根目录，一个独立且唯一的文件结构，Linux中每个分区都是用来组成整个文件系统的一部分。</p>
+<p>2.Linux采用了一种叫“载入”的处理方法，它的整个文件系统中包含了一整套的文件和目录，且将一个分区和一个目录联系起来。这时要载入的一个分区将使它的存储空间在一个目录下获得。</p>
+<p>3.示意图</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=M2M4N2EyMzYwNjJjNWJmYmY5OWYyODdmZjFlOGYxNzFfdXZCTE5rbGNhV0VOMkRrbmFDT3ZLa0Y2bnN6VjYyNUFfVG9rZW46VHBxV2IxeUx2b3lteG54OGc2dWNBZzFabnVXXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="硬盘说明"><a href="#硬盘说明" class="headerlink" title="硬盘说明"></a><strong>硬盘说明</strong></h4><p>1.Linux硬盘分IDE硬盘和SCSI硬盘，目前基本上是SCSI硬盘</p>
+<p>2.对于IDE硬盘，驱动器标识符为‘hdx~’，其中’hd‘表明分区所在设备的类型，这里是指IDE硬盘。’x‘为盘号（a为基本盘，b为基本从属盘，c为辅助主盘，d为辅助从属盘），’ ~’代表分区，前四个分区用数字1-4表示，它们是主分区或扩展分区，从5开始就是逻辑分区。例如，hda3表示为前一个IDE硬盘上的第三个主分区或扩展分区，hdb2表示为第二个IDE硬盘上的第二个主分区或扩展分区。</p>
+<p>3.对于SCSI硬盘则标识为’sdx~‘，SCSI硬盘使用’sd‘来表示分区所在设备的类型的，其余则和IDE硬盘的表示方法一样。</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjA0ZTkyZTU4MTM0NmYzMmI5YjQ3NzY0NTBmZjRkYjNfZnlDRzlYekFFZmtRYjNSYVFjYVBEZFpHUk9MbkRwdXJfVG9rZW46TTJyS2JWbmN4b3Fabzl4TDZ0OGNHcVB6bm9kXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>上图中，sda表示第一块SCSI硬盘，sda1表示第一块SCSI硬盘的第一个分区</p>
+<p>sr0是光驱，不用管他</p>
+<h4 id="查看所有设备挂载情况"><a href="#查看所有设备挂载情况" class="headerlink" title="查看所有设备挂载情况"></a><strong>查看所有设备挂载情况</strong></h4><p>命令：lsblk或者lsblk -f （list block的简称）</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=OWQ0MDJiOThkMjkwZWI2MGU1Y2E3MmE0NGRhMjUyYjNfQmNJQzFpSXpWOWhzZmhQNjJRd0dnU2ZuNE5YOVZQRzhfVG9rZW46VURJeWJnUmV1bzVGVE94TDVYSmNGbVd4bjFjXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>lsblk -f可以将分区的情况看的更加清晰</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ODBmMWE5YWU5MDY4ZmJjOTZjMTU3MWZkYTRhODliYjNfbFBpU0lvRnh5d2RTdUlrZDF5NFVNMzRReWdBdGh0OU9fVG9rZW46VXYxU2JmbEczb0lpMHJ4QW1ydGNaSUdLbkFmXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>FSTYPE是文件类型，UUID是当你格式化后，会给你的每一个分区分配一个唯一的不重复的40位的字符串（唯一标识符），MOUNTPOINT是挂载点</p>
+<h3 id="挂载的经典案例"><a href="#挂载的经典案例" class="headerlink" title="挂载的经典案例"></a><strong>挂载的经典案例</strong></h3><h4 id="说明："><a href="#说明：" class="headerlink" title="说明："></a><strong>说明：</strong></h4><p>下面我们以增加一块硬盘为例来熟悉下磁盘的相关指令和深入理解磁盘分区、挂载、卸载的概念。</p>
+<h4 id="如何增加一块硬盘"><a href="#如何增加一块硬盘" class="headerlink" title="如何增加一块硬盘"></a><strong>如何增加一块硬盘</strong></h4><p>1.虚拟机增加硬盘 2.分区 3.格式化 4.挂载 5.设置可以自动挂载 <strong>虚拟机增加硬盘步骤1</strong> 在【虚拟机】菜单中，选择【设置】，然后设备列表里添加硬盘，然后一路【下一步】，中间只有选择磁盘大小的地方需要修改，直到完成。然后重启系统（才能识别）！ <strong>虚拟机增加硬盘步骤2</strong> 分区命令 fdisk &#x2F;dev&#x2F;sdb 开始对&#x2F;sdb分区 m 显示命令列表 p 显示磁盘分区 同 fdisk -l n 新增分区 d 删除分区 w 写入并退出 说明：开始分区后输入n，新增分区，然后选择p，分区类型为主分区。两次回车默认剩余全部空间。最后输入w写入分区并退出，若不保存退出输入q。 <strong>虚拟机增加硬盘步骤3</strong> 格式化磁盘 分区命令：mkfs 【选项】【t 分区格式】 分区路径，例如mkfs -t ext4 &#x2F;dev&#x2F;sdb1 （mkfs是make filesystem的简写）（也可以写成mkfs.ext4 &#x2F;dev&#x2F;sdb1) 其中ext4是分区类型 <strong>虚拟机增加磁盘步骤4</strong> 挂载：将一个分区与一个目录关联起来 mount 设备名称 挂载目录 例如：mount &#x2F;dev&#x2F;sdb1 &#x2F;newdisk（必须先创建&#x2F;newdisk目录） 卸载： umount 设备名称 或者 挂载目录 例如：umount &#x2F;dev&#x2F;sdb1 或者 umount &#x2F;newdisk 注意：用命令行挂载重启后会失效（即这样操作的挂载关系是临时的） <strong>虚拟机增加硬盘步骤5</strong> 永久挂载：通过修改&#x2F;etc&#x2F;fstab实现自动挂载（fstab是filesystem table的缩写）</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YTMwNmE3NTZlZjZhNTdiOTA5OTU4NzBlNDMzYzk4NDNfNDZaeXRjaThHSmdWa1BpdlhlcTFNcVFvMm1hY3NOMjNfVG9rZW46Q3lmc2Jva1ltb1p5MUl4OEJ1ZmNHdmZybldmXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>补充：最后的两个数字：第一个是挂载点内备份，0表示不做dump备份，第二个表示磁盘检查，0表示不检查磁盘扇区，1表示其他目录文件检查，2表示根目录文件检查</p>
+<p>添加完成后 执行mount -a即刻生效（或者执行reboot也会自动生效）</p>
+<p>注意：永久挂载前最好保存快照。防止操作失误导致开不了机</p>
+<h3 id="磁盘情况查询"><a href="#磁盘情况查询" class="headerlink" title="磁盘情况查询"></a><strong>磁盘情况查询</strong></h3><h4 id="查询系统整体磁盘使用情况"><a href="#查询系统整体磁盘使用情况" class="headerlink" title="查询系统整体磁盘使用情况"></a><strong>查询系统整体磁盘使用情况</strong></h4><p>基本语法</p>
+<p>df -h</p>
+<p>应用实例</p>
+<p>查询系统整体磁盘使用情况</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YmRhNjM5NjdmOTg4ODM4MmQwY2Q4MGQ5MjQ1Yjc4ZmNfbmlKSGQ3dUZ5Q1hWTkt4dnFiOGVwaEVsSDVXemdDZFRfVG9rZW46UjAyc2J6aDlib0VOeDN4YjAzb2NBeHFvbjdnXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>注意：如果磁盘使用率达到80%以上，就需要想办法清理空间了。</p>
+<h4 id="查看指定目录的磁盘占用情况"><a href="#查看指定目录的磁盘占用情况" class="headerlink" title="查看指定目录的磁盘占用情况"></a><strong>查看指定目录的磁盘占用情况</strong></h4><p>基本语法</p>
+<p>du -h &#x2F;目录</p>
+<p>查询指定目录的磁盘占用情况，不指定则默认查询当前目录</p>
+<p>-s 指定目录占用大小汇总</p>
+<p>-h 带计量单位（人类可读）</p>
+<p>-a 含文件</p>
+<p>–max-depth&#x3D;1 子目录深度（当前目录的1层子目录也显示）</p>
+<p>-c 列出明细的同时，增加汇总值</p>
+<p>应用案例</p>
+<p>查询&#x2F;opt目录的磁盘占用情况，深度为1</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MTJkOGE5MDQ3MjcyNzc3ZDcyNjhhOTgzMGM0YzVhNzFfb29oMGtIRW00c1h5SWxqZDd6QzE2QmU5c2tnbDNQblRfVG9rZW46SW1WUWJER3Zyb3IwMVF4TW5SVWNGWlI5bnZiXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="磁盘情况-工作使用指令"><a href="#磁盘情况-工作使用指令" class="headerlink" title="磁盘情况-工作使用指令"></a><strong>磁盘情况-工作使用指令</strong></h3><p>1.统计&#x2F;opt文件夹下文件（以-开头）的个数</p>
+<p>第一步：列出&#x2F;opt目录下的内容：ls -l &#x2F;opt</p>
+<p>第二步：通过正则表达式‘^-’过滤（因为-开头的是文件类型）：ls -l &#x2F;opt | grep ‘^-’</p>
+<p>第三步：利用wc指令和-l选项统计行数</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p>补充：</p>
+<p>wc指令(wc就是wordcount的简写)选项：</p>
+<p>-l：计算行数（line）</p>
+<p>-c：计算字节数（character）</p>
+<p>-m：计算字符数（char）</p>
+<p>-w：计算单词数（word）</p>
+<p>2.统计&#x2F;opt文件夹下目录的个数</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p>3.统计&#x2F;opt文件夹下文件的个数，包括子文件夹里的</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p>4.统计&#x2F;opt文件夹下目录的个数，包括子文件夹里的</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p>5.以树状显示目录结构：tree 目录</p>
+<p>注意：如果没有tree指令，则使用yum install tree，前提网络是畅通的</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZGFhYTdjMTI1NDgyNWZkMWFhMTQ4ZjJmZjZlZDcwYWFfU245elJra3VrdHphMHhMNlI3VTgyYzBvMElhNVV1SjZfVG9rZW46Umh1TWJ1cE5Fb00zeU94MTQ1MGNjTUh0bkdkXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="Linux实操篇-网络配置"><a href="#Linux实操篇-网络配置" class="headerlink" title="Linux实操篇-网络配置"></a><strong>Linux实操篇-网络配置</strong></h2><h3 id="Linux网络配置原理图"><a href="#Linux网络配置原理图" class="headerlink" title="Linux网络配置原理图"></a><strong>Linux网络配置原理图</strong></h3><h4 id="画出原理图，帮助理解"><a href="#画出原理图，帮助理解" class="headerlink" title="画出原理图，帮助理解"></a><strong>画出原理图，帮助理解</strong></h4><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2M1NGQ4YzM2MDA2ZDlmNzNjNjViY2IzNDhmNTE3YTJfNnV4OEU2ZkhFMWRFSWF2OEFzUFFBTGJnSVVCYWNjcmVfVG9rZW46T3RYQ2J0QjBzb0VaT3B4NXBCT2NQZmNGbjhjXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="查看网络IP和网关"><a href="#查看网络IP和网关" class="headerlink" title="查看网络IP和网关"></a><strong>查看网络IP和网关</strong></h3><h4 id="查看虚拟机网络编辑器和修改IP地址"><a href="#查看虚拟机网络编辑器和修改IP地址" class="headerlink" title="查看虚拟机网络编辑器和修改IP地址"></a><strong>查看虚拟机网络编辑器和修改IP地址</strong></h4><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YTE2NmQ0ZDE0MDJhMTVkMDY2OTQ1ZjhhNTZmOGVlMWVfbHNKSUlwQXNhaDkxS2JPTVlJNGpLNWVhRmdzU0E3SEVfVG9rZW46TFFXTWJ5UGcwb3dmbEd4Wk9ISWNZUjhoblBjXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="查看网关"><a href="#查看网关" class="headerlink" title="查看网关"></a><strong>查看网关</strong></h4><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MTI0MmZhNDZiYWIyM2NmNjI5NzBiNzYzNTJjODRkOTJfVFo4OEtlWEswSUNiUjNsd1FKRXROT2FFejY2em9ObGFfVG9rZW46UGprMmJJQjdQb1BzVDZ4R2tCYWN4SlR3bkFkXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NzY1NTcxODY4ODc1MzY3YzNlNThhODc3YmVjODYyNDhfZVJsSmJmVHowUmI0ZTBtZGZmMUVnTUdBZ3NVNldnTVhfVG9rZW46SkFzSWJObFpPb1Nmc0t4QkNhUWNaSXlGbmluXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="查看windows环境中的VMnet8网络配置：ipconfig指令"><a href="#查看windows环境中的VMnet8网络配置：ipconfig指令" class="headerlink" title="查看windows环境中的VMnet8网络配置：ipconfig指令"></a><strong>查看windows环境中的VMnet8网络配置：ipconfig指令</strong></h3><p>也可以在网络和internet&gt;高级网络设置&gt;查看其他属性里查看</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MTFhMjFlMjkyNWU4MmI5NjFjYTBjMTc1YzczNGM0MGJfRDc0ZURlMzJjT2h0YmZDYWN1ckFrMkFNQWpuSVNXWG5fVG9rZW46QU9sOGI1ZlhOb0pUTWd4RXVqaGM1YzlwbnN4XzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="查看linux的网络配置：ifconfig指令"><a href="#查看linux的网络配置：ifconfig指令" class="headerlink" title="查看linux的网络配置：ifconfig指令"></a><strong>查看linux的网络配置：ifconfig指令</strong></h3><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NGU0ZDRjYzY3OWFjMTdiZDFlMTk4ODBjMTVmZDkxNDhfY0x1TlJ1TmRDRkJsbnl6Z3llRXVuN3g2SzhBNTNpeVhfVG9rZW46V3RaSGIzampYb0RRdVB4UzQ0U2M3M01WblpkXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="ping测试主机之间网络连通性"><a href="#ping测试主机之间网络连通性" class="headerlink" title="ping测试主机之间网络连通性"></a><strong>ping测试主机之间网络连通性</strong></h3><h4 id="基本语法-1"><a href="#基本语法-1" class="headerlink" title="基本语法"></a><strong>基本语法</strong></h4><p>ping 目的主机 （功能描述：测试当前服务器是否可以连接目的主机）</p>
+<h4 id="应用实例-4"><a href="#应用实例-4" class="headerlink" title="应用实例"></a><strong>应用实例</strong></h4><p>测试当前服务器是否可以连接百度</p>
+<p>ping <a target="_blank" rel="noopener" href="http://www.baidu.com/">www.baidu.com</a></p>
+<h3 id="linux网络环境配置"><a href="#linux网络环境配置" class="headerlink" title="linux网络环境配置"></a><strong>linux网络环境配置</strong></h3><h4 id="第一种方法（自动获取）："><a href="#第一种方法（自动获取）：" class="headerlink" title="第一种方法（自动获取）："></a><strong>第一种方法（自动获取）：</strong></h4><p>说明：登录后，通过界面来设置自动获取ip。</p>
+<p>优点：linux启动后会自动获取IP，避免冲突</p>
+<p>缺点：每次自动获取的ip地址可能不一样</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NzcxMTkyMGRjOWE2MjFmZDU3ZmE2ZTQ0ZmQ5ZjYwZmFfNDdHM0EzQk1EemdObVhIWDZodGRyYTBPSFJQMGFYWjdfVG9rZW46WTFqN2JNcEI1b1M2aVR4YlFmeWNRZTBKbkpiXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YTI0YmI3OTJmZTc3NzY3OTk1MDg0ZTFjODQ0MTMwMGVfMmEzM0VVMkxVZjhNQWkwVWxMOVdsNlZMWkttNzVXMEJfVG9rZW46RVdET2IzMko4b1dyTGl4c3FzZ2NZQjlUbmxjXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="第二种方法（指定ip）："><a href="#第二种方法（指定ip）：" class="headerlink" title="第二种方法（指定ip）："></a><strong>第二种方法（指定ip）：</strong></h4><p>说明</p>
+<p>直接修改配置文件来指定ip，并可以连接到外网（程序员推荐）</p>
+<p>编辑： vim &#x2F;etc&#x2F;sysconfig&#x2F;network-scripts&#x2F;ifcfg-ens33（ens33就是网络设备，更准确地说是网卡）</p>
+<p>要求：将ip地址配置成静态的：比如：ip地址为192.168.200.130</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTZlMWY5MDEwY2Q1NzcxNWIzNDc0MTk1YjEwOTA3ODBfUVhISGxOSlVMZnRJbU9Fd3lQMUgxdjNvQ2dMYWNJaFZfVG9rZW46UldBYWJ4RE1Db1ZUWnJ4QkY4VGNGNXNlbms0XzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>ifcfg-ens33 文件说明</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p>要将ip地址配置成静态的，需要修改ifcfg-ens33文件，具体地需要添加or修改</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p>修改后保存，接下来还需要打开虚拟机的虚拟网络编辑器，找到VMnet8，修改其子网IP为192.168.200.0</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZmQyYjVhNjQ2YjA1OWI4N2ZlMzJmZDBiN2I4N2VjYmVfQzM1aE9MalBXNjlBZ2Y2cHRwcXFnc0JqTmxrakJscElfVG9rZW46UXVmMmJKYkF1bzBlaVR4dFNDWmNTZjN3bjlLXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>接下来打开NAT设置，修改网关IP为192.168.200.2</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDM1ODg1MmM5ZjA2NjkyMDdmMGE3OWVjYzY4YjU2NTJfMDd5U0dkQTZ0ZlF6OVZBVTNBRkFqbXl3MUE3a1FvejJfVG9rZW46TGNCMGJaTmRvb2NZUXF4ZlE0dWNxNW1WblhkXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>点应用和确定</p>
+<p>重启网络服务或者重启系统生效</p>
+<p>service network restart # 重启网络服务</p>
+<p>reboot # 重启系统</p>
+<p>注意：因为修改了虚拟机的ip，所有要在xshell中登录虚拟机，需要修改对应连接的属性中的ip</p>
+<h3 id="设置主机名和hosts映射"><a href="#设置主机名和hosts映射" class="headerlink" title="设置主机名和hosts映射"></a><strong>设置主机名和hosts映射</strong></h3><h4 id="设置主机名"><a href="#设置主机名" class="headerlink" title="设置主机名"></a><strong>设置主机名</strong></h4><p>1.为了方便记忆，可以给linux系统设置主机名，也可以根据需要修改主机名</p>
+<p>2.指令hostname：查看主机名</p>
+<p>3.修改文件在&#x2F;etc&#x2F;hostname指定</p>
+<p>4.修改后，重启生效</p>
+<h4 id="设置hosts映射"><a href="#设置hosts映射" class="headerlink" title="设置hosts映射"></a><strong>设置hosts映射</strong></h4><p>思考：如何通过主机名能够找到（比如ping）某个linux系统?</p>
+<p>windows</p>
+<p>在C:\Windows\System32\drivers\etc\hosts文件指定ip地址和主机名的关系即可</p>
+<p>案例：192.168.200.130 hspedu100</p>
+<p>linux</p>
+<p>在&#x2F;etc&#x2F;hosts 文件指定</p>
+<p>案例：192.168.200.1 ThinkPad-PC（这个名字其实可以随意，但是ping的时候必须也是这个名称）</p>
+<h3 id="主机名解析过程分析（Hosts、DNS）"><a href="#主机名解析过程分析（Hosts、DNS）" class="headerlink" title="主机名解析过程分析（Hosts、DNS）"></a><strong>主机名解析过程分析（Hosts、DNS）</strong></h3><h4 id="Hosts是什么"><a href="#Hosts是什么" class="headerlink" title="Hosts是什么"></a><strong>Hosts是什么</strong></h4><p>一个文本文件，用来记录IP和Hostname（主机名）的映射关系</p>
+<h4 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a><strong>DNS</strong></h4><p>1.DNS，就是Domain Name System的缩写，翻译过来就是域名系统</p>
+<p>2.是互联网上作为域名和IP地址相互映射的一个分布式数据库</p>
+<h4 id="应用实例：用户在浏览器输入了www-baidu-com"><a href="#应用实例：用户在浏览器输入了www-baidu-com" class="headerlink" title="应用实例：用户在浏览器输入了www.baidu.com"></a><strong>应用实例：用户在浏览器输入了<a target="_blank" rel="noopener" href="http://www.baidu.com/">www.baidu.com</a></strong></h4><p>1.浏览器先检查浏览器缓存中有没有该域名和IP地址的对应关系，有就先调用这个IP完成解析；如果没有找到，就检查操作系统DNS解析器缓存，如果有直接返回IP完成解析。这两个缓存，可以理解为本地解析器缓存。</p>
+<p>2.一般来说，当电脑第一次成功访问某一网站后，在一定时间内，浏览器或操作系统会缓存他的IP地址（DNS解析记录)。如在cmd窗口中输入</p>
+<p>ipconfig &#x2F;displaydns &#x2F;&#x2F; 可以看到当前操作系统里面的DNS域名解析缓存</p>
+<p>ipconfig &#x2F;flushdns &#x2F;&#x2F; 手动清理dns缓存</p>
+<p>3.如果本地解析器缓存没有找到对应映射，检查系统中的hosts文件中有没有配置对应的域名IP映射，如果有，则完成解析并返回。</p>
+<p>4.如果本地DNS解析器缓存和hosts文件中均没有找到对应的IP，则到域名服务DNS（公网的DNS，即分布式数据库）进行解析域</p>
+<p>5.如果还没找到，返回域名不存在的信息</p>
+<p>注意：</p>
+<p>1.如果是ping 一个域名，则没有浏览器缓存</p>
+<p>2.公网的DNS服务器不是一个服务器，而是分级的（这是为了优化而做的）</p>
+<p>示意图</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NjAwMGJhNmY3MjNhYWZkZThkMGQ4ZmEyNTU0OTk5NjRfR3gyQjdoeERubWJrbHZrZGcwcTVUZk5LTGpyVlBoOElfVG9rZW46WEh1ZmJlaXlXb043OWV4aDFNRWNsUDlIbkplXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>补充：</p>
+<p>dns域名劫持：黑客攻击，修改hosts文件，会让域名定向到假网站，（不过现在很多浏览器都有防域名劫持的机制）。</p>
+<h2 id="第14章：Linux实操篇-进程管理（重点）"><a href="#第14章：Linux实操篇-进程管理（重点）" class="headerlink" title="第14章：Linux实操篇-进程管理（重点）"></a><strong>第14章：Linux实操篇-进程管理（重点）</strong></h2><h3 id="基本介绍-2"><a href="#基本介绍-2" class="headerlink" title="基本介绍"></a><strong>基本介绍</strong></h3><p>1.在Linux中，每个执行的程序都成为一个进程。每一个进程都分配一个ID号(pid，也叫进程号）。</p>
+<p>下图是windows下通过任务管理器查看进程。</p>
+<p>补充：程序（静态概念）不运行的时候，就是一段代码。当它加载到内存里时，它才是一个进程（动态概念）。</p>
+<p>2.每个进程都可能以两种方式存在。前台与后台，所谓前台进程就是用户目前的屏幕上可以进行操作的。后台进程则是实际在操作，但由于屏幕上无法看到的进程，通常使用后台方式执行，比如mysql服务。</p>
+<p>3.一般系统的服务都是以后台进程的方式存在，如mysql，tomcat，而且都会常驻在系统中。直到关机才结束。</p>
+<h3 id="显示系统执行的进程"><a href="#显示系统执行的进程" class="headerlink" title="显示系统执行的进程"></a><strong>显示系统执行的进程</strong></h3><h4 id="基本介绍-3"><a href="#基本介绍-3" class="headerlink" title="基本介绍"></a><strong>基本介绍</strong></h4><p>ps命令是用来查看目前系统中，有哪些正在执行，以及它们执行的状况。可以不加任何参数。</p>
+<p>一般将-a，-u和-x三个参数同时组合使用。</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MDJhMDA2MzIzN2VmZjllZTkxMmUzZDBhMGFjYmQyOGNfT3BXdnNldVlRa2VBQWRFU1ZpYjBJaDdQZUNubUtNeWdfVG9rZW46UTVsaGIxaEJlb2lNMGh4cjNENWM4U2xwbjdlXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>USER是指”进程执行用户“</p>
+<p>PID是指”进程号“</p>
+<p>%CPU是指”占用CPU的百分比“</p>
+<p>%MEM是指”占用物理内存百分比“</p>
+<p>VSZ是指”占用虚拟内存大小“</p>
+<p>RSS是指”驻留集合大小，即进程所使用的非交换区物理内存大小“</p>
+<p>TTY是指”终端信息“</p>
+<p>STAT是指”当前运行状态“，S表示sleep（休眠）、r表示正在运行</p>
+<p>START是指”执行的开始时间“</p>
+<p>TIME是指”占用CPU时间“</p>
+<p>COMMAND是指”进程名，也可以理解为执行该进程的指令“</p>
+<h4 id="ps详解"><a href="#ps详解" class="headerlink" title="ps详解"></a><strong>ps详解</strong></h4><p>1.指令：ps -aux | grep xxx，比如想看看有没有sshd服务</p>
+<p>2.指令说明</p>
+<p>System V 展示风格</p>
+<p>USER：用户名称</p>
+<p>PID：进程号</p>
+<p>%CPU：进程占用CPU百分比</p>
+<p>%MEM：进程占用物理内存的百分比</p>
+<p>VSZ：进程占用的虚拟内存大小（单位 ：KB）</p>
+<p>RSS：进程占用的物理内存大小（单位：KB）</p>
+<p>TTY：终端名称，缩写</p>
+<p>STAT：进程状态，其中S-睡眠，s-表示该进程是会话的先导进程，N-表示进程拥有比普通优先级更低的优先级，R-正在运行，D-短期等待，Z-僵死进程，T-被跟踪或者被停止等等</p>
+<p>STARTED：进程的启动时间</p>
+<p>TIME：CPU时间，即进程使用CPU的总时间</p>
+<p>COMMAND：启动进程所用的命令和参数，如果过长会被截断显示</p>
+<h4 id="应用实例-5"><a href="#应用实例-5" class="headerlink" title="应用实例"></a><strong>应用实例</strong></h4><p>要求：以全格式显示当前所有的进程，查看进程的父进程。比如查看sshd的父进程信息：ps -ef | grep sshd</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YzZmNzM1MzExMGM2NjllNWNlNmVkYTdiNmM0Njc4NzVfdlA1WEthWWd0Z0Nsd2E3U0RIUmlxWGxMR3VjOUtuZUxfVG9rZW46WE1Nb2JLN1R3b3RqQld4OFBTd2M4VVFlblBjXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>可以看出，sshd的父进程的PID为1，通过指令ps -aux | more可以看到PID为1的进程为</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MWRhMjYzNjQ4YzVhZTFiMjE2ODdjM2NjODQ3ZjJmNTBfQjNkVnRpTE50TnI0N2RReGFkWTZVc1dad0ROaVFOZVBfVG9rZW46TDlEdWJEbzQwb0pzOEZ4TjV4NmNYVDlBbkk1XzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>补充：</p>
+<p>1.一个进程可以创建生成多个子进程，所以会有所谓的多进程的概念。</p>
+<p>2.看上上图可以发现，root身份通过xshell登录的2033进程是1318进程的子进程。</p>
+<p>ps -ef是以全格式显示当前所有的进程</p>
+<p>-e显示所有进程。-f 全格式</p>
+<p>ps -ef | grep xxx</p>
+<p>是BSD风格</p>
+<p>UID：用户ID</p>
+<p>PID：进程ID</p>
+<p>PPID：父进程ID</p>
+<p>C：CPU用于计算执行优先级的因子。数值越大， 表明进程是CPU密集型运算，执行优先级会降低；数值越小，表明进程是I&#x2F;O密集型运算，执行优先级会提高</p>
+<p>STIME：进程启动的时间</p>
+<p>TTY：完整的终端名称</p>
+<p>TIME：CPU时间</p>
+<p>CMD：启动进程所用的命令和参数</p>
+<h3 id="终止进程kill和killall"><a href="#终止进程kill和killall" class="headerlink" title="终止进程kill和killall"></a><strong>终止进程kill和killall</strong></h3><h4 id="介绍："><a href="#介绍：" class="headerlink" title="介绍："></a><strong>介绍：</strong></h4><p>若是某个进程执行一半需要停止时，或是已消了很大的系统资源时，此时可以考虑停止该进程。使用kill命令来完成此项任务。</p>
+<h4 id="基本语法-2"><a href="#基本语法-2" class="headerlink" title="基本语法"></a><strong>基本语法</strong></h4><p>kill [选项] 进程号（功能描述：通过进程号终止进程）</p>
+<p>killall 进程名称 （功能描述：通过进程名称终止进程，也支持通配符，这在系统因负载过大而变得很慢时很有用）</p>
+<p>补充：</p>
+<p>1.通过kill只会终止父进程，其子进程会交给1号进程接管。</p>
+<p>2.通过killall终止进程，会将该进程下面的所有子进程也一并终止。</p>
+<h4 id="常用选项-1"><a href="#常用选项-1" class="headerlink" title="常用选项"></a><strong>常用选项</strong></h4><p>-9：表示强迫进程立即停止（因为在有些情况下，系统处于保护机制，它会忽略kill指令，但是带-9会强制终止进程）</p>
+<h4 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a><strong>最佳实践</strong></h4><p>案例1：踢掉某个非法登录用户：kill 对应进程号，比如kill 11421</p>
+<p>案例2：终止远程登录服务sshd，在适当时候再次启动sshd服务：</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZGY1NjkwMGNjOGZkNGM2MWEzNWU5YmJiYWJiNjJiNmNfaUxkVXJ2a3BKTVg3a0t5dm5Fc3JmRkJGT3o5dHZKYzhfVG9rZW46WEtzVmJCRVZBbzdpaVF4VFZDYmNUUEJpbk9oXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>案例3：终止多个gedit，演示killall：killall gedit</p>
+<p>案例4：强制杀掉一个终端</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NmU2NWE3MjBiZDg3YmM4NGQ5OTQyMWRkNjVjNDRkZGNfYkJwcDUyc0pKR3FHTDAyaVhUakNSN2xBaWxWNm9mY21fVG9rZW46T25rVGIyWFNlb25aNnF4VklSdmNkdjVtblNmXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>kill 5480，没有反应。因为该终端正在工作，认为你可能是误操作。此时要终止必须要强制终止：kill -9 5480</p>
+<h3 id="查看进程树pstree"><a href="#查看进程树pstree" class="headerlink" title="查看进程树pstree"></a><strong>查看进程树pstree</strong></h3><h4 id="基本语法-3"><a href="#基本语法-3" class="headerlink" title="基本语法"></a><strong>基本语法</strong></h4><p>pstree [选项] [进程号]，可以更加直观的来看进程信息，不写进程号，默认查看进程为1的进程树</p>
+<h4 id="常用选项-2"><a href="#常用选项-2" class="headerlink" title="常用选项"></a><strong>常用选项</strong></h4><p>-p：显示进程的PID</p>
+<p>-u：显示进程的所属用户</p>
+<h4 id="应用实例："><a href="#应用实例：" class="headerlink" title="应用实例："></a><strong>应用实例：</strong></h4><p>案例1：请以树状的形式显示进程pid：pstree -p （进程号）</p>
+<p>案例2：请以树状的形式显示进程的用户：pstree -u</p>
+<h3 id="服务（service）管理"><a href="#服务（service）管理" class="headerlink" title="服务（service）管理"></a><strong>服务（service）管理</strong></h3><h4 id="介绍：-1"><a href="#介绍：-1" class="headerlink" title="介绍："></a><strong>介绍：</strong></h4><p>服务（service）本质就是进程，但是是运行在后台的，通常都会监听某个端口，等待其他程序的请求，比如（mysqld，sshd，防火墙等），因此我们又称为守护进程，是Linux中非常重要的知识点。下图为原理图。</p>
+<p>​        </p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDdkNjFjM2QwY2U4ZWE0ZWFiODIyZTc5ZDdkMjBiNzlfOExhaGdOQWx3djYySlJualFTbklaN2pGc1B0Z29iUzlfVG9rZW46S3dVRGJZQ0dBb2lkcEF4Nkl0OWNkVXVKblRoXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>补充：</p>
+<p>1.SSHD，就是远程登陆服务，是通过SSH来登陆的。最后的一个符号D其实是daemon的简写，表示后台程序&#x2F;守护进程&#x2F;服务</p>
+<h4 id="service管理指令"><a href="#service管理指令" class="headerlink" title="service管理指令"></a><strong>service管理指令</strong></h4><p>1.service 服务名 [start | stop | restart | reload | status]</p>
+<p>2.在CentOS7.0后，很多服务不再使用service，而是systemctl（后面专门讲）</p>
+<p>3.在CentOS7.0后，被service指令管理的服务在&#x2F;etc&#x2F;init.d&#x2F;查看（注意，必须最后带&#x2F;）</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NGMyNmNiOGE1ZTRjOGNlMDVlMzBiMGZjZTUyZWRhMDZfTG1BdFJaWjBtRDZXQjFFUnFSWlJYQ1N1VmJIdmJ3dTdfVG9rZW46VHZzQmJIT2Fnb243b0V4UGlyQWNhaWFZblZmXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="service管理指令案例"><a href="#service管理指令案例" class="headerlink" title="service管理指令案例"></a><strong>service管理指令案例</strong></h4><p>请使用service指令，查看，关闭，启动network(注意：在虚拟系统演示，因为网络连接会关闭，进程不再监听端口，xshell就无法连接上sshd)</p>
+<h4 id="查看服务名："><a href="#查看服务名：" class="headerlink" title="查看服务名："></a><strong>查看服务名：</strong></h4><p>方式1：使用setup -&gt; 系统服务 就可以看到全部：setup</p>
+<p>下图中打星号的表示会随着linux的启动，自动启动。没有带星号的则需要手动启动。</p>
+<p>将光标移动到某一个服务上，按空格，可以将自动启动的服务改为需要手动启动，即可以去掉星号。</p>
+<p>按tab可以切换选择框。</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=N2I4OWEzNjYwYzFlMzlmM2U1NzIxMDdiOWFmMjg1NThfQmhTaFdNS3pOZzlhcTZQT2Q1bzFUVlRKVm83NU43ZE1fVG9rZW46WGdtV2JCMHBQb3hrR0R4dGVlSGNmbkxZbmhlXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>方式2：&#x2F;etc&#x2F;init.d 看到service指令管理的服务：ls -l &#x2F;etc&#x2F;init.d</p>
+<h4 id="服务的运行级别（runlevel）："><a href="#服务的运行级别（runlevel）：" class="headerlink" title="服务的运行级别（runlevel）："></a><strong>服务的运行级别（runlevel）：</strong></h4><p>Linux系统中有7种运行级别（runlevel）：常用的是级别3和5</p>
+<p>运行级别0：系统停机状态（一旦启动马上关机），系统默认运行级别不能设为0，否则不能正常启动</p>
+<p>运行级别1：单用户工作状态，root权限，用于系统维护，禁止远程登录</p>
+<p>运行级别2：多用户状态（没有NFS），不支持网络</p>
+<p>运行级别3：完全的多用户状态（有NFS），无界面，登录后进入控制台命令行模式</p>
+<p>运行级别4：系统未使用，保留</p>
+<p>运行级别5：X11控制台，登录后进入图形GUI模式</p>
+<p>运行级别6：系统正常关闭并重启，默认运行级别不能设为6，否则不能正常启动</p>
+<p>开机的流程说明：</p>
+<p>开机-&gt;BIOS-&gt;&#x2F;boot-&gt;systemd进程1-&gt;运行级别-&gt;运行级对应的服务</p>
+<h4 id="CentOS7后运行级别说明"><a href="#CentOS7后运行级别说明" class="headerlink" title="CentOS7后运行级别说明"></a><strong>CentOS7后运行级别说明</strong></h4><p>在&#x2F;etc&#x2F;inittab中进行了简化，如下：</p>
+<p>multi-user.target: analogous to runlevel 3</p>
+<p>graphical.target: analogous to runlevel 5</p>
+<h5 id="To-view-current-default-target-run"><a href="#To-view-current-default-target-run" class="headerlink" title="To view current default target, run:"></a><strong>To view current default target, run:</strong></h5><p>systemctl get-default</p>
+<h5 id="To-set-a-default-target-run"><a href="#To-set-a-default-target-run" class="headerlink" title="To set a default target, run:"></a><strong>To set a default target, run:</strong></h5><p>systemctl set-default TARGET.target</p>
+<h4 id="chkconfig指令"><a href="#chkconfig指令" class="headerlink" title="chkconfig指令"></a><strong>chkconfig指令</strong></h4><p>介绍</p>
+<p>1.通过chkconfig命令可以给服务的各个运行级别设置自启动&#x2F;关闭</p>
+<p>2.chkconfig指令管理的服务在&#x2F;etc&#x2F;init.d查看</p>
+<p>3.注意：Centos7.0后，很多服务使用systemctl管理（后面马上讲）</p>
+<p>chkconfig基本语法</p>
+<p>查看服务chkconfig –list [|grep xxx] (–list可加可不加）</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MWQ3NWQ5ZGU5M2VjOGIyNmFlYWNkOGVlYTFlOWY1NWNfOFpsaE9iN0NlVUNXRndHcEJZWUF0SmlEdFRNSlNVYnNfVG9rZW46TFE0RWJab1dFb2w0VWl4MTAwY2NWMWxkbmVmXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>注意：sysv和systemd都是管理进程启动或关闭的程序，sysv启动服务慢，systemd启动服务快</p>
+<p>chkconfig 服务名 –list</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ODdiOWFlMzgxOTYxOTQwZDM2ZGFhMTY1Mzg5Njg5NTJfWXhZOVdsNkVnRFdlOEE3YUMydzNuV3piVGlOSTRjZElfVG9rZW46Q3FkZmI1aVFFb3RkREJ4ZXg0cmN0Z29WbnZkXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>chkconfig –level 5 服务名 on&#x2F;off：用这条指令可以设置某一个服务在某一个运行级别是自启动或者关闭自启动</p>
+<p>案例演示：对network 服务 进行各种操作，把network在3这个级别关闭自启动</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p>使用细节</p>
+<p>chkconfig重新设置服务后自启动或关闭，需要重启机器reboot生效。</p>
+<h4 id="systemctl管理指令"><a href="#systemctl管理指令" class="headerlink" title="systemctl管理指令"></a><strong>systemctl管理指令</strong></h4><p>1.基本语法：systemctl [start | stop | restart | status] 服务名</p>
+<p>2.systemctl指令管理的服务在&#x2F;usr&#x2F;lib&#x2F;systemd&#x2F;system查看</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZmJiODczMjI5NjU2ZTg5NzU5ZjNhZmE0MGUyMjIyZGJfV21BaEhwTmdVSnRBMURGc3p0Q2Rqa1JaRTlTR2c3NnpfVG9rZW46STRieGJIZW5Jb2diSkN4RnY4VmN4OUk1blliXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="systemctl设置服务的自启动状态"><a href="#systemctl设置服务的自启动状态" class="headerlink" title="systemctl设置服务的自启动状态"></a><strong>systemctl设置服务的自启动状态</strong></h4><p>1.systemctl list-unit-files [| grep 服务名] （查看服务开机启动状态，grep可以进行过滤）</p>
+<p>2.systemctl enable 服务名（设置服务开机启动）</p>
+<p>3.systemctl disable 服务名（关闭服务开机启动）</p>
+<p>4.systemctl is-enabled 服务名（查询某个服务是否是自启动的）</p>
+<h4 id="应用案例："><a href="#应用案例：" class="headerlink" title="应用案例："></a><strong>应用案例：</strong></h4><p>查看当前防火墙的状况，关闭防火墙和重启防火墙。&#x3D;&gt; firewalld.service</p>
+<p>查看防火墙服务开机启动状态：systemctl list-unit-files | grep firewalld（.service可带可不带）</p>
+<p>查看防火墙的状态：systemctl status firewalld</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjkyNjlmOTU1ZmQzMTkwMDlhZTg3Y2FlNWZhNTc5OWNfNXNrS2h0SkxYOFQ4NldXdHpTZ2lhNFhRQThEd1pNYjBfVG9rZW46QlJ4R2IzWFptb0RRS0p4UUJyZ2NDN3A4bjFjXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>关闭防火墙：systemctl stop firewalld</p>
+<p>重启防火墙：systemctl start firewalld</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=Mzk4MTVjMDk0ZGQzNTNlMThlNjdhODFkMzNiOGM4ZTFfd3REczdsUmcwcjlvb2lrbndXWnQ2c1BTUXIyZGZObkNfVG9rZW46R3JGbGJyaE9mb2wyRWJ4NEpNN2NZNmNjblNoXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>注意：</p>
+<p>1.防火墙的服务名可以通过过滤查看&#x2F;usr&#x2F;lib&#x2F;systemd&#x2F;system文件来获得</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=Yzc1NDc1ZDY2Y2U3NTA0NDE2YzBkOWFiOTE5MTMwMmZfWEJPcm5UR25kazFudGU4d2s4Unl4UFdvQVFWWmNmcFZfVG9rZW46U2VXTWJyclE1b2NzTE14ZWxQU2M5dWtrbjdjXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>2.static状态表示该服务与其他服务相关联，不能单独设置该服务的启动状态</p>
+<p>3.与前面的chkconfig –level x 服务名 on&#x2F;off不同的是，systemctl enable&#x2F;disable 服务名的指令不需要带level，这是因为centos7.0以后，通过systemctl开启和关闭服务，默认是对级别3和5做操作，都生效。</p>
+<h4 id="细节讨论："><a href="#细节讨论：" class="headerlink" title="细节讨论："></a><strong>细节讨论：</strong></h4><p>1.关闭或者启用防火墙后，立即生效。[telnet测试 某个端口即可]</p>
+<p>可以通过netstat -anp | more指令查看网络状态</p>
+<p>测试：telnet 192.168.200.130 111</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZWFkNWYyNDY3MjhiZTkwYTYzMDk5OGU4YzFmZDMyYjlfMnp1eDRaZHdVSWVXcHVqWUFha0hsZzJRc3hFNnNJVm1fVG9rZW46VVBIdGI4OGt6bzBPclF4WGVUQWNhZTRQbmJnXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>无法连接，说明防火墙是启动的，并且没有把111端口打开。</p>
+<p>当关闭防火墙后，再测试连接端口，则可以通过。</p>
+<p>补充：</p>
+<p>（1）：防火墙基本原理：可以认为系统在监听端口前面加了一个防火墙，当一个请求来的时候，如果相应端口是放开的，则请求可以通过，否则不通过。防火墙可以理解为筛子，通过预先设置的大小，来过滤掉不符合尺寸的服务。</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YzJmOTY0NTlmOTdhYTIxYjhjMjQwYWU1MTk2Y2E3MDdfMVoxaGlMS2E3SFFkbUg3ZXhLN0hRam80aVdPM3pzSWJfVG9rZW46SFpxd2I4b245b2Z0ck14cm5QTWNWdmxZblhkXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>（2）：开启telnet命令需要：依次点击‘开始’-&gt;“控制面板”-&gt;“程序”-&gt;“在程序和功能”找到并点击“启用或关闭windows功能”进入windows系统功能设置对话框。找到并勾选“Telnet客户端”和“Telnet服务器”</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2NkNTkyOTRkYWFiNjU5N2QwMDBhNzI5N2I0ZmMzMDRfZGJpMEVwQ2xZUWprUDlDaHBKNmJEWmpYN0tNaXIwcFpfVG9rZW46SmFDcWI0UUdDb214Vm94SDVpeGNwekp0blRjXzE3NDAzMTY4NzA6MTc0MDMyMDQ3MF9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>2.这种方式只是临时生效，当重启系统后，还是回归以前对服务的设置。</p>
+<p>3.如果希望设置某个服务自启动或关闭永久生效，要使用systemctl [enable|disable] 服务名。</p>
+<h4 id="打开或者关闭指定端口"><a href="#打开或者关闭指定端口" class="headerlink" title="打开或者关闭指定端口"></a><strong>打开或者关闭指定端口</strong></h4><p>在真正的生产环境，往往需要将防火墙打开，但问题来了，如果我们把防火墙打开，那么外部请求数据包就不能跟服务器监听端口通讯。这时，需要打开指定的端口。比如80、22、8080等，这个又怎么做呢？[示意图]</p>
+<h4 id="firewall指令"><a href="#firewall指令" class="headerlink" title="firewall指令"></a><strong>firewall指令</strong></h4><p>打开端口：firewall-cmd –permanent –add-port&#x3D;端口号&#x2F;协议</p>
+<p>关闭端口：firewall-cmd –permanent –remove-port&#x3D;端口号&#x2F;协议</p>
+<p>重新载入，才能生效：firewall-cmd –reload</p>
+<p>查询端口是否开放：firewall-cmd –query-port&#x3D;端口&#x2F;协议</p>
+<p>补充：要知道对应端口的协议是什么，可以使用netstat -anp指令查看</p>
+<h4 id="应用案例：-1"><a href="#应用案例：-1" class="headerlink" title="应用案例："></a><strong>应用案例：</strong></h4><p>1.启用防火墙，测试111端口是否能telnet，答案是不行：通过firewall-cmd –query-port&#x3D;111&#x2F;tcp可以发现111端口是未开放的</p>
+<p>2.开放111端口：</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p>3.再次关闭111端口：</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a><strong>命令</strong></h2><h3 id="解压"><a href="#解压" class="headerlink" title="解压"></a><strong>解压</strong></h3><p>解压 tar -zxvf xx.tar.gz</p>
+<ul>
+<li>-x: 解压缩</li>
+<li>-v: 显示详细过程</li>
+<li>-f: 指定文件名</li>
+<li>-z: 支持 gzip 格式</li>
+<li>-j: 支持 bzip2 格式</li>
+</ul>
+<p>在命令行中删除文件的常用命令取决于你使用的操作系统。以下是一些主要操作系统中的删除文件命令：</p>
+<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a><strong>删除</strong></h3><p>使用 <code>rm</code> 命令：</p>
+<ul>
+<li>删除单个文件：</li>
+</ul>
+<p>暂时无法在飞书文档外展示此内容</p>
+<ul>
+<li>删除多文件：</li>
+</ul>
+<p>暂时无法在飞书文档外展示此内容</p>
+<ul>
+<li>强制删除文件（不提示确认）：</li>
+</ul>
+<p>暂时无法在飞书文档外展示此内容</p>
+<ul>
+<li>删除目录及其内容（递归）：</li>
+</ul>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p><strong>注意事项</strong> 使用删除命令时要谨慎，删除的文件通常无法恢复。 可以使用 <code>-i</code> 选项在 Linux 中启用交互模式，以便在删除每个文件之前进行确认：  </p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<h3 id="pwd"><a href="#pwd" class="headerlink" title="pwd"></a><strong>pwd</strong></h3><p>显示当前用户所在的目录</p>
+<h3 id="实时查看内容"><a href="#实时查看内容" class="headerlink" title="实时查看内容"></a>实时查看内容</h3><p>使用watch -d(-d是高亮显示输出发生变化的内容，以便于观察)</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p>这个命令的作用详见图解系统笔记中关于软中断一章。</p>
+<p><code>ps aux</code> 是一个用于在类 Unix 操作系统（如 Linux、macOS 等）中查看系统中当前运行的所有进程的命令。它显示了系统上所有进程的详细信息，包括进程的 PID、内存和 CPU 使用情况、进程状态等。</p>
+<h3 id="ps-aux"><a href="#ps-aux" class="headerlink" title="ps aux"></a><code>ps aux</code></h3><ul>
+<li>**<code>ps</code>**：代表 “process status”，即查看进程的状态。</li>
+<li>**<code>a</code>**：显示所有用户的进程，而不仅仅是当前用户的进程。这个选项也会显示其他用户运行的进程。</li>
+<li>**<code>u</code>**：以用户为中心的格式显示信息，显示进程所属的用户、CPU 和内存占用情况等。</li>
+<li>**<code>x</code>**：显示没有控制终端的进程，也就是那些没有关联到终端（如后台进程）的进程。</li>
+</ul>
+<p><code>ps aux</code> 输出的字段说明：</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<ul>
+<li><strong>USER</strong>：进程所属的用户。</li>
+<li><strong>PID</strong>：进程的 ID。</li>
+<li><strong>%CPU</strong>：进程使用的 CPU 百分比。</li>
+<li><strong>%MEM</strong>：进程使用的内存百分比。</li>
+<li><strong>VSZ</strong>：进程使用的虚拟内存大小（以 KB 为单位）。</li>
+<li><strong>RSS</strong>：进程实际使用的物理内存大小（以 KB 为单位）。</li>
+<li><strong>TTY</strong>：进程关联的终端（如果有的话），如果是后台进程，通常会显示为 <code>?</code>。</li>
+<li><strong>STAT</strong>：进程的状态（例如，<code>R</code> 表示运行中，<code>S</code> 表示睡眠中，<code>Z</code> 表示僵尸进程等）。</li>
+<li><strong>START</strong>：进程启动的时间。</li>
+<li><strong>TIME</strong>：进程消耗的 CPU 时间总量。</li>
+<li><strong>COMMAND</strong>：启动进程的命令及其参数。</li>
+</ul>
+<p>例子：</p>
+<p>暂时无法在飞书文档外展示此内容</p>
+<p><code>ps aux</code> 的一些常见用途：</p>
+<ol>
+<li><strong>查看系统进程</strong>：你可以用 <code>ps aux</code> 来列出当前系统上的所有进程，了解每个进程的状态。</li>
+<li><strong>分析 CPU 和内存使用情况</strong>：通过查看 <code>CPU</code> 和 <code>MEM</code> 列，你可以分析哪些进程占用了大量的资源，帮助系统管理员优化性能。</li>
+<li><strong>检查后台进程</strong>：包括那些没有终端控制的进程（通过 <code>x</code> 选项），你可以了解后台运行的服务和进程。</li>
+<li><strong>监控进程</strong>：结合 <code>grep</code> 命令，你可以过滤特定的进程，例如查看某个应用的进程：<ol>
+<li>暂时无法在飞书文档外展示此内容</li>
+</ol>
+</li>
+</ol>
+<p><code>ps aux</code> 是一个强大且常用的命令，有助于你在 Linux 系统中查看和管理进程。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AC%94%E8%AE%B0/" class="category-chain-item">笔记</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/linux/" class="print-no-link">#linux</a>
+      
+        <a href="/tags/%E9%9F%A9%E9%A1%BA%E5%B9%B3/" class="print-no-link">#韩顺平</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>linux</div>
+      <div>https://bshtj.github.io/2024/09/25/linux/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年9月25日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/12/26/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="软件设计模式期末复习笔记">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">软件设计模式期末复习笔记</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/05/29/How-to-quickly-typeset-existing-modules-in-QFluentWidgets-based-on-crtl_c+v/" title="如何基于crtl c+v快速排版QFluentWidgets中已有模块">
+                        <span class="hidden-mobile">如何基于crtl c+v快速排版QFluentWidgets中已有模块</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

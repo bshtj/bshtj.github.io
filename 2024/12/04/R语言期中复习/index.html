@@ -1,0 +1,1254 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/wuliannan.png">
+  <link rel="icon" href="/img/wuliannan.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="blog">
+  
+    <meta name="description" content="2 R基础语法 2.1 vector 2.1.1 排除元素使用负索引 12345678# 创建一个向量vec &lt;- c(10, 20, 30, 40, 50)# 排除第3个元素（即下标为3的元素）vec_excluded &lt;- vec[-3]# 输出排除后的结果print(vec_excluded)  2.1.2 提取满足条件的元素可以使用逻辑条件（如 &#x3D;&#x3D;、&lt;、&gt; 等）来">
+<meta property="og:type" content="article">
+<meta property="og:title" content="R语言期中复习">
+<meta property="og:url" content="https://bshtj.github.io/2024/12/04/R%E8%AF%AD%E8%A8%80%E6%9C%9F%E4%B8%AD%E5%A4%8D%E4%B9%A0/index.html">
+<meta property="og:site_name" content="bshtj_blog">
+<meta property="og:description" content="2 R基础语法 2.1 vector 2.1.1 排除元素使用负索引 12345678# 创建一个向量vec &lt;- c(10, 20, 30, 40, 50)# 排除第3个元素（即下标为3的元素）vec_excluded &lt;- vec[-3]# 输出排除后的结果print(vec_excluded)  2.1.2 提取满足条件的元素可以使用逻辑条件（如 &#x3D;&#x3D;、&lt;、&gt; 等）来">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MzA2ODY2ZmIzMjA5OWNmOTI3MGU0N2YwZmU5ZDM1ODdfUG9wSXNHRTlDVEd5MTZKSDJDbWhUVmxrT0hnYmlrTG5fVG9rZW46QzVaQmJVaFZlb2RmYTR4OUw0Y2Nnc21BbkZmXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MGIyZTc0YmNjZWY5NDY3YTljMzRhNzJiZTVlZTYyMTBfNnZHMWFWQ1E3cXZZTWtHSlpna0lLajBzakF3TG1FY1JfVG9rZW46WnhUbGJZbzFjb2x5Tzd4YnZVcGM5cDJObkllXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjEwYjRlMWM5NGZjMWQ2ZDU0OTJmMWMxY2YwNTlkMzVfVmVnOUU1RWk5ajRDNTg5bnRSZ2dicVNUbGVJc2FmdGlfVG9rZW46UkdHc2I1NFJ2b2g2SEV4ZGVkQWNiSFh2bmFjXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YTMzOTIwNmMyZjdlYTU2YzExMTk2ZjVjMGJhNjU2NzJfTmZTSlo4c1J1aWN1VHJXU2J0M0YwMEc2NllBWm56NkhfVG9rZW46TkdTN2I3WlB0b3NkOU14TkF0UWNha09jbkFnXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NmIzMmY1YWY5NGU2N2Y5NWM1MWFhNDQyZGJiMWE5ZWNfWjdxNU0xa0dScWFqYzdDMkNUdzdtNVRxQ2prdkQyeGlfVG9rZW46WnhQUGJibHhRb29QUGl4YzFaYWNKN1VtbkFVXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MTYxZDE2ZGNlOTZlOGEyODcyMTQzNDEwOWRlNGVkNGRfejFIYmpmb2VBUk5yY3RZRXlJRGVwMFFlWDBVc290OXFfVG9rZW46UnZYNGJrenNkb2VnenF4eUVVS2NvMTBQbkxiXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTUxYTM5MWQ1ZDU5ZjI3YjM4NGZiMmEwNWFmMTAyMDdfS3AwcDRTaTBVTGhNY1I1c0d3Umc5NURHc0IybzNhanVfVG9rZW46QXNuUGI4VDBlb01RaGV4cVhyVWM5MG14bjBXXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MThmM2FhN2Q4ODEzNTk3ODU5M2U3NTg5NGU5YjQ2Y2RfRE5CbUZIVXpIbnliT1dObGNiQ0c1ZjJXSDZ6NkRwazdfVG9rZW46QURWT2JBQnFqb2d6SHJ4dkFnbGNRYW1lbnpkXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MTFmYjZlMWZmYzRmNDJiMzVmODM5YWRkZWExZmI3NGFfaFBXbWNMUXhwOWtac2tMQkcyM3plc2dLT0JnVWlKZndfVG9rZW46WHpacWJkZXUyb2tFOVl4OFc1d2NhUDlrbm9lXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YjEzODljOGJlNDIwZTYzMmQ3OTFmZTg4OTdkMjM3OWFfNXdKTWpyMjRoMmR0TE5LZXJaY1kwNE9CWmZvaXd3ZjZfVG9rZW46SjRqZ2JOSFNyb0hUNE94cjVMVWNJYVRtbllmXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YjRjMjNiNTM2MjUwMGU2YmI2ODU1OTk2YjUyYTMxOWFfRXJmM21UaXdHZ3lLY0FjRUVhRWMwTTl3WEMzTUtTQjdfVG9rZW46TU4yQ2JBQkdwb1pVT054WmFqVWM5OXlvbkxjXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDU3NWY1NWVlMDA5MTJjZDkyMjdkNDQ3ODk4OWNjZDRfRFZwNlF6cTA0dkY5OGpUbVpSRm04b2lHN25ZSXJNU1ZfVG9rZW46T3VVM2JIa0c3bzVVNlN4cjJzamN3c2hybkNlXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MWMzZDk4OWQzNDQxOGY1NWQxYjBjMDhlMWIxZWIwMzJfajhEcDdjMWE4MUtzaWhLTHF4eHcyZE4zdVZuV2JnMFZfVG9rZW46QThFVGJsT0Fjb21OdGp4a3k4S2NQS0Y4bjhlXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YTJmNWYxMzZhZjVjYWQ2ZmZhMWZlMThlOWU1Y2RhMjBfZlgxb3ZRV2R1b2QwSms4RVRhb3czbUl5bkNXS293UjZfVG9rZW46WTFsRmIzeUc0bzFQS0F4WUpZZ2NOTmo1bmdoXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTYzMWYxMGVjMzJlODgzMDg3NTRmYWI3OTQ4N2Q3MjZfSktjZjRPWEFzWlE0c01MVUZRNnIxNjRjQTZ4MmYzVWlfVG9rZW46Vk8xd2JkeU41bzBYMkd4c2RqZWM2aTNBbkljXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=OTY2Mzc5YmJhOTlmNzQ5NDQ2YTc4MDcwNjk2OWU4NmNfUGVIVFE1T3BLMXJVNG41ckF5RW1DWEdwdWkwUkdhaUJfVG9rZW46SHFPVWJGYmlXb1ZsR3Z4NTFYRWNxTnZHblNnXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=N2IzZTcyMTczMjE5OGFkNjQ5NDUwZmEzMmQ5MjhmNGJfZ3F5Sm9FM2NLbEpZTU1uaVhEVmFxNzU2UllwRExsOTBfVG9rZW46SWZjbGJOTmFlb1h6ZFB4bE0yZGM4a09tbkFmXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2U5MjlmZjQ3MGUwNTE3YzM3MzY3ZTZlYzU3MDZhODBfUE5MOGpBdzVhNWdvenhmYXgwdkJuUTg4ZjZVZkpvbkhfVG9rZW46UTRnNGJTVzRGb0RRNEh4MTlja2NzdXQzbjdmXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NzcxNWY0NzUwZWNlODhlYTlhNzNmYzdkNDA0MWQ3ODhfdnpDVG9xV3ZRcWdsWkJrMUxsOE9BQjZLcXROQ2JkWERfVG9rZW46T204R2IySWgyb2ZoazR4ckt6WmNpdlhWbjdnXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YzY5MjBkZTY4Y2M4YjFiYWQ3NDU4OGM1OWRkYmY4YTNfUDZaMUg5RG1ZelNxRXdqcFJmc3F1NG9vd3BOaDVxMHpfVG9rZW46V0hCUWJ0R2Rzb1Z5RHJ4NEV2WmNORGN0bkJiXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YjkxNDVjMjQ3NGM3ZGUxYzAwYjM1MGY1NTNlODBlOTVfZm5mRWJFU0hBczBUYjl2VDdRbDU2MldpUkNQQmVENFRfVG9rZW46UnRSeWJwN2xCb1Ziamt4RkdiYmNCR2prblhjXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZmUyMTcxMzRlYjZmMDJlZDEzYTIzYzdhOWQyYmM3OTJfY3ppTHVLeURmWFFqTHRoV3BrNGF6QWJSWGwzYkdkdTJfVG9rZW46U3YyOGJnM3FCb3ZFZ3N4QUVBT2NQUDVjbjhmXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YjRkMGYxYTQ2YzRhZmNjMGZjMmFlOGI4N2U3NGEwMzRfZjB1MTVla0RjREtMT04yWXk3NXBZUHgyM2lzdkVQaWVfVG9rZW46VHBtUmJ3NXBsbzlUZ3R4eVp2SGMwVUVXbnpmXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=N2FmYTdlZTE1NWM1NDM0YmNlMTJiZjVmMzNlMmFiNmJfM0ZXMGRqOHhVaGNQRU1qZFdZdGpxamxRZ1RidTRKYjFfVG9rZW46WmdYNmJ5Q3pFbzhZVmN4OVBiWGNjSkJabmdoXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NGI3YzA0NDNmMjkzYjc4MTE4NTgwNGQ5NThkYzUxMDFfNjVtaXgxY090M2VYaEZqSXVFOGw5SFFyenNXYnVhZGxfVG9rZW46SlByYmJHbGlxb0ZDMFh4ZTJ2eWNWYmVTblZjXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NmM2NmM2NWM5NjRiODRkNTZjZGYzZDIwNDkyZTBmN2ZfQWtHZ0RKWVZUc2FFYlNmRUF1Q1VDbzk5SWVsdjJtcThfVG9rZW46VGVEeGJyT0Nzb3o2bDl4dDM4UGM4dFVCblljXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MDkzYzlkYzVmMjFhNDIzM2IzZGE1MjMyY2Y2MzY3YzRfYkpYUEFKMTN2d01zOGtLNDBtNElibHdIWThpQ3E1Tm9fVG9rZW46UGZkV2J0V1Ewb1NmVzJ4am50b2NlWGhYbkFjXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YjJjN2FkYmMwMTRkMWE3M2U1M2RmOTQ3MTIwNzBlNTZfeHk2a3N0cjFwM0Y4NjJXczRqUEo3VHptaENwakFORUlfVG9rZW46WXdyUWJiZ25Lb28wRG94V09jNmNvVWhtbndlXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YThjMmZhNjc1MzBjMjA4MjQ1ZDE0NTE4NTFiNzk0NTZfZ0xZSHZURW1WdlRNd3d0bTF4ZEhYOHdSZkxDTGY2VmpfVG9rZW46SndmSmJ3ZFRub1g1UWZ4aWpOSmM0TWowbjViXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NjFiMjNkODBiMTVlMTVjNjMwZjdjYjliNWZhZDE2NjFfUG9JcVlvOXFQMVFWSU5SQjZ2OUhwUDZuUlV5SE80WXpfVG9rZW46U3pWR2JjUWtjb3EwSXV4b3RxcWNBbnNBbldlXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NGM5NDE2ODBjZmYyZDJlZjUwN2QzMGVjZmQ2MGJiNThfeUw3T3V4WVZSQkpDN0lYV3FFb0dyYUY5NTJWUGx4Z1RfVG9rZW46TWlQS2JQc2Q2b1MxcEh4VkJqcmNMWUQwbmllXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YmQwYjczZDAxOWY3NDYyM2E2YThhNmMyZjJmOTg2YjBfaHFaSjJ0U2pRc3ZaYVZOV2N1WnFKaDZ2aXBiRlh4R1pfVG9rZW46UnBnQmJIWGZOb2NFYlh4Z2dqeGNLVVhwblpmXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=OTFjN2U2NzM0Zjk5NjE2MDQ2NWRlYzRjY2VlMDdiNTZfQlg2OXdDUFFYUzZsMlhHNFQzQ3AxNXlqSlBHYzBpZXFfVG9rZW46R3NuNmJmanIxb0x2REl4TXY4RmM1OTJBbnNkXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2VmYjM2MGZlMWM1MmFmYmNmOTdmZDg1M2I2NDQwZGJfenNqTDlhc3ExOWpHZ2dId3ZSZ1NPbmFSUTRtNFFGa1ZfVG9rZW46T3piN2JGcEZmb1pyWHV4QXlFRGNvMlhzbmdiXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=OWM4ZmIxZDNiOTE4OTFlMWNmYzZkNWNjNzJiYjA2NjZfUTlVWU5KcUpaWnFmQjZ0cEpmNU9tWHFLWThYbmZSZklfVG9rZW46SUI1M2JEVnNtbzA2SUp4bDlPMmNTMTRPbmllXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2IwNWViZmY4YzIyY2Q4YzQ3MTViNGY1OTcxNjZkM2VfN1pNcWFIM1V1ZHFmOUF0Wk11RVNwT1hHU29BVEQzaFJfVG9rZW46T2RWSGJvMXhCb09xaFB4Y0ZIT2NVcHA2bjFmXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YTFhMzJlZDg4MWQ0OTY1MTBlOTY0NGIwYjZiNTQzNjlfVFE4SEwxenY4RGFKWHlDVWJtR3lZMUR5Y3VSYlJ3Q25fVG9rZW46UjFXUWJiUEVab2VuUnF4R3JRWWNjVzl0bjJjXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NTIwYzBkN2M4MTliYThlZGUwMzVjMjMzZGVlOTljNjlfWDJiRGlGTmV5Q1ZVNWJERzUyZndMbzhYWDd6QzN6OHhfVG9rZW46R1pCbmJlcGlOb2cyQWJ4V0oxYmNFYzFxbm9jXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YjdkNzEwYzE2NGI0MzFjYjQ4Y2YwODI1YjJjMTI0NjhfcTdvNzdOdTdYaEhlVmlCcGVhOE5wcDlLREowY3ZXUWtfVG9rZW46RllXTmJoSlcwb0xaNUF4Sk1CdGNJeEVhblZoXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=Yzg4ZDE0ZDY3NWNjOWUwZTExZTBmODYyYWQ1NWI2NjBfSVVadmpoSGh2QmgxdEVxa3lsenAwUjNnbXg4a1M2Z09fVG9rZW46RlR5R2JRYmRTb0F1QXN4UVl6RWNURWJsbmRlXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MjI0OGYzYWZiM2M1ODc0NTdlN2IwMDI2ZTBmZmYwYmVfYWxZUW5hUW5GM0JGbFZOSlZORkxlVVVsNkdGbGJwMFNfVG9rZW46R2pqS2JoaFBvb2R2RUd4MXk4V2NXQXI3blllXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YmMzNDIyNmFiNjA0ZWU3OTA3NjdmMmQyYWY2ODMzZDBfdDJrOXhDZ25CSUtGa3JwOEYwZkZaYkVsS0tHNGhxNnJfVG9rZW46QTZkMmIyQXZzb1pkbUd4cGZabmMxcGYzbkxoXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YjFhNDBmN2U0NGIzNjE1ZmM5MGEwZGM5NDYxYWQxYTdfN21Jb2xMWTM0NkFySEJ5Q1Y2dnRETHZLcXh4NEV2RXpfVG9rZW46U2o1RWJRSzQ5b1YySlN4b0E1OGNMbENiblBoXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=OWZmM2VkOWVkYWFhMGQ5ZjVmZmQ1YWEzZTJlNWY3NTFfdFpqYXczNGlHZWZ5Slk5bmdPWXlycU1VN203TlFyWHlfVG9rZW46VEo3cWJwMjRYb1NQME94eHlNNWNuVWhMbjBjXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MzMwNzNiYjljMDI4NGM1MWQxYzNjYzk4MmE4YWZhMDVfMjdFV3VWRUR5cTdERFJVOFRBMG1PdElnQ1Y5bktGQlVfVG9rZW46TzZmZGJGU0Zkb2pHUFV4ODZkbmNPeE5SbkVlXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MjVhNTVjZjU2NDk3MWU0ZGE2ODgyYjZlZTk1MmUyY2FfSUx1aUk5QlpoSERoTng2d0VPTDZoNHdoaGhJOXNTbUlfVG9rZW46VUEzdmI0QndPb2ZHU3h4NnlEU2NaQzFQbm5iXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YjQyMmU2ZThlMmYwZmE5MDU2YjM2YjU5NjI1ZTIxZTZfT01DVXhNb0RIdzdWZzJsNWtnODJXazB0MWdvREtyRUpfVG9rZW46REp6aGIxb2l1b0tyNmt4TnVNcWNPZGlXbnRjXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDVmZDIyMTRhMTBiMTgwZTQzZmY4OTVkYzQzYjkxNWZfZnJwazIzQUlNT0hlNnVaYjlsZWVKNkxTbEowd0phQkRfVG9rZW46TGsyaWJGY3REb0JCZ1h4YnVhZmM1Z3pBbnJiXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2RjMWEyOGY3NGNmMTk0NjNhOTI2ODEwZmFiNDVmZTBfODJQTjdjeXVHT0FseTgwS2llelBpb3BVbEVpcG53ZVpfVG9rZW46RkxTamJuVklpb3FNQUR4VGhKR2NZVkg0bjRjXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NTNkMjI5OTBjOTE3MGZlZWExYzQ3MGU0NGM4OGIxY2JfR1RrZ3Y5d2Q5OGxUQUx4SHJVZWZpMmttT1BiTXJZVHFfVG9rZW46U0Q4WmJiTHBOb2liSnF4MzEzYmMwTmdKbjBiXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NDM2MjBjMzUyYTU3YzFmMDM3NTA0OTlmNjlmNTIzNWNfMDNkNVlLbWZSeDhEUDJKeENFMjhIeldUbUlwMzVESWlfVG9rZW46S0xjYWJoS0x6b2tnend4M3FZQ2NwQ29UbkhiXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NDBlZjgwYjBkZTFkMzNmNjFkMTI5YjU4NjVlYmMyY2NfbWhTeHhxVDBaTW9NZVd5MFF3RzFZeTZYRDNEcldRQldfVG9rZW46TnhUd2J1U1czb0pjODV4RjM4d2M1eXo4bmdjXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YzYzYTc2Zjk4MWY3MDEzNDIyMzg5YzAwNTYzYTQwMDhfRzZKaUZ5R1pybk5hSXhlMUM1TEVCZzlrWERZNldQc3pfVG9rZW46SWRLVmJINk5kb1dNSE54SUxRRWMwQktHbjVjXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MTViOGQxNmU2NDA1OTJlMDdiNWYzZWFjMWE3M2VmM2ZfcWVXbmdyaG5XVVhWc3pTQzVGeEJQdDRoUDhWelFxaE5fVG9rZW46UXRJYmI3TnRRb0FsNzV4VUd6amNtZVEwbndiXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MWM4MDk2MmY3NGFmM2QyNGNhMDI1OWVmOTg5ZTUwZjVfdGJLYW5qdGFSM1BnUURERWZoOU9CekJaSjBTUVRjRVZfVG9rZW46WGI3YmIxYkExb2J6MWd4WHB0b2MzYUU0bjFmXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=OTg4OWJhOGYzNjRkZDlmNjA4Yzc5ZDcwOWM1MTFiOThfRno4WUFlMXNxYUVrT3JBRVo0YWtYWklMZXpyYWxJSlZfVG9rZW46Q05EWWJ5U1czb0xTWDJ4T05abmM2bmN1bjlkXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MDQxM2VmZjU0NDk4YTgzMmZiNDE1YjM0Yjk5ODhkOWRfSEJ3VkJYcXBpZG1hbnRxSURnczZBc2JvNFczODl5WGlfVG9rZW46T1NaY2JLUmhLb3FGUlV4bmFmYmN1Q3lMbjdlXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YmViNGE3ZDE4YTNhZjgxOTk4YTYwZmNkNTQ4N2YyODRfSFUyemZ6VFdsQUw0cVluUEg5d1FSSXFueHFXcmRWZmhfVG9rZW46SHppSWJNc3M5bzhKYjN4OWlYbGNPUkE2bnZiXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MGU2MmZiMjNlNmIzMDc0Njg1ZGJlZGFmMzhjYjE3OWZfR1RUeFM5RTJKbjIxaUdHQ3UwZ2VKYk10VHUwNVNBR0NfVG9rZW46QWVyRWI0WW0yb3NNdFN4cVVGN2NRSlZ4bjBlXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=OTA2YzAzOGRjMmVkYzMwOWZkYWE4NzE3ZTBhMjQxMzVfZTB2SWk1V3k3VlV0dWJDY3pXcTBqMlRCQTZFY3ZVRTdfVG9rZW46WmlBYWJHbUtjbzRVWXF4M3JLZ2NsOTJPbmpmXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MjY0MDYzYTYyYmY2YTJiZWJlMDdiZDhhYjdhYmUzZTVfWW1zQm4xUzl4Z2pCenJyamxEZWZCa3JoT1hPaDZUZ0FfVG9rZW46SnI3cmJyYU1Pb2lYWmR4OTQ3QmNhN2h2blNlXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MTA5YWE3ODE3MmYxMDZhMDE1Y2ZlNDQ3ZjU2NDE5MGNfcTRWdVV2OU9RS1prUGNlTlgzaXA4ZzREbFVydW1nVktfVG9rZW46SXg0TWJkcW9BbzBHM3J4ODY5eWNzdWp1bjBjXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=OTZkNjllZWM3NTYyOGQxYmYxYTAzZGE1Y2U3ZGUyYWJfU000UHlwUktDckhSSFFRVVJ0Z050WVN2aE8wODdOWkxfVG9rZW46WkFqQmJETTdpb2RHSXZ4NEFXa2NwUXkxblFMXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MzA3MGMzNDVhYmM4YWFiMjBmODc5OTk4ZjIwNGQ5ZjdfVDJnR2h3ZHJGak5nQlVRYXU2UldyZTdVV0F4WnhndXZfVG9rZW46S3E4eWJRalRNb1pKY2l4QzFISGNBUEtibnZoXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YmFjNzZlZTY1NTAxMWRkOWI2Y2RmNmI3YzdjZDIxZjdfTkZHZ3dNU3FPNU45U0VQY0JZN29YS1ZIZnk0cXVzTnJfVG9rZW46RU1sUmJJdFNMb2Y4V1B4Z1RoVGNENlphbm1jXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2VkZThjNzZiYTlmZDg3MjYwNjcyYzI5M2RjYTY0NTJfYnVvUjdMWGtDSmNrbWpBcERDRTIxTGN4bjh6Rk5Uck1fVG9rZW46SGFYdWJzbWhqb09RMXZ4NjFpZ2NTWTdKbmtjXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTZhMTcyNDA1Y2NjZDk5YjY4NTc1YzA2NzI2YjMyYjdfbWJmMGpRaDZWQkV6dUk3dkxpTmRqSVlUMGNSbElIQ0xfVG9rZW46U29yY2JJYWpyb01LWm14aFNFSWNsQng5blhnXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDMzM2RhZmIyOGUwMThlZmFlM2Q2N2VlMDUxNmFiOTZfck43dFBrNUhNY1F1b2x5elZ4cGl0bjJjcDM4TmtmeDFfVG9rZW46UzY1ZGJXM0dZb1VoeHZ4UGhucGNFZEhwbjF0XzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+<meta property="article:published_time" content="2024-12-04T13:33:01.000Z">
+<meta property="article:modified_time" content="2025-02-23T13:34:38.116Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="R">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MzA2ODY2ZmIzMjA5OWNmOTI3MGU0N2YwZmU5ZDM1ODdfUG9wSXNHRTlDVEd5MTZKSDJDbWhUVmxrT0hnYmlrTG5fVG9rZW46QzVaQmJVaFZlb2RmYTR4OUw0Y2Nnc21BbkZmXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA">
+  
+  
+  
+  <title>R语言期中复习 - bshtj_blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"bshtj.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>bshtj</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="R语言期中复习"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-12-04 21:33" pubdate>
+          2024年12月4日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          56 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">R语言期中复习</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="2-R基础语法"><a href="#2-R基础语法" class="headerlink" title="2 R基础语法"></a>2 R基础语法</h1><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MzA2ODY2ZmIzMjA5OWNmOTI3MGU0N2YwZmU5ZDM1ODdfUG9wSXNHRTlDVEd5MTZKSDJDbWhUVmxrT0hnYmlrTG5fVG9rZW46QzVaQmJVaFZlb2RmYTR4OUw0Y2Nnc21BbkZmXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="2-1-vector"><a href="#2-1-vector" class="headerlink" title="2.1 vector"></a>2.1 vector</h2><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MGIyZTc0YmNjZWY5NDY3YTljMzRhNzJiZTVlZTYyMTBfNnZHMWFWQ1E3cXZZTWtHSlpna0lLajBzakF3TG1FY1JfVG9rZW46WnhUbGJZbzFjb2x5Tzd4YnZVcGM5cDJObkllXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="2-1-1-排除元素"><a href="#2-1-1-排除元素" class="headerlink" title="2.1.1 排除元素"></a>2.1.1 排除元素</h3><p>使用负索引</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs R"><span class="hljs-comment"># 创建一个向量</span><br>vec <span class="hljs-operator">&lt;-</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">10</span><span class="hljs-punctuation">,</span> <span class="hljs-number">20</span><span class="hljs-punctuation">,</span> <span class="hljs-number">30</span><span class="hljs-punctuation">,</span> <span class="hljs-number">40</span><span class="hljs-punctuation">,</span> <span class="hljs-number">50</span><span class="hljs-punctuation">)</span><br><br><span class="hljs-comment"># 排除第3个元素（即下标为3的元素）</span><br>vec_excluded <span class="hljs-operator">&lt;-</span> vec<span class="hljs-punctuation">[</span><span class="hljs-operator">-</span><span class="hljs-number">3</span><span class="hljs-punctuation">]</span><br><br><span class="hljs-comment"># 输出排除后的结果</span><br>print<span class="hljs-punctuation">(</span>vec_excluded<span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-1-2-提取满足条件的元素"><a href="#2-1-2-提取满足条件的元素" class="headerlink" title="2.1.2 提取满足条件的元素"></a><strong>2.1.2 提取满足条件的元素</strong></h3><p>可以使用逻辑条件（如 <code>==</code>、<code>&lt;</code>、<code>&gt;</code> 等）来筛选元素。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs R"><span class="hljs-comment"># 创建一个向量</span><br>vec <span class="hljs-operator">&lt;-</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">10</span><span class="hljs-punctuation">,</span> <span class="hljs-number">20</span><span class="hljs-punctuation">,</span> <span class="hljs-number">30</span><span class="hljs-punctuation">,</span> <span class="hljs-number">40</span><span class="hljs-punctuation">,</span> <span class="hljs-number">50</span><span class="hljs-punctuation">)</span><br><br><span class="hljs-comment"># 提取大于30的元素</span><br>vec_condition <span class="hljs-operator">&lt;-</span> vec<span class="hljs-punctuation">[</span>vec <span class="hljs-operator">&gt;</span> <span class="hljs-number">30</span><span class="hljs-punctuation">]</span><br><br><span class="hljs-comment"># 输出符合条件的元素</span><br>print<span class="hljs-punctuation">(</span>vec_condition<span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-1-3-which-函数"><a href="#2-1-3-which-函数" class="headerlink" title="2.1.3**which()** 函数"></a>2.1.3**<code>which()</code>** <strong>函数</strong></h3><p><code>which()</code> 函数用于返回满足条件的元素的下标索引。它返回的是逻辑条件为 <code>TRUE</code> 的元素的索引位置。</p>
+<p><strong>示例：找到大于30的元素的下标</strong></p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs R"><span class="hljs-comment"># 创建一个向量</span><br>vec <span class="hljs-operator">&lt;-</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">10</span><span class="hljs-punctuation">,</span> <span class="hljs-number">20</span><span class="hljs-punctuation">,</span> <span class="hljs-number">30</span><span class="hljs-punctuation">,</span> <span class="hljs-number">40</span><span class="hljs-punctuation">,</span> <span class="hljs-number">50</span><span class="hljs-punctuation">)</span><span class="hljs-comment"># 使用 which() 查找大于30的元素的下标</span><br>indices <span class="hljs-operator">&lt;-</span> which<span class="hljs-punctuation">(</span>vec <span class="hljs-operator">&gt;</span> <span class="hljs-number">30</span><span class="hljs-punctuation">)</span><span class="hljs-comment"># 输出满足条件的元素的下标</span><br>print<span class="hljs-punctuation">(</span>indices<span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>输出：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Plain">[1] 4 5<br></code></pre></td></tr></table></figure>
+
+<p><code>which(vec &gt; 30)</code> 返回的是大于30的元素的下标位置，即第4个和第5个元素。</p>
+<h3 id="2-1-4-which-min-和-which-max-函数"><a href="#2-1-4-which-min-和-which-max-函数" class="headerlink" title="2.1.4 which.min() 和 which.max() 函数"></a>2.1.4 <strong><code>which.min()</code></strong> <strong>和</strong> <strong><code>which.max()</code></strong> <strong>函数</strong></h3><ul>
+<li><code>which.min()</code>：返回向量中最小值的下标。</li>
+<li><code>which.max()</code>：返回向量中最大值的下标。</li>
+</ul>
+<p><strong>示例：找到最小值和最大值的下标</strong></p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs R"><span class="hljs-comment"># 创建一个向量</span><br>vec <span class="hljs-operator">&lt;-</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">10</span><span class="hljs-punctuation">,</span> <span class="hljs-number">20</span><span class="hljs-punctuation">,</span> <span class="hljs-number">30</span><span class="hljs-punctuation">,</span> <span class="hljs-number">40</span><span class="hljs-punctuation">,</span> <span class="hljs-number">50</span><span class="hljs-punctuation">)</span><span class="hljs-comment"># 找到最小值的下标</span><br>min_index <span class="hljs-operator">&lt;-</span> which.min<span class="hljs-punctuation">(</span>vec<span class="hljs-punctuation">)</span><span class="hljs-comment"># 找到最大值的下标</span><br>max_index <span class="hljs-operator">&lt;-</span> which.max<span class="hljs-punctuation">(</span>vec<span class="hljs-punctuation">)</span><span class="hljs-comment"># 输出结果</span><br>print<span class="hljs-punctuation">(</span>paste<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;最小值的下标:&quot;</span><span class="hljs-punctuation">,</span> min_index<span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><br>print<span class="hljs-punctuation">(</span>paste<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;最大值的下标:&quot;</span><span class="hljs-punctuation">,</span> max_index<span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>输出：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs Plain">[1] &quot;最小值的下标: 1&quot;<br>[1] &quot;最大值的下标: 5&quot;<br></code></pre></td></tr></table></figure>
+
+<p>在这个例子中，<code>which.min(vec)</code> 返回最小值 <code>10</code> 的下标 <code>1</code>，而 <code>which.max(vec)</code> 返回最大值 <code>50</code> 的下标 <code>5</code>。</p>
+<h3 id="2-1-5-向量运算"><a href="#2-1-5-向量运算" class="headerlink" title="2.1.5 向量运算"></a>2.1.5 向量运算</h3><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjEwYjRlMWM5NGZjMWQ2ZDU0OTJmMWMxY2YwNTlkMzVfVmVnOUU1RWk5ajRDNTg5bnRSZ2dicVNUbGVJc2FmdGlfVG9rZW46UkdHc2I1NFJ2b2g2SEV4ZGVkQWNiSFh2bmFjXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="2-2-数组"><a href="#2-2-数组" class="headerlink" title="2.2 数组"></a>2.2 数组</h2><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YTMzOTIwNmMyZjdlYTU2YzExMTk2ZjVjMGJhNjU2NzJfTmZTSlo4c1J1aWN1VHJXU2J0M0YwMEc2NllBWm56NkhfVG9rZW46TkdTN2I3WlB0b3NkOU14TkF0UWNha09jbkFnXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NmIzMmY1YWY5NGU2N2Y5NWM1MWFhNDQyZGJiMWE5ZWNfWjdxNU0xa0dScWFqYzdDMkNUdzdtNVRxQ2prdkQyeGlfVG9rZW46WnhQUGJibHhRb29QUGl4YzFaYWNKN1VtbkFVXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="2-3-Matrices"><a href="#2-3-Matrices" class="headerlink" title="2.3 Matrices"></a>2.3 Matrices</h2><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MTYxZDE2ZGNlOTZlOGEyODcyMTQzNDEwOWRlNGVkNGRfejFIYmpmb2VBUk5yY3RZRXlJRGVwMFFlWDBVc290OXFfVG9rZW46UnZYNGJrenNkb2VnenF4eUVVS2NvMTBQbkxiXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>默认是by col</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTUxYTM5MWQ1ZDU5ZjI3YjM4NGZiMmEwNWFmMTAyMDdfS3AwcDRTaTBVTGhNY1I1c0d3Umc5NURHc0IybzNhanVfVG9rZW46QXNuUGI4VDBlb01RaGV4cVhyVWM5MG14bjBXXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>A[c(1,3), c(2,4)]</p>
+<ul>
+<li><code>c(1,3)</code> 选择了矩阵的第1行和第3行。</li>
+<li><code>c(2,4)</code> 选择了矩阵的第2列和第4列。</li>
+</ul>
+<p>他们形成一个新的矩阵。</p>
+<p>矩阵融合</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MThmM2FhN2Q4ODEzNTk3ODU5M2U3NTg5NGU5YjQ2Y2RfRE5CbUZIVXpIbnliT1dObGNiQ0c1ZjJXSDZ6NkRwazdfVG9rZW46QURWT2JBQnFqb2d6SHJ4dkFnbGNRYW1lbnpkXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="2-4-data-frame"><a href="#2-4-data-frame" class="headerlink" title="2.4 data_frame"></a>2.4 data_frame</h2><h3 id="2-4-1-merge"><a href="#2-4-1-merge" class="headerlink" title="2.4.1 merge()"></a>2.4.1 merge()</h3><p><strong>示例：</strong></p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs R"><span class="hljs-comment"># 创建两个数据框</span><br>df1 <span class="hljs-operator">&lt;-</span> data.frame<span class="hljs-punctuation">(</span>ID <span class="hljs-operator">=</span> <span class="hljs-number">1</span><span class="hljs-operator">:</span><span class="hljs-number">3</span><span class="hljs-punctuation">,</span> Name <span class="hljs-operator">=</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;Alice&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;Bob&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;Charlie&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><br>df2 <span class="hljs-operator">&lt;-</span> data.frame<span class="hljs-punctuation">(</span>ID <span class="hljs-operator">=</span> <span class="hljs-number">2</span><span class="hljs-operator">:</span><span class="hljs-number">4</span><span class="hljs-punctuation">,</span> Age <span class="hljs-operator">=</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">25</span><span class="hljs-punctuation">,</span> <span class="hljs-number">30</span><span class="hljs-punctuation">,</span> <span class="hljs-number">35</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><span class="hljs-comment"># 合并两个数据框</span><br>merged_df <span class="hljs-operator">&lt;-</span> merge<span class="hljs-punctuation">(</span>df1<span class="hljs-punctuation">,</span> df2<span class="hljs-punctuation">,</span> by <span class="hljs-operator">=</span> <span class="hljs-string">&quot;ID&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-built_in">all</span> <span class="hljs-operator">=</span> <span class="hljs-literal">TRUE</span><span class="hljs-punctuation">)</span><br>print<span class="hljs-punctuation">(</span>merged_df<span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MTFmYjZlMWZmYzRmNDJiMzVmODM5YWRkZWExZmI3NGFfaFBXbWNMUXhwOWtac2tMQkcyM3plc2dLT0JnVWlKZndfVG9rZW46WHpacWJkZXUyb2tFOVl4OFc1d2NhUDlrbm9lXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="2-4-2-aggregate"><a href="#2-4-2-aggregate" class="headerlink" title="2.4.2 aggregate()"></a>2.4.2 aggregate()</h3><p><code>aggregate()</code> 用于对数据进行分组汇总（例如求和、平均、计数等），类似于 SQL 中的 <code>GROUP BY</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Plain">aggregate(x, by, FUN, ...)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>x</code>：要汇总的数据。可以是数据框的列，也可以是一个数据框。</li>
+<li><code>by</code>：分组的变量，通常是一个列或由多个列组成的列表。</li>
+<li><code>FUN</code>：用于汇总数据的函数（如 <code>sum()</code>、<code>mean()</code>、<code>median()</code> 等）。</li>
+<li><code>...</code>：其他参数，可以传递给 <code>FUN</code>。</li>
+</ul>
+<p>实例:</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs R"><span class="hljs-comment"># 创建数据框</span><br>df <span class="hljs-operator">&lt;-</span> data.frame<span class="hljs-punctuation">(</span><br>  Name <span class="hljs-operator">=</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;Alice&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;Bob&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;Alice&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;Bob&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;Charlie&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span><br>  Score <span class="hljs-operator">=</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">85</span><span class="hljs-punctuation">,</span> <span class="hljs-number">90</span><span class="hljs-punctuation">,</span> <span class="hljs-number">95</span><span class="hljs-punctuation">,</span> <span class="hljs-number">80</span><span class="hljs-punctuation">,</span> <span class="hljs-number">88</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span><br>  Age <span class="hljs-operator">=</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">23</span><span class="hljs-punctuation">,</span> <span class="hljs-number">24</span><span class="hljs-punctuation">,</span> <span class="hljs-number">23</span><span class="hljs-punctuation">,</span> <span class="hljs-number">24</span><span class="hljs-punctuation">,</span> <span class="hljs-number">25</span><span class="hljs-punctuation">)</span><br><span class="hljs-punctuation">)</span><br><br><span class="hljs-comment"># 根据 Name 列进行分组，计算每个组的平均 Score</span><br>agg_df <span class="hljs-operator">&lt;-</span> aggregate<span class="hljs-punctuation">(</span>Score <span class="hljs-operator">~</span> Name<span class="hljs-punctuation">,</span> data <span class="hljs-operator">=</span> df<span class="hljs-punctuation">,</span> FUN <span class="hljs-operator">=</span> mean<span class="hljs-punctuation">)</span><br>print<span class="hljs-punctuation">(</span>aSgg_df<span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure>
+
+<p>在 R 语言中，<code>Score ~ Name</code> 是一种公式（formula）写法，用于指定变量之间的关系，通常用于统计建模和数据操作。公式形式为 <code>y ~ x</code>，表示 <code>y</code> 是因变量（目标变量），<code>x</code> 是自变量（预测变量）。</p>
+<p>因此，<code>Score ~ Name</code>：表示我们将 <code>Score</code> 列按 <code>Name</code> 列进行分组。</p>
+<h3 id="2-4-3-stack"><a href="#2-4-3-stack" class="headerlink" title="2.4.3 stack()"></a>2.4.3 stack()</h3><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YjEzODljOGJlNDIwZTYzMmQ3OTFmZTg4OTdkMjM3OWFfNXdKTWpyMjRoMmR0TE5LZXJaY1kwNE9CWmZvaXd3ZjZfVG9rZW46SjRqZ2JOSFNyb0hUNE94cjVMVWNJYVRtbllmXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="2-5-Lists"><a href="#2-5-Lists" class="headerlink" title="2.5 Lists"></a>2.5 Lists</h2><p>能包含所有类型</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YjRjMjNiNTM2MjUwMGU2YmI2ODU1OTk2YjUyYTMxOWFfRXJmM21UaXdHZ3lLY0FjRUVhRWMwTTl3WEMzTUtTQjdfVG9rZW46TU4yQ2JBQkdwb1pVT054WmFqVWM5OXlvbkxjXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="2-6-Data-Types"><a href="#2-6-Data-Types" class="headerlink" title="2.6 Data Types"></a>2.6 Data Types</h2><p>• Logical – True&#x2F;False </p>
+<p>• Integer – 4, 6, 2 </p>
+<p>• Numeric – 3.4, 566, 2.34 </p>
+<p>• Character – “a”, “hello” </p>
+<p>• Factor – “Female”, “Male” </p>
+<p>• Date &amp; Times – “2021-09-15”, “ 2021-09-15 13:30:00”</p>
+<h2 id="2-7-Character-String-Split"><a href="#2-7-Character-String-Split" class="headerlink" title="2.7 Character&amp;String Split"></a>2.7 Character&amp;String Split</h2><p>nchar(),substring(),paste(),regexpr(),grep(),blob2rx(),gsub()</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDU3NWY1NWVlMDA5MTJjZDkyMjdkNDQ3ODk4OWNjZDRfRFZwNlF6cTA0dkY5OGpUbVpSRm04b2lHN25ZSXJNU1ZfVG9rZW46T3VVM2JIa0c3bzVVNlN4cjJzamN3c2hybkNlXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MWMzZDk4OWQzNDQxOGY1NWQxYjBjMDhlMWIxZWIwMzJfajhEcDdjMWE4MUtzaWhLTHF4eHcyZE4zdVZuV2JnMFZfVG9rZW46QThFVGJsT0Fjb21OdGp4a3k4S2NQS0Y4bjhlXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="2-8-factor"><a href="#2-8-factor" class="headerlink" title="2.8 factor"></a>2.8 factor</h2><h3 id="2-8-1-名义型，有序型"><a href="#2-8-1-名义型，有序型" class="headerlink" title="2.8.1 名义型，有序型"></a>2.8.1 名义型，有序型</h3><ul>
+<li><strong>名义型</strong>变量是没有顺序之分的类别变量。下表中，糖尿病类型Diabetes（Type1、 Type2）是名义型变量的一例。即使在数据中Type1编码为1而Type2编码为2，这 也并不意味着二者是有序的。 </li>
+<li><strong>有序型</strong>变量表示一种顺序关系，而非数量关系。病情Status（poor, improved,  excellent）是顺序型变量的典型示例。我们知道，病情为poor（较差）病人的 状态不如improved（病情好转）的病人，但并不知道相差多少。</li>
+</ul>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YTJmNWYxMzZhZjVjYWQ2ZmZhMWZlMThlOWU1Y2RhMjBfZlgxb3ZRV2R1b2QwSms4RVRhb3czbUl5bkNXS293UjZfVG9rZW46WTFsRmIzeUc0bzFQS0F4WUpZZ2NOTmo1bmdoXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTYzMWYxMGVjMzJlODgzMDg3NTRmYWI3OTQ4N2Q3MjZfSktjZjRPWEFzWlE0c01MVUZRNnIxNjRjQTZ4MmYzVWlfVG9rZW46Vk8xd2JkeU41bzBYMkd4c2RqZWM2aTNBbkljXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="2-8-2-将连续数据转化为分类变量-factors"><a href="#2-8-2-将连续数据转化为分类变量-factors" class="headerlink" title="2.8.2 将连续数据转化为分类变量(factors)"></a>2.8.2 将连续数据转化为分类变量(factors)</h3><ul>
+<li>cut()</li>
+</ul>
+<p>假设我们有一个包含连续数值的向量 <code>x</code></p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs R">x <span class="hljs-operator">&lt;-</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">5</span><span class="hljs-punctuation">,</span> <span class="hljs-number">8</span><span class="hljs-punctuation">,</span> <span class="hljs-number">12</span><span class="hljs-punctuation">,</span> <span class="hljs-number">15</span><span class="hljs-punctuation">,</span> <span class="hljs-number">20</span><span class="hljs-punctuation">,</span> <span class="hljs-number">25</span><span class="hljs-punctuation">,</span> <span class="hljs-number">30</span><span class="hljs-punctuation">,</span> <span class="hljs-number">35</span><span class="hljs-punctuation">)</span><br><span class="hljs-comment"># 使用 cut() 函数将数据划分为三个区间</span><br>x_factor <span class="hljs-operator">&lt;-</span> cut<span class="hljs-punctuation">(</span>x<span class="hljs-punctuation">,</span> breaks <span class="hljs-operator">=</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span> labels <span class="hljs-operator">=</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;Low&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;Medium&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;High&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><br>print<span class="hljs-punctuation">(</span>x_factor<span class="hljs-punctuation">)</span><br><span class="hljs-comment"># 输出</span><br><span class="hljs-punctuation">[</span><span class="hljs-number">1</span><span class="hljs-punctuation">]</span> Low    Low    Medium Medium High   High   High   High  <br>Levels<span class="hljs-operator">:</span> Low Medium High<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li><strong>最小值</strong>：<code>min(x)</code> &#x3D; 5</li>
+<li><strong>最大值</strong>：<code>max(x)</code> &#x3D; 35</li>
+<li><strong>区间宽度</strong>： <code>(35 - 5) / 3 = 10</code></li>
+</ol>
+<p>基于这些计算，<code>cut()</code> 会将 <code>x</code> 划分为以下三个区间：</p>
+<ul>
+<li>第一个区间：<code>(5, 15]</code>（包含 15）</li>
+<li>第二个区间：<code>(15, 25]</code>（包含 25）</li>
+<li>第三个区间：<code>(25, 35]</code>（包含 35）</li>
+</ul>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs R"><span class="hljs-comment"># 自定义分组区间</span><br>x_factor <span class="hljs-operator">&lt;-</span> cut<span class="hljs-punctuation">(</span>x<span class="hljs-punctuation">,</span> breaks <span class="hljs-operator">=</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">0</span><span class="hljs-punctuation">,</span> <span class="hljs-number">10</span><span class="hljs-punctuation">,</span> <span class="hljs-number">20</span><span class="hljs-punctuation">,</span> <span class="hljs-number">30</span><span class="hljs-punctuation">,</span> <span class="hljs-number">40</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span> labels <span class="hljs-operator">=</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;0-10&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;10-20&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;20-30&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;30-40&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><br>print<span class="hljs-punctuation">(</span>x_factor<span class="hljs-punctuation">)</span><br><span class="hljs-comment"># 输出</span><br><span class="hljs-punctuation">[</span><span class="hljs-number">1</span><span class="hljs-punctuation">]</span> <span class="hljs-number">0</span><span class="hljs-operator">-</span><span class="hljs-number">10</span>   <span class="hljs-number">0</span><span class="hljs-operator">-</span><span class="hljs-number">10</span>   <span class="hljs-number">10</span><span class="hljs-operator">-</span><span class="hljs-number">20</span>  <span class="hljs-number">10</span><span class="hljs-operator">-</span><span class="hljs-number">20</span>  <span class="hljs-number">20</span><span class="hljs-operator">-</span><span class="hljs-number">30</span>  <span class="hljs-number">20</span><span class="hljs-operator">-</span><span class="hljs-number">30</span>  <span class="hljs-number">30</span><span class="hljs-operator">-</span><span class="hljs-number">40</span>  <span class="hljs-number">30</span><span class="hljs-operator">-</span><span class="hljs-number">40</span> <br>Levels<span class="hljs-operator">:</span> <span class="hljs-number">0</span><span class="hljs-operator">-</span><span class="hljs-number">10</span> <span class="hljs-number">10</span><span class="hljs-operator">-</span><span class="hljs-number">20</span> <span class="hljs-number">20</span><span class="hljs-operator">-</span><span class="hljs-number">30</span> <span class="hljs-number">30</span><span class="hljs-operator">-</span><span class="hljs-number">40</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="2-9-operation"><a href="#2-9-operation" class="headerlink" title="2.9 operation"></a>2.9 operation</h2><h3 id="2-9-1-运算符号"><a href="#2-9-1-运算符号" class="headerlink" title="2.9.1 运算符号"></a>2.9.1 运算符号</h3><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=OTY2Mzc5YmJhOTlmNzQ5NDQ2YTc4MDcwNjk2OWU4NmNfUGVIVFE1T3BLMXJVNG41ckF5RW1DWEdwdWkwUkdhaUJfVG9rZW46SHFPVWJGYmlXb1ZsR3Z4NTFYRWNxTnZHblNnXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="2-9-2-Regular-Convert-Operation"><a href="#2-9-2-Regular-Convert-Operation" class="headerlink" title="2.9.2 Regular&amp;Convert Operation"></a>2.9.2 Regular&amp;Convert Operation</h3><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=N2IzZTcyMTczMjE5OGFkNjQ5NDUwZmEzMmQ5MjhmNGJfZ3F5Sm9FM2NLbEpZTU1uaVhEVmFxNzU2UllwRExsOTBfVG9rZW46SWZjbGJOTmFlb1h6ZFB4bE0yZGM4a09tbkFmXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2U5MjlmZjQ3MGUwNTE3YzM3MzY3ZTZlYzU3MDZhODBfUE5MOGpBdzVhNWdvenhmYXgwdkJuUTg4ZjZVZkpvbkhfVG9rZW46UTRnNGJTVzRGb0RRNEh4MTlja2NzdXQzbjdmXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="2-9-3-repicate"><a href="#2-9-3-repicate" class="headerlink" title="2.9.3 repicate()"></a>2.9.3 repicate()</h3><figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs R">replicate<span class="hljs-punctuation">(</span>n<span class="hljs-punctuation">,</span> expr<span class="hljs-punctuation">,</span> simplify <span class="hljs-operator">=</span> <span class="hljs-literal">TRUE</span><span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>n</strong>: 要重复的次数。</li>
+<li><strong>expr</strong>: 需要重复执行的表达式或者函数调用。</li>
+<li><strong>simplify</strong>: 一个逻辑值，控制返回值的简化方式。默认为 <code>TRUE</code>，表示如果可能将结果简化为一个数组或向量；如果是 <code>FALSE</code>，则返回一个列表。</li>
+</ul>
+<h2 id="2-10-condition-loop"><a href="#2-10-condition-loop" class="headerlink" title="2.10 condition&amp;loop"></a>2.10 condition&amp;loop</h2><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NzcxNWY0NzUwZWNlODhlYTlhNzNmYzdkNDA0MWQ3ODhfdnpDVG9xV3ZRcWdsWkJrMUxsOE9BQjZLcXROQ2JkWERfVG9rZW46T204R2IySWgyb2ZoazR4ckt6WmNpdlhWbjdnXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h1 id="3-数据可视化"><a href="#3-数据可视化" class="headerlink" title="3 数据可视化"></a>3 数据可视化</h1><h2 id="3-1-数据摘要"><a href="#3-1-数据摘要" class="headerlink" title="3.1 数据摘要"></a>3.1 数据摘要</h2><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YzY5MjBkZTY4Y2M4YjFiYWQ3NDU4OGM1OWRkYmY4YTNfUDZaMUg5RG1ZelNxRXdqcFJmc3F1NG9vd3BOaDVxMHpfVG9rZW46V0hCUWJ0R2Rzb1Z5RHJ4NEV2WmNORGN0bkJiXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YjkxNDVjMjQ3NGM3ZGUxYzAwYjM1MGY1NTNlODBlOTVfZm5mRWJFU0hBczBUYjl2VDdRbDU2MldpUkNQQmVENFRfVG9rZW46UnRSeWJwN2xCb1Ziamt4RkdiYmNCR2prblhjXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="3-2-箱线图"><a href="#3-2-箱线图" class="headerlink" title="3.2 箱线图"></a>3.2 箱线图</h2><p>在 R 中，使用 <code>boxplot()</code> 函数可以绘制箱线图。</p>
+<p><strong>示例 1：绘制单一变量的箱线图</strong></p>
+<p>假设我们有一个数据向量 <code>x</code>，想绘制它的箱线图：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs R"><span class="hljs-comment"># 创建数据向量</span><br>x <span class="hljs-operator">&lt;-</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">,</span> <span class="hljs-number">2</span><span class="hljs-punctuation">,</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span> <span class="hljs-number">5</span><span class="hljs-punctuation">,</span> <span class="hljs-number">6</span><span class="hljs-punctuation">,</span> <span class="hljs-number">7</span><span class="hljs-punctuation">,</span> <span class="hljs-number">8</span><span class="hljs-punctuation">,</span> <span class="hljs-number">9</span><span class="hljs-punctuation">,</span> <span class="hljs-number">100</span><span class="hljs-punctuation">)</span><span class="hljs-comment"># 绘制箱线图</span><br>boxplot<span class="hljs-punctuation">(</span>x<span class="hljs-punctuation">,</span> main<span class="hljs-operator">=</span><span class="hljs-string">&quot;Boxplot of x&quot;</span><span class="hljs-punctuation">,</span> ylab<span class="hljs-operator">=</span><span class="hljs-string">&quot;Values&quot;</span><span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>示例 2：多个变量的箱线图</strong></p>
+<p>如果你有一个数据框 <code>df</code>，包含多个变量，想要同时绘制多个变量的箱线图：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs R"><span class="hljs-comment"># 创建一个数据框</span><br>df <span class="hljs-operator">&lt;-</span> data.frame<span class="hljs-punctuation">(</span><br>  Group1 <span class="hljs-operator">=</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">,</span> <span class="hljs-number">2</span><span class="hljs-punctuation">,</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span> <span class="hljs-number">5</span><span class="hljs-punctuation">,</span> <span class="hljs-number">6</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span><br>  Group2 <span class="hljs-operator">=</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">5</span><span class="hljs-punctuation">,</span> <span class="hljs-number">6</span><span class="hljs-punctuation">,</span> <span class="hljs-number">7</span><span class="hljs-punctuation">,</span> <span class="hljs-number">8</span><span class="hljs-punctuation">,</span> <span class="hljs-number">9</span><span class="hljs-punctuation">,</span> <span class="hljs-number">10</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span><br>  Group3 <span class="hljs-operator">=</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">2</span><span class="hljs-punctuation">,</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span> <span class="hljs-number">5</span><span class="hljs-punctuation">,</span> <span class="hljs-number">6</span><span class="hljs-punctuation">,</span> <span class="hljs-number">7</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><span class="hljs-comment"># 绘制多个变量的箱线图</span><br>boxplot<span class="hljs-punctuation">(</span>df<span class="hljs-punctuation">,</span> main<span class="hljs-operator">=</span><span class="hljs-string">&quot;Boxplot of Groups&quot;</span><span class="hljs-punctuation">,</span> ylab<span class="hljs-operator">=</span><span class="hljs-string">&quot;Values&quot;</span><span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>示例 3：分组绘制箱线图</strong></p>
+<p>如果你有分组变量（例如分类变量），并且想要绘制各组的箱线图，可以使用 <code>boxplot()</code> 中的分组参数。例如，假设你有一个分组变量 <code>group</code>：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs R"><span class="hljs-comment"># 创建数据框</span><br>df <span class="hljs-operator">&lt;-</span> data.frame<span class="hljs-punctuation">(</span><br>  value <span class="hljs-operator">=</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">,</span> <span class="hljs-number">2</span><span class="hljs-punctuation">,</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span> <span class="hljs-number">5</span><span class="hljs-punctuation">,</span> <span class="hljs-number">6</span><span class="hljs-punctuation">,</span> <span class="hljs-number">7</span><span class="hljs-punctuation">,</span> <span class="hljs-number">8</span><span class="hljs-punctuation">,</span> <span class="hljs-number">9</span><span class="hljs-punctuation">,</span> <span class="hljs-number">10</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span><br>  group <span class="hljs-operator">=</span> <span class="hljs-built_in">rep</span><span class="hljs-punctuation">(</span><span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;A&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;B&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span> each <span class="hljs-operator">=</span> <span class="hljs-number">5</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><span class="hljs-comment"># 按照分组绘制箱线图</span><br>boxplot<span class="hljs-punctuation">(</span>value <span class="hljs-operator">~</span> group<span class="hljs-punctuation">,</span> data <span class="hljs-operator">=</span> df<span class="hljs-punctuation">,</span> main<span class="hljs-operator">=</span><span class="hljs-string">&quot;Boxplot by Group&quot;</span><span class="hljs-punctuation">,</span> ylab<span class="hljs-operator">=</span><span class="hljs-string">&quot;Values</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>解释箱线图的优势</strong></p>
+<ol>
+<li><strong>展示分布形态</strong>：箱线图直观地展示了数据的对称性和偏态。例如，如果中位数接近箱体的中心，且上下四分位数差不多，说明数据比较对称；如果中位数偏向箱体的一端，说明数据偏态。</li>
+<li><strong>发现离群点</strong>：离群点在箱线图中表现为图外的小点，能帮助我们识别可能的异常值。</li>
+<li><strong>对比不同组</strong>：通过多个箱线图的对比，我们可以直观地比较不同组的分布情况。</li>
+</ol>
+<h2 id="3-3-直方图"><a href="#3-3-直方图" class="headerlink" title="3.3 直方图"></a>3.3 直方图</h2><p>在 R 中，使用 <code>boxplot()</code> 函数可以绘制箱线图。</p>
+<p><strong>示例 1：绘制单一变量的箱线图</strong></p>
+<p>假设我们有一个数据向量 <code>x</code>，想绘制它的箱线图：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs R"><span class="hljs-comment"># 创建数据向量</span><br>x <span class="hljs-operator">&lt;-</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">,</span> <span class="hljs-number">2</span><span class="hljs-punctuation">,</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span> <span class="hljs-number">5</span><span class="hljs-punctuation">,</span> <span class="hljs-number">6</span><span class="hljs-punctuation">,</span> <span class="hljs-number">7</span><span class="hljs-punctuation">,</span> <span class="hljs-number">8</span><span class="hljs-punctuation">,</span> <span class="hljs-number">9</span><span class="hljs-punctuation">,</span> <span class="hljs-number">100</span><span class="hljs-punctuation">)</span><span class="hljs-comment"># 绘制箱线图</span><br>boxplot<span class="hljs-punctuation">(</span>x<span class="hljs-punctuation">,</span> main<span class="hljs-operator">=</span><span class="hljs-string">&quot;Boxplot of x&quot;</span><span class="hljs-punctuation">,</span> ylab<span class="hljs-operator">=</span><span class="hljs-string">&quot;Values&quot;</span><span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>示例 2：多个变量的箱线图</strong></p>
+<p>如果你有一个数据框 <code>df</code>，包含多个变量，想要同时绘制多个变量的箱线图：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs R"><span class="hljs-comment"># 创建一个数据框</span><br>df <span class="hljs-operator">&lt;-</span> data.frame<span class="hljs-punctuation">(</span><br>  Group1 <span class="hljs-operator">=</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">,</span> <span class="hljs-number">2</span><span class="hljs-punctuation">,</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span> <span class="hljs-number">5</span><span class="hljs-punctuation">,</span> <span class="hljs-number">6</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span><br>  Group2 <span class="hljs-operator">=</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">5</span><span class="hljs-punctuation">,</span> <span class="hljs-number">6</span><span class="hljs-punctuation">,</span> <span class="hljs-number">7</span><span class="hljs-punctuation">,</span> <span class="hljs-number">8</span><span class="hljs-punctuation">,</span> <span class="hljs-number">9</span><span class="hljs-punctuation">,</span> <span class="hljs-number">10</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span><br>  Group3 <span class="hljs-operator">=</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">2</span><span class="hljs-punctuation">,</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span> <span class="hljs-number">5</span><span class="hljs-punctuation">,</span> <span class="hljs-number">6</span><span class="hljs-punctuation">,</span> <span class="hljs-number">7</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><span class="hljs-comment"># 绘制多个变量的箱线图</span><br>boxplot<span class="hljs-punctuation">(</span>df<span class="hljs-punctuation">,</span> main<span class="hljs-operator">=</span><span class="hljs-string">&quot;Boxplot of Groups&quot;</span><span class="hljs-punctuation">,</span> ylab<span class="hljs-operator">=</span><span class="hljs-string">&quot;Values&quot;</span><span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>示例 3：分组绘制箱线图</strong></p>
+<p>如果你有分组变量（例如分类变量），并且想要绘制各组的箱线图，可以使用 <code>boxplot()</code> 中的分组参数。例如，假设你有一个分组变量 <code>group</code>：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs R"><span class="hljs-comment"># 创建数据框</span><br>df <span class="hljs-operator">&lt;-</span> data.frame<span class="hljs-punctuation">(</span><br>  value <span class="hljs-operator">=</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">,</span> <span class="hljs-number">2</span><span class="hljs-punctuation">,</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span> <span class="hljs-number">4</span><span class="hljs-punctuation">,</span> <span class="hljs-number">5</span><span class="hljs-punctuation">,</span> <span class="hljs-number">6</span><span class="hljs-punctuation">,</span> <span class="hljs-number">7</span><span class="hljs-punctuation">,</span> <span class="hljs-number">8</span><span class="hljs-punctuation">,</span> <span class="hljs-number">9</span><span class="hljs-punctuation">,</span> <span class="hljs-number">10</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span><br>  group <span class="hljs-operator">=</span> <span class="hljs-built_in">rep</span><span class="hljs-punctuation">(</span><span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;A&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;B&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span> each <span class="hljs-operator">=</span> <span class="hljs-number">5</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><span class="hljs-comment"># 按照分组绘制箱线图</span><br>boxplot<span class="hljs-punctuation">(</span>value <span class="hljs-operator">~</span> group<span class="hljs-punctuation">,</span> data <span class="hljs-operator">=</span> df<span class="hljs-punctuation">,</span> main<span class="hljs-operator">=</span><span class="hljs-string">&quot;Boxplot by Group&quot;</span><span class="hljs-punctuation">,</span> ylab<span class="hljs-operator">=</span><span class="hljs-string">&quot;Value</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>直方图的应用场景</strong></p>
+<ol>
+<li><strong>数据分布分析</strong>：直方图帮助我们了解数据的分布类型（如正态分布、偏态分布等）。</li>
+<li><strong>检测异常值</strong>：通过观察数据的分布，我们可以识别是否存在异常值（如数据的尾部异常偏离）。</li>
+<li><strong>选择合适的模型</strong>：直方图可以帮助我们判断数据是否符合某种统计模型（例如正态分布），从而选择合适的分析方法或假设检验。</li>
+</ol>
+<h2 id="3-4-plot和ggplot"><a href="#3-4-plot和ggplot" class="headerlink" title="3.4 plot和ggplot"></a>3.4 plot和ggplot</h2><h1 id="4-数据预处理"><a href="#4-数据预处理" class="headerlink" title="4 数据预处理"></a>4 数据预处理</h1><h2 id="4-1-数据过滤"><a href="#4-1-数据过滤" class="headerlink" title="4.1 数据过滤"></a>4.1 数据过滤</h2><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZmUyMTcxMzRlYjZmMDJlZDEzYTIzYzdhOWQyYmM3OTJfY3ppTHVLeURmWFFqTHRoV3BrNGF6QWJSWGwzYkdkdTJfVG9rZW46U3YyOGJnM3FCb3ZFZ3N4QUVBT2NQUDVjbjhmXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YjRkMGYxYTQ2YzRhZmNjMGZjMmFlOGI4N2U3NGEwMzRfZjB1MTVla0RjREtMT04yWXk3NXBZUHgyM2lzdkVQaWVfVG9rZW46VHBtUmJ3NXBsbzlUZ3R4eVp2SGMwVUVXbnpmXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=N2FmYTdlZTE1NWM1NDM0YmNlMTJiZjVmMzNlMmFiNmJfM0ZXMGRqOHhVaGNQRU1qZFdZdGpxamxRZ1RidTRKYjFfVG9rZW46WmdYNmJ5Q3pFbzhZVmN4OVBiWGNjSkJabmdoXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="4-2-缺失值处理"><a href="#4-2-缺失值处理" class="headerlink" title="4.2 缺失值处理"></a>4.2 缺失值处理</h2><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NGI3YzA0NDNmMjkzYjc4MTE4NTgwNGQ5NThkYzUxMDFfNjVtaXgxY090M2VYaEZqSXVFOGw5SFFyenNXYnVhZGxfVG9rZW46SlByYmJHbGlxb0ZDMFh4ZTJ2eWNWYmVTblZjXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NmM2NmM2NWM5NjRiODRkNTZjZGYzZDIwNDkyZTBmN2ZfQWtHZ0RKWVZUc2FFYlNmRUF1Q1VDbzk5SWVsdjJtcThfVG9rZW46VGVEeGJyT0Nzb3o2bDl4dDM4UGM4dFVCblljXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="4-3-异常值检测"><a href="#4-3-异常值检测" class="headerlink" title="4.3 异常值检测"></a>4.3 异常值检测</h2><h2 id="4-4-数据去重"><a href="#4-4-数据去重" class="headerlink" title="4.4 数据去重"></a>4.4 数据去重</h2><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MDkzYzlkYzVmMjFhNDIzM2IzZGE1MjMyY2Y2MzY3YzRfYkpYUEFKMTN2d01zOGtLNDBtNElibHdIWThpQ3E1Tm9fVG9rZW46UGZkV2J0V1Ewb1NmVzJ4am50b2NlWGhYbkFjXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ul>
+<li>duplicated()</li>
+</ul>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YjJjN2FkYmMwMTRkMWE3M2U1M2RmOTQ3MTIwNzBlNTZfeHk2a3N0cjFwM0Y4NjJXczRqUEo3VHptaENwakFORUlfVG9rZW46WXdyUWJiZ25Lb28wRG94V09jNmNvVWhtbndlXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YThjMmZhNjc1MzBjMjA4MjQ1ZDE0NTE4NTFiNzk0NTZfZ0xZSHZURW1WdlRNd3d0bTF4ZEhYOHdSZkxDTGY2VmpfVG9rZW46SndmSmJ3ZFRub1g1UWZ4aWpOSmM0TWowbjViXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ul>
+<li>Unique</li>
+</ul>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NjFiMjNkODBiMTVlMTVjNjMwZjdjYjliNWZhZDE2NjFfUG9JcVlvOXFQMVFWSU5SQjZ2OUhwUDZuUlV5SE80WXpfVG9rZW46U3pWR2JjUWtjb3EwSXV4b3RxcWNBbnNBbldlXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NGM5NDE2ODBjZmYyZDJlZjUwN2QzMGVjZmQ2MGJiNThfeUw3T3V4WVZSQkpDN0lYV3FFb0dyYUY5NTJWUGx4Z1RfVG9rZW46TWlQS2JQc2Q2b1MxcEh4VkJqcmNMWUQwbmllXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="4-5-数据规范"><a href="#4-5-数据规范" class="headerlink" title="4.5 数据规范"></a>4.5 数据规范</h2><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YmQwYjczZDAxOWY3NDYyM2E2YThhNmMyZjJmOTg2YjBfaHFaSjJ0U2pRc3ZaYVZOV2N1WnFKaDZ2aXBiRlh4R1pfVG9rZW46UnBnQmJIWGZOb2NFYlh4Z2dqeGNLVVhwblpmXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=OTFjN2U2NzM0Zjk5NjE2MDQ2NWRlYzRjY2VlMDdiNTZfQlg2OXdDUFFYUzZsMlhHNFQzQ3AxNXlqSlBHYzBpZXFfVG9rZW46R3NuNmJmanIxb0x2REl4TXY4RmM1OTJBbnNkXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="4-6-数据采样"><a href="#4-6-数据采样" class="headerlink" title="4.6 数据采样"></a>4.6 数据采样</h2><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2VmYjM2MGZlMWM1MmFmYmNmOTdmZDg1M2I2NDQwZGJfenNqTDlhc3ExOWpHZ2dId3ZSZ1NPbmFSUTRtNFFGa1ZfVG9rZW46T3piN2JGcEZmb1pyWHV4QXlFRGNvMlhzbmdiXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="4-7-数据排序"><a href="#4-7-数据排序" class="headerlink" title="4.7 数据排序"></a>4.7 数据排序</h2><p>sort()</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs R"><span class="hljs-comment"># 降序排序</span><br>sorted_vec_desc <span class="hljs-operator">&lt;-</span> sort<span class="hljs-punctuation">(</span>vec<span class="hljs-punctuation">,</span> decreasing <span class="hljs-operator">=</span> <span class="hljs-literal">TRUE</span><span class="hljs-punctuation">)</span><br>print<span class="hljs-punctuation">(</span>sorted_vec_desc<span class="hljs-punctuation">)</span><br><span class="hljs-comment"># 输出: [1] 8 5 4 3 1</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="4-8-数据向量化"><a href="#4-8-数据向量化" class="headerlink" title="4.8 数据向量化"></a>4.8 数据向量化</h2><ul>
+<li>as.vector()</li>
+</ul>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=OWM4ZmIxZDNiOTE4OTFlMWNmYzZkNWNjNzJiYjA2NjZfUTlVWU5KcUpaWnFmQjZ0cEpmNU9tWHFLWThYbmZSZklfVG9rZW46SUI1M2JEVnNtbzA2SUp4bDlPMmNTMTRPbmllXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ul>
+<li>Unlist()</li>
+</ul>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2IwNWViZmY4YzIyY2Q4YzQ3MTViNGY1OTcxNjZkM2VfN1pNcWFIM1V1ZHFmOUF0Wk11RVNwT1hHU29BVEQzaFJfVG9rZW46T2RWSGJvMXhCb09xaFB4Y0ZIT2NVcHA2bjFmXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YTFhMzJlZDg4MWQ0OTY1MTBlOTY0NGIwYjZiNTQzNjlfVFE4SEwxenY4RGFKWHlDVWJtR3lZMUR5Y3VSYlJ3Q25fVG9rZW46UjFXUWJiUEVab2VuUnF4R3JRWWNjVzl0bjJjXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="4-9-列联表"><a href="#4-9-列联表" class="headerlink" title="4.9 列联表"></a>4.9 列联表</h2><ul>
+<li>Table</li>
+</ul>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NTIwYzBkN2M4MTliYThlZGUwMzVjMjMzZGVlOTljNjlfWDJiRGlGTmV5Q1ZVNWJERzUyZndMbzhYWDd6QzN6OHhfVG9rZW46R1pCbmJlcGlOb2cyQWJ4V0oxYmNFYzFxbm9jXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="4-10-分组汇总"><a href="#4-10-分组汇总" class="headerlink" title="4.10 分组汇总"></a>4.10 分组汇总</h2><p>用法</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs R">aggregate<span class="hljs-punctuation">(</span>formula<span class="hljs-punctuation">,</span> data<span class="hljs-punctuation">,</span> FUN<span class="hljs-punctuation">,</span> ...<span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>formula</code>：一个公式，通常的形式是 <code>response ~ group</code>，其中 <code>response</code> 是你想要聚合的变量（因变量），<code>group</code> 是分组的变量（自变量）。例如，<code>y ~ x</code> 表示按 <code>x</code> 分组，对 <code>y</code> 进行聚合。</li>
+<li><code>data</code>：一个数据框，包含要进行聚合的变量。</li>
+<li><code>FUN</code>：聚合函数，表示对每个组要应用的函数，例如 <code>sum</code>（求和）、<code>mean</code>（求平均值）、<code>median</code>（求中位数）等。</li>
+<li><code>...</code>：其他可选参数，传递给聚合函数。</li>
+</ul>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YjdkNzEwYzE2NGI0MzFjYjQ4Y2YwODI1YjJjMTI0NjhfcTdvNzdOdTdYaEhlVmlCcGVhOE5wcDlLREowY3ZXUWtfVG9rZW46RllXTmJoSlcwb0xaNUF4Sk1CdGNJeEVhblZoXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=Yzg4ZDE0ZDY3NWNjOWUwZTExZTBmODYyYWQ1NWI2NjBfSVVadmpoSGh2QmgxdEVxa3lsenAwUjNnbXg4a1M2Z09fVG9rZW46RlR5R2JRYmRTb0F1QXN4UVl6RWNURWJsbmRlXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h1 id="5-数据分布拟合"><a href="#5-数据分布拟合" class="headerlink" title="5 数据分布拟合"></a>5 数据分布拟合</h1><h2 id="5-1-正态分布"><a href="#5-1-正态分布" class="headerlink" title="5.1 正态分布"></a>5.1 正态分布</h2><ul>
+<li>rnorm()</li>
+<li>**<code>p</code>**：累积分布函数（CDF），计算 P(X ≤ x)。</li>
+<li>**<code>d</code>**：概率密度函数（PDF），计算概率密度。</li>
+<li>**<code>q</code>**：分位数函数，计算给定概率对应的分位数。</li>
+<li>**<code>r</code>**：随机数生成函数，生成符合某种分布的随机数。</li>
+</ul>
+<p>在R中，<code>p</code>、<code>d</code>、<code>q</code> 和 <code>r</code> 是正态分布相关函数的常用前缀，它们分别对应不同的功能。这些函数用于处理与概率分布（如正态分布）相关的常见任务。具体来说，<code>p</code>、<code>d</code>、<code>q</code> 和 <code>r</code> 代表：</p>
+<p><strong>1.</strong> <strong><code>p</code></strong> <strong>累积分布函数（CDF）</strong></p>
+<figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs autohotkey">p 函数计算的是一个给定数值或一组数值的累计概率。它返回的是 `**`P(X ≤ x)`**`，即随机变量小于或等于某个值的概率。<br></code></pre></td></tr></table></figure>
+
+<p><strong>示例：</strong><strong><code>pnorm()</code></strong></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MjI0OGYzYWZiM2M1ODc0NTdlN2IwMDI2ZTBmZmYwYmVfYWxZUW5hUW5GM0JGbFZOSlZORkxlVVVsNkdGbGJwMFNfVG9rZW46R2pqS2JoaFBvb2R2RUd4MXk4V2NXQXI3blllXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><strong>2.</strong> <strong><code>d</code></strong> <strong>概率密度函数（PDF）</strong></p>
+<p><code>d</code> 函数计算的是 <strong>在某个点的概率密度</strong>，即随机变量取特定值的“概率”。对于连续分布，这个“概率”实际上是密度，表示该点附近的概率区间的大小。</p>
+<p><strong>示例：</strong>**<code>dnorm()</code>**<strong>（正态分布的PDF）</strong></p>
+<p>我们计算标准正态分布下 <code>X = 0</code> 的概率密度：</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YmMzNDIyNmFiNjA0ZWU3OTA3NjdmMmQyYWY2ODMzZDBfdDJrOXhDZ25CSUtGa3JwOEYwZkZaYkVsS0tHNGhxNnJfVG9rZW46QTZkMmIyQXZzb1pkbUd4cGZabmMxcGYzbkxoXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><strong>3.</strong> <strong><code>q</code></strong> <strong>分位数函数（逆CDF）</strong></p>
+<p><code>q</code> 函数计算的是给定累计概率对应的值，也就是反向操作。你输入的是概率，输出的是对应的分位数（例如 Z 值）。</p>
+<p><strong>示例：</strong>**<code>qnorm()</code>**<strong>（正态分布的分位数函数）</strong></p>
+<p>我们想知道在标准正态分布下，累计概率为 0.95 对应的 Z 值是多少。</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YjFhNDBmN2U0NGIzNjE1ZmM5MGEwZGM5NDYxYWQxYTdfN21Jb2xMWTM0NkFySEJ5Q1Y2dnRETHZLcXh4NEV2RXpfVG9rZW46U2o1RWJRSzQ5b1YySlN4b0E1OGNMbENiblBoXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><strong>4.</strong> <strong><code>r</code></strong> <strong>随机数生成函数</strong></p>
+<p><code>r</code> 用于生成符合某种分布的随机数。例如，<code>rnorm()</code> 用于生成正态分布的随机数。</p>
+<p><strong>示例：</strong><strong><code>rnorm()</code></strong></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=OWZmM2VkOWVkYWFhMGQ5ZjVmZmQ1YWEzZTJlNWY3NTFfdFpqYXczNGlHZWZ5Slk5bmdPWXlycU1VN203TlFyWHlfVG9rZW46VEo3cWJwMjRYb1NQME94eHlNNWNuVWhMbjBjXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="5-2-二项分布"><a href="#5-2-二项分布" class="headerlink" title="5.2 二项分布"></a>5.2 二项分布</h2><ol>
+<li><strong><code>dbinom()</code></strong> — 二项分布的概率质量函数 (PMF)</li>
+</ol>
+<p><code>dbinom()</code> 用于计算给定参数下，二项分布的某个具体值的概率。</p>
+<p>语法：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs R">dbinom<span class="hljs-punctuation">(</span>x<span class="hljs-punctuation">,</span> size<span class="hljs-punctuation">,</span> prob<span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>x</strong>：需要计算概率的值（可能的成功次数）。</li>
+<li><strong>size</strong>：试验的次数（例如，总共进行多少次独立实验）。</li>
+<li><strong>prob</strong>：每次试验中成功的概率。</li>
+</ul>
+<p>示例：</p>
+<p>假设我们进行 10 次独立试验，每次试验成功的概率是 0.3，想知道恰好有 3 次成功的概率是多少：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs R">dbinom<span class="hljs-punctuation">(</span><span class="hljs-number">3</span><span class="hljs-punctuation">,</span> size <span class="hljs-operator">=</span> <span class="hljs-number">10</span><span class="hljs-punctuation">,</span> prob <span class="hljs-operator">=</span> <span class="hljs-number">0.3</span><span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure>
+
+<p>这个函数会返回二项分布中，10 次试验中恰好 3 次成功的概率。</p>
+<ol start="2">
+<li><strong><code>pbinom()</code></strong> — 二项分布的累积分布函数 (CDF)</li>
+</ol>
+<p><code>pbinom()</code> 用于计算在二项分布中，某个值 <strong>x</strong> 或更小的事件发生的累积概率。</p>
+<p>语法：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs R">pbinom<span class="hljs-punctuation">(</span>q<span class="hljs-punctuation">,</span> size<span class="hljs-punctuation">,</span> prob<span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>q</strong>：累积概率对应的值（例如，累计的成功次数）。</li>
+<li><strong>size</strong>：试验的次数。</li>
+<li><strong>prob</strong>：每次试验中成功的概率。</li>
+</ul>
+<p>示例：</p>
+<p>如果我们进行 10 次试验，每次成功的概率是 0.3，想知道成功次数小于或等于 3 次的概率是多少：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs R">pbinom<span class="hljs-punctuation">(</span><span class="hljs-number">3</span><span class="hljs-punctuation">,</span> size <span class="hljs-operator">=</span> <span class="hljs-number">10</span><span class="hljs-punctuation">,</span> prob <span class="hljs-operator">=</span> <span class="hljs-number">0.3</span><span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure>
+
+<p>这个函数会返回成功次数小于或等于 3 次的累积概率。</p>
+<ol start="3">
+<li><strong><code>qbinom()</code></strong> — 二项分布的分位数函数</li>
+</ol>
+<p><code>qbinom()</code> 用于计算给定概率下的分位数，即返回一个值，这个值表示在给定的累积概率下可能的最大成功次数。</p>
+<p>语法：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs R">qbinom<span class="hljs-punctuation">(</span>p<span class="hljs-punctuation">,</span> size<span class="hljs-punctuation">,</span> prob<span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>p</strong>：累积概率（例如，0.95 表示 95% 的概率）。</li>
+<li><strong>size</strong>：试验次数。</li>
+<li><strong>prob</strong>：每次试验中成功的概率。</li>
+</ul>
+<p>示例：</p>
+<p>假设我们进行 10 次试验，每次试验成功的概率是 0.3，想知道，累积概率达到 0.8 时，最大成功次数是多少：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs R">qbinom<span class="hljs-punctuation">(</span><span class="hljs-number">0.8</span><span class="hljs-punctuation">,</span> size <span class="hljs-operator">=</span> <span class="hljs-number">10</span><span class="hljs-punctuation">,</span> prob <span class="hljs-operator">=</span> <span class="hljs-number">0.3</span><span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure>
+
+<p>这个函数会返回当累积概率为 0.8 时，最大成功次数的分位数。</p>
+<p>例子：完整示范</p>
+<p>假设我们进行 20 次独立试验，每次试验成功的概率是 0.4，下面是如何使用这三个函数的示例：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs R"><span class="hljs-comment"># 计算恰好有 8 次成功的概率</span><br>dbinom<span class="hljs-punctuation">(</span><span class="hljs-number">8</span><span class="hljs-punctuation">,</span> size <span class="hljs-operator">=</span> <span class="hljs-number">20</span><span class="hljs-punctuation">,</span> prob <span class="hljs-operator">=</span> <span class="hljs-number">0.4</span><span class="hljs-punctuation">)</span><br><br><span class="hljs-comment"># 计算成功次数小于或等于 8 次的累积概率</span><br>pbinom<span class="hljs-punctuation">(</span><span class="hljs-number">8</span><span class="hljs-punctuation">,</span> size <span class="hljs-operator">=</span> <span class="hljs-number">20</span><span class="hljs-punctuation">,</span> prob <span class="hljs-operator">=</span> <span class="hljs-number">0.4</span><span class="hljs-punctuation">)</span><br><br><span class="hljs-comment"># 计算累积概率为 0.95 时，最大成功次数的分位数</span><br>qbinom<span class="hljs-punctuation">(</span><span class="hljs-number">0.95</span><span class="hljs-punctuation">,</span> size <span class="hljs-operator">=</span> <span class="hljs-number">20</span><span class="hljs-punctuation">,</span> prob <span class="hljs-operator">=</span> <span class="hljs-number">0.4</span><span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure>
+
+<p>例题：</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MzMwNzNiYjljMDI4NGM1MWQxYzNjYzk4MmE4YWZhMDVfMjdFV3VWRUR5cTdERFJVOFRBMG1PdElnQ1Y5bktGQlVfVG9rZW46TzZmZGJGU0Zkb2pHUFV4ODZkbmNPeE5SbkVlXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MjVhNTVjZjU2NDk3MWU0ZGE2ODgyYjZlZTk1MmUyY2FfSUx1aUk5QlpoSERoTng2d0VPTDZoNHdoaGhJOXNTbUlfVG9rZW46VUEzdmI0QndPb2ZHU3h4NnlEU2NaQzFQbm5iXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="5-3-泊松分布"><a href="#5-3-泊松分布" class="headerlink" title="5.3 泊松分布"></a>5.3 泊松分布</h2><p><strong>示例 1：计算单位时间内发生特定次数事件的概率</strong></p>
+<p>假设某个区域内每小时平均发生 3 次事故，我们想知道在该区域内 1 小时内恰好发生 2 次事故的概率是多少：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Plain">dpois(2, lambda = 3)<br></code></pre></td></tr></table></figure>
+
+<p><strong>示例 2：计算单位时间内发生最多 2 次事故的累积概率</strong></p>
+<p>继续上面的例子，计算单位时间内发生 <strong>最多</strong> 2 次事故的概率：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Plain">ppois(2, lambda = 3)<br></code></pre></td></tr></table></figure>
+
+<p><strong>示例 3：确定累积概率为 0.95 时最多发生的事故次数</strong></p>
+<p>假设每小时平均发生 3 次事故，计算当累积概率为 0.95 时，最多会发生多少次事故：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Plain">qpois(0.95, lambda = 3)<br></code></pre></td></tr></table></figure>
+
+<p><strong>示例 4：从泊松分布中生成随机数</strong></p>
+<p>生成 5 个符合泊松分布的随机事故次数（假设每小时平均发生 3 次事故）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Plain">rpois(5, lambda = 3)<br></code></pre></td></tr></table></figure>
+
+<h2 id="5-4-几何分布"><a href="#5-4-几何分布" class="headerlink" title="5.4 几何分布"></a>5.4 几何分布</h2><p><strong>用来描述在一系列独立的伯努利试验中，直到第一次成功出现之前失败的次数。</strong></p>
+<p>对于某射击测试，可以最多射击10次，射中8环以上就算通过， 如果某学生每次射击击中8环以上的概率为0.2，每次射击之间互 不影响 </p>
+<p>• 请问该学生第1次通过测试的概率为多少？ </p>
+<p>• 请问该学生第10次才通过测试的概率为多少？ </p>
+<p>• 请问该学生无法通过测试的概率为多少？</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs R"><span class="hljs-comment"># 成功概率</span><br>p <span class="hljs-operator">&lt;-</span> 0.2<br><br><span class="hljs-comment"># 第1次通过的概率 (第1次成功)</span><br>P_first_pass <span class="hljs-operator">&lt;-</span> dgeom<span class="hljs-punctuation">(</span><span class="hljs-number">0</span><span class="hljs-punctuation">,</span> p<span class="hljs-punctuation">)</span><br><br><span class="hljs-comment"># 第10次才通过的概率 (第10次成功)</span><br>P_tenth_pass <span class="hljs-operator">&lt;-</span> dgeom<span class="hljs-punctuation">(</span><span class="hljs-number">9</span><span class="hljs-punctuation">,</span> p<span class="hljs-punctuation">)</span><br><br><span class="hljs-comment"># 无法通过的概率 (最多10次都失败)</span><br>P_no_pass <span class="hljs-operator">&lt;-</span> 1 <span class="hljs-operator">-</span> pgeom<span class="hljs-punctuation">(</span><span class="hljs-number">10</span><span class="hljs-punctuation">,</span> p<span class="hljs-punctuation">)</span><br><br><span class="hljs-comment"># 输出结果</span><br>cat<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;第1次通过的概率:&quot;</span><span class="hljs-punctuation">,</span> P_first_pass<span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;\n&quot;</span><span class="hljs-punctuation">)</span><br>cat<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;第10次才通过的概率:&quot;</span><span class="hljs-punctuation">,</span> P_tenth_pass<span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;\n&quot;</span><span class="hljs-punctuation">)</span><br>cat<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;无法通过的概率:&quot;</span><span class="hljs-punctuation">,</span> P_no_pass<span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;\n&quot;</span><span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="5-5-负二项分布"><a href="#5-5-负二项分布" class="headerlink" title="5.5 负二项分布"></a>5.5 负二项分布</h2><p><strong>求解r次成功需要的实验次数x的概率</strong></p>
+<p><strong>语法：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Plain">dnbinom(x, size, prob)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>x</code>: 失败次数（或事件次数，非负整数）。</li>
+<li><code>size</code>: 所需成功次数。</li>
+<li><code>prob</code>: 每次试验成功的概率。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<p>假设我们想计算在进行 10 次试验之前，成功 3 次，失败次数为 5 的概率。设成功概率为 0.4：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Plain">dnbinom(5, size = 3, prob = 0.4)<br></code></pre></td></tr></table></figure>
+
+<p>这个例子会返回得到 5 次失败，且在 3 次成功之前的概率。</p>
+<p><strong>2.</strong> <strong>pnbinom: 计算负二项分布的累积分布函数（CDF）</strong></p>
+<p><code>pnbinom</code> 函数用于计算负二项分布的累积分布函数（CDF），即计算小于或等于给定失败次数的累计概率。</p>
+<p><strong>语法：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Plain">pnbinom(q, size, prob)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>q</code>: 失败次数（或事件次数，非负整数）。</li>
+<li><code>size</code>: 所需成功次数。</li>
+<li><code>prob</code>: 每次试验成功的概率。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<p>如果我们想知道，在进行 3 次成功之前，失败次数小于或等于 5 次的累计概率，可以使用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Plain">pnbinom(5, size = 3, prob = 0.4)<br></code></pre></td></tr></table></figure>
+
+<p>这个函数会返回累计概率，即失败次数小于等于 5 时的总概率。</p>
+<p><strong>3.</strong> <strong>qnbinom: 计算负二项分布的分位数函数（逆CDF）</strong></p>
+<p><code>qnbinom</code> 函数用于根据给定的累积概率，反向计算对应的失败次数。换句话说，它可以根据概率值查找对应的失败次数（或事件发生次数）。</p>
+<p><strong>语法：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Plain">qnbinom(p, size, prob)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>p</code>: 累积概率（0 到 1 之间的数值）。</li>
+<li><code>size</code>: 所需成功次数。</li>
+<li><code>prob</code>: 每次试验成功的概率。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<p>如果我们知道，累计概率为 0.7，并且成功次数为 3，我们想要找出对应的失败次数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Plain">qnbinom(0.7, size = 3, prob = 0.4)<br></code></pre></td></tr></table></figure>
+
+<p>这个例子会返回在 3 次成功之前，失败次数对应的第一个分位数。</p>
+<p><strong>4.</strong> <strong>rnbinom: 生成负二项分布的随机数</strong></p>
+<p><code>rnbinom</code> 函数用于根据指定的参数生成负二项分布的随机样本。可以用于模拟负二项分布的样本。</p>
+<p><strong>语法：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Plain">rnbinom(n, size, prob)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>n</code>: 生成的随机数的个数。</li>
+<li><code>size</code>: 所需成功次数。</li>
+<li><code>prob</code>: 每次试验成功的概率。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<p>如果我们想生成 10 个样本，表示在 3 次成功之前的失败次数，且每次试验成功的概率为 0.4：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Plain">rnbinom(10, size = 3, prob = 0.4)<br></code></pre></td></tr></table></figure>
+
+<p>这个例子将生成 10 个符合负二项分布的随机样本，表示在进行 3 次成功之前的失败次数。</p>
+<h2 id="5-6-指数分布"><a href="#5-6-指数分布" class="headerlink" title="5.6 指数分布"></a>5.6 指数分布</h2><p><strong>随机变量X：一段时间内事件发生的时间间隔 1个参数：事件平均发生的频次</strong></p>
+<p><strong>1.</strong> <strong>dexp: 计算指数分布的概率密度函数（PDF）</strong></p>
+<p><code>dexp</code> 函数用于计算给定值下的概率密度函数值，即在特定时间点（或值）处，事件发生的概率密度。</p>
+<p><strong>语法：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Plain">dexp(x, rate = 1)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>x</code>: 事件发生时间或间隔，必须为非负数。</li>
+<li><code>rate</code>: 事件的发生率参数，默认为 1。它是分布的反参数，通常等于 1&#x2F;平均等待时间。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<p>假设事件发生的平均时间间隔是 2，计算在时间 3 处的概率密度：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Plain">dexp(3, rate = 1/2)<br></code></pre></td></tr></table></figure>
+
+<p>这个例子返回在时间 3 处的概率密度值。</p>
+<p><strong>2.</strong> <strong>pexp: 计算指数分布的累积分布函数（CDF）</strong></p>
+<p><code>pexp</code> 函数用于计算指数分布的累积分布函数值，即计算随机变量小于或等于给定值时的累积概率。</p>
+<p><strong>语法：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Plain">pexp(q, rate = 1)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>q</code>: 给定的时间或间隔，必须为非负数。</li>
+<li><code>rate</code>: 事件发生率，默认为 1。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<p>假设事件发生的平均间隔时间是 2，计算在时间 3 之前发生事件的累计概率：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Plain">pexp(3, rate = 1/2)<br></code></pre></td></tr></table></figure>
+
+<p>这个例子会返回在时间 3 之前发生事件的概率。</p>
+<p><strong>3.</strong> <strong>qexp: 计算指数分布的分位数函数（逆CDF）</strong></p>
+<p><code>qexp</code> 函数用于根据给定的累积概率，反向计算对应的时间或间隔值。也就是说，给定一个累积概率，它会告诉你事件发生的时间（或间隔）。</p>
+<p><strong>语法：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Plain">qexp(p, rate = 1)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>p</code>: 累积概率值（0 到 1 之间）。</li>
+<li><code>rate</code>: 事件发生率，默认为 1。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<p>如果我们知道事件发生的平均时间间隔是 2，且我们想知道累计概率为 0.8 时事件发生的时间，可以使用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Plain">qexp(0.8, rate = 1/2)<br></code></pre></td></tr></table></figure>
+
+<p>这个例子会返回在 80% 累积概率下，事件发生的时间。</p>
+<p><strong>4.</strong> <strong>rexp: 生成指数分布的随机数</strong></p>
+<p><code>rexp</code> 函数用于生成符合指数分布的随机样本。它可以用来模拟指数分布的样本数据。</p>
+<p><strong>语法：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Plain">rexp(n, rate = 1)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>n</code>: 需要生成的随机数的数量。</li>
+<li><code>rate</code>: 事件发生率，默认为 1。</li>
+</ul>
+<p><strong>示例：</strong></p>
+<p>假设事件发生的平均时间间隔是 2，生成 5 个随机样本：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Plain">rexp(5, rate = 1/2)<br></code></pre></td></tr></table></figure>
+
+<p>这个例子将返回 5 个符合指数分布的随机数，表示事件发生的时间间隔。</p>
+<h2 id="5-7-卡方分布"><a href="#5-7-卡方分布" class="headerlink" title="5.7 卡方分布"></a>5.7 卡方分布</h2><p><strong>语法：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs Plain">RCopy Code<br>pchisq(q, df)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>q</code>: 给定的卡方值（必须为非负数）。</li>
+<li><code>df</code>: 自由度。</li>
+</ul>
+<h1 id="6-假设检验"><a href="#6-假设检验" class="headerlink" title="6 假设检验"></a>6 假设检验</h1><h2 id="6-1-单个总体的均值检验"><a href="#6-1-单个总体的均值检验" class="headerlink" title="6.1 单个总体的均值检验"></a>6.1 单个总体的均值检验</h2><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YjQyMmU2ZThlMmYwZmE5MDU2YjM2YjU5NjI1ZTIxZTZfT01DVXhNb0RIdzdWZzJsNWtnODJXazB0MWdvREtyRUpfVG9rZW46REp6aGIxb2l1b0tyNmt4TnVNcWNPZGlXbnRjXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>样本量&gt;&#x3D;30算大</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDVmZDIyMTRhMTBiMTgwZTQzZmY4OTVkYzQzYjkxNWZfZnJwazIzQUlNT0hlNnVaYjlsZWVKNkxTbEowd0phQkRfVG9rZW46TGsyaWJGY3REb0JCZ1h4YnVhZmM1Z3pBbnJiXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="6-1-1-z检验"><a href="#6-1-1-z检验" class="headerlink" title="6.1.1 z检验"></a>6.1.1 z检验</h3><p>某切割机正常工作时,切割每段金属棒的平均长度为10.5cm,标准差是0.15cm。今从一批产品中随机的抽取15段进行测量,其结果如下： </p>
+<p>10.4，10.9，10.6，10.6，10.1，10.8，10.4，10.5 </p>
+<p>10.5，10.7，10.3，10.2，10.3，10.7，10.2 </p>
+<p>假定切割的长度服从正态分布，且标准差没有变化，试问该机工作是否正常?(𝛼 &#x3D;0.05)</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2RjMWEyOGY3NGNmMTk0NjNhOTI2ODEwZmFiNDVmZTBfODJQTjdjeXVHT0FseTgwS2llelBpb3BVbEVpcG53ZVpfVG9rZW46RkxTamJuVklpb3FNQUR4VGhKR2NZVkg0bjRjXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="6-1-2-t检验"><a href="#6-1-2-t检验" class="headerlink" title="6.1.2 t检验"></a>6.1.2 t检验</h3><p><strong>在 R 中进行单样本 t 检验</strong></p>
+<p>R 提供了 <code>t.test()</code> 函数来执行单样本 t 检验。</p>
+<p><strong>语法</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Plain">t.test(x, mu = 0, alternative = &quot;two.sided&quot;, conf.level = 0.95)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>x</strong>：一个数值型向量，表示样本数据。</li>
+<li><strong>mu</strong>：假定的总体均值，默认值是 0。</li>
+<li><strong>alternative</strong>：假设检验的类型。可选值有：<ul>
+<li><code>&quot;two.sided&quot;</code>（双尾检验，默认值）：检验均值是否等于 <code>mu</code>。</li>
+<li><code>&quot;greater&quot;</code>：检验样本均值是否大于 <code>mu</code>。</li>
+<li><code>&quot;less&quot;</code>：检验样本均值是否小于 <code>mu</code>。</li>
+</ul>
+</li>
+<li><strong>conf.level</strong>：置信水平，默认值是 0.95（即 95% 置信区间）。</li>
+</ul>
+<p><strong>示例 1: 单样本 t 检验</strong></p>
+<p>假设我们有一个样本数据，想检验这个样本的均值是否等于 50。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs R"><span class="hljs-comment">#样本数据</span><br>data <span class="hljs-operator">&lt;-</span> <span class="hljs-built_in">c</span><span class="hljs-punctuation">(</span><span class="hljs-number">52</span><span class="hljs-punctuation">,</span> <span class="hljs-number">49</span><span class="hljs-punctuation">,</span> <span class="hljs-number">51</span><span class="hljs-punctuation">,</span> <span class="hljs-number">48</span><span class="hljs-punctuation">,</span> <span class="hljs-number">50</span><span class="hljs-punctuation">,</span> <span class="hljs-number">53</span><span class="hljs-punctuation">,</span> <span class="hljs-number">47</span><span class="hljs-punctuation">,</span> <span class="hljs-number">49</span><span class="hljs-punctuation">,</span> <span class="hljs-number">51</span><span class="hljs-punctuation">,</span> <span class="hljs-number">50</span><span class="hljs-punctuation">)</span>进行单样本 t 检验<br>t_test_result <span class="hljs-operator">&lt;-</span> t.test<span class="hljs-punctuation">(</span>data<span class="hljs-punctuation">,</span> mu <span class="hljs-operator">=</span> <span class="hljs-number">50</span><span class="hljs-punctuation">)</span>查看检验结果<br>print<span class="hljs-punctuation">(</span>t_test_result<span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>输出</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs Plain">data:  data<br>t = 0.2321, df = 9, p-value = 0.8194<br>alternative hypothesis: true mean is not equal to 5095 percent confidence interval:48.81403  51.18597<br>sample estimates:<br>mean of x 50 <br></code></pre></td></tr></table></figure>
+
+<p>在这个例子中，t 统计量为 0.2321，自由度为 9，p 值为 0.8194，表示我们不能拒绝零假设，即样本均值与 50 没有显著差异。95% 置信区间为 [48.814, 51.186]。</p>
+<p><strong>示例 2: 单样本 t 检验（单尾检验）</strong></p>
+<p>如果你只关心样本均值是否大于或小于某个值，你可以使用单尾检验。例如，检验样本均值是否大于 50：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs R"><span class="hljs-comment"># 进行单尾检验（样本均值是否大于 50）</span><br>t_test_result_one_tail <span class="hljs-operator">&lt;-</span> t.test<span class="hljs-punctuation">(</span>data<span class="hljs-punctuation">,</span> mu <span class="hljs-operator">=</span> <span class="hljs-number">50</span><span class="hljs-punctuation">,</span> alternative <span class="hljs-operator">=</span> <span class="hljs-string">&quot;greater&quot;</span><span class="hljs-punctuation">)</span>查看结果<br>print<span class="hljs-punctuation">(</span>t_test_result_one_tail<span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>输出</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs Plain">data:  data<br>t = 0.2321, df = 9, p-value = 0.5897<br>alternative hypothesis: true mean is greater than 5095 percent confidence interval:48.81403  51.18597<br>sample estimates:<br>mean of x 50 <br></code></pre></td></tr></table></figure>
+
+<p>在单尾检验中，p 值为 0.5897，表示不能拒绝假设，样本均值并不显著大于 50。</p>
+<p><strong>结果解释</strong></p>
+<ul>
+<li><strong>t 统计量（t-value）</strong>：表示样本均值与假设总体均值的差异程度。</li>
+<li><strong>p 值（p-value）</strong>：表示观察到当前数据或更极端数据的概率。若 p 值小于显著性水平（如 0.05），则拒绝零假设。</li>
+<li><strong>置信区间</strong>：给出了样本均值的可能范围，可以帮助我们判断总体均值所在的区间。</li>
+</ul>
+<p><strong>注意事项</strong></p>
+<ol>
+<li><strong>样本的正态性</strong>：单样本 t 检验假定样本数据来自正态分布。若样本数据较小（例如 n &lt; 30），最好进行正态性检验，如使用 Shapiro-Wilk 检验 (<code>shapiro.test()</code>)，或者通过直方图、QQ 图等方法可视化数据。</li>
+<li><strong>样本量较小</strong>：当样本量较小（例如小于 30）时，t 检验的假定条件更加严格。此时，检验结果可能受到影响。</li>
+</ol>
+<h2 id="6-2-两个总体的均值检验"><a href="#6-2-两个总体的均值检验" class="headerlink" title="6.2 两个总体的均值检验"></a>6.2 两个总体的均值检验</h2><p><strong>情形1</strong>：σ1 2 和σ2 2 已知 </p>
+<p><strong>情形2</strong>： σ1 2和σ2 2未知， σ1  2&#x3D; σ2 2，且n较小 </p>
+<p><strong>情形3</strong>： σ1 2和σ2 2未知， σ1 2 ≠ σ2 2，且n较小</p>
+<h3 id="6-2-1-情形1"><a href="#6-2-1-情形1" class="headerlink" title="6.2.1 情形1"></a>6.2.1 情形1</h3><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NTNkMjI5OTBjOTE3MGZlZWExYzQ3MGU0NGM4OGIxY2JfR1RrZ3Y5d2Q5OGxUQUx4SHJVZWZpMmttT1BiTXJZVHFfVG9rZW46U0Q4WmJiTHBOb2liSnF4MzEzYmMwTmdKbjBiXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NDM2MjBjMzUyYTU3YzFmMDM3NTA0OTlmNjlmNTIzNWNfMDNkNVlLbWZSeDhEUDJKeENFMjhIeldUbUlwMzVESWlfVG9rZW46S0xjYWJoS0x6b2tnend4M3FZQ2NwQ29UbkhiXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="6-2-2-情形2"><a href="#6-2-2-情形2" class="headerlink" title="6.2.2 情形2"></a>6.2.2 情形2</h3><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NDBlZjgwYjBkZTFkMzNmNjFkMTI5YjU4NjVlYmMyY2NfbWhTeHhxVDBaTW9NZVd5MFF3RzFZeTZYRDNEcldRQldfVG9rZW46TnhUd2J1U1czb0pjODV4RjM4d2M1eXo4bmdjXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="6-3-单个总体方差检验"><a href="#6-3-单个总体方差检验" class="headerlink" title="6.3 单个总体方差检验"></a>6.3 单个总体方差检验</h2><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YzYzYTc2Zjk4MWY3MDEzNDIyMzg5YzAwNTYzYTQwMDhfRzZKaUZ5R1pybk5hSXhlMUM1TEVCZzlrWERZNldQc3pfVG9rZW46SWRLVmJINk5kb1dNSE54SUxRRWMwQktHbjVjXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="6-4-两个总体的方差检验"><a href="#6-4-两个总体的方差检验" class="headerlink" title="6.4 两个总体的方差检验"></a>6.4 两个总体的方差检验</h2><p>以下的的两个F可以用qf()来求</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs R">qf<span class="hljs-punctuation">(</span><span class="hljs-number">0.95</span><span class="hljs-punctuation">,</span> df1 <span class="hljs-operator">=</span> <span class="hljs-number">5</span><span class="hljs-punctuation">,</span> df2 <span class="hljs-operator">=</span> <span class="hljs-number">8</span><span class="hljs-punctuation">)</span><br>qf<span class="hljs-punctuation">(</span><span class="hljs-number">0.05</span><span class="hljs-punctuation">,</span> df1 <span class="hljs-operator">=</span> <span class="hljs-number">5</span><span class="hljs-punctuation">,</span> df2 <span class="hljs-operator">=</span> <span class="hljs-number">8</span><span class="hljs-punctuation">)</span><br></code></pre></td></tr></table></figure>
+
+<p>两台车床加工同一零件，分别取6件和9件测量直径， 得<em>s</em>1 2 &#x3D; 0.345， <em>s</em>2 2 &#x3D; 0.357。假定零件的直径服从正态分布，能否据此断 定两个总体的方差相等？（<em>a</em>&#x3D;0.05）</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MTViOGQxNmU2NDA1OTJlMDdiNWYzZWFjMWE3M2VmM2ZfcWVXbmdyaG5XVVhWc3pTQzVGeEJQdDRoUDhWelFxaE5fVG9rZW46UXRJYmI3TnRRb0FsNzV4VUd6amNtZVEwbndiXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MWM4MDk2MmY3NGFmM2QyNGNhMDI1OWVmOTg5ZTUwZjVfdGJLYW5qdGFSM1BnUURERWZoOU9CekJaSjBTUVRjRVZfVG9rZW46WGI3YmIxYkExb2J6MWd4WHB0b2MzYUU0bjFmXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h1 id="7-方差分析"><a href="#7-方差分析" class="headerlink" title="7 方差分析"></a>7 方差分析</h1><h2 id="7-1-单因素方差分析"><a href="#7-1-单因素方差分析" class="headerlink" title="7.1 单因素方差分析"></a>7.1 单因素方差分析</h2><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=OTg4OWJhOGYzNjRkZDlmNjA4Yzc5ZDcwOWM1MTFiOThfRno4WUFlMXNxYUVrT3JBRVo0YWtYWklMZXpyYWxJSlZfVG9rZW46Q05EWWJ5U1czb0xTWDJ4T05abmM2bmN1bjlkXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MDQxM2VmZjU0NDk4YTgzMmZiNDE1YjM0Yjk5ODhkOWRfSEJ3VkJYcXBpZG1hbnRxSURnczZBc2JvNFczODl5WGlfVG9rZW46T1NaY2JLUmhLb3FGUlV4bmFmYmN1Q3lMbjdlXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="7-2-双因素方差分析"><a href="#7-2-双因素方差分析" class="headerlink" title="7.2 双因素方差分析"></a>7.2 双因素方差分析</h2><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YmViNGE3ZDE4YTNhZjgxOTk4YTYwZmNkNTQ4N2YyODRfSFUyemZ6VFdsQUw0cVluUEg5d1FSSXFueHFXcmRWZmhfVG9rZW46SHppSWJNc3M5bzhKYjN4OWlYbGNPUkE2bnZiXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MGU2MmZiMjNlNmIzMDc0Njg1ZGJlZGFmMzhjYjE3OWZfR1RUeFM5RTJKbjIxaUdHQ3UwZ2VKYk10VHUwNVNBR0NfVG9rZW46QWVyRWI0WW0yb3NNdFN4cVVGN2NRSlZ4bjBlXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=OTA2YzAzOGRjMmVkYzMwOWZkYWE4NzE3ZTBhMjQxMzVfZTB2SWk1V3k3VlV0dWJDY3pXcTBqMlRCQTZFY3ZVRTdfVG9rZW46WmlBYWJHbUtjbzRVWXF4M3JLZ2NsOTJPbmpmXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h1 id="8-相关分析"><a href="#8-相关分析" class="headerlink" title="8 相关分析"></a>8 相关分析</h1><h2 id="8-1-相关关系"><a href="#8-1-相关关系" class="headerlink" title="8.1 相关关系"></a>8.1 相关关系</h2><ul>
+<li>相关方向（正相关、负相关）</li>
+<li>相关程度（完全相关、不完全相关、不相关）</li>
+</ul>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MjY0MDYzYTYyYmY2YTJiZWJlMDdiZDhhYjdhYmUzZTVfWW1zQm4xUzl4Z2pCenJyamxEZWZCa3JoT1hPaDZUZ0FfVG9rZW46SnI3cmJyYU1Pb2lYWmR4OTQ3QmNhN2h2blNlXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MTA5YWE3ODE3MmYxMDZhMDE1Y2ZlNDQ3ZjU2NDE5MGNfcTRWdVV2OU9RS1prUGNlTlgzaXA4ZzREbFVydW1nVktfVG9rZW46SXg0TWJkcW9BbzBHM3J4ODY5eWNzdWp1bjBjXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=OTZkNjllZWM3NTYyOGQxYmYxYTAzZGE1Y2U3ZGUyYWJfU000UHlwUktDckhSSFFRVVJ0Z050WVN2aE8wODdOWkxfVG9rZW46WkFqQmJETTdpb2RHSXZ4NEFXa2NwUXkxblFMXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="8-2-相关系数"><a href="#8-2-相关系数" class="headerlink" title="8.2 相关系数"></a>8.2 相关系数</h2><p>• 线性相关系数的定义 </p>
+<p>• 相关系数(coefficient of correlation)是描述两个变量之间线性相关密切 </p>
+<p>程度和相关方向的统计分析指标 </p>
+<p>• 相关系数计算 </p>
+<p>• <strong>皮尔逊(Pearson)相关系数</strong> </p>
+<p>• 斯皮尔曼等级相关系数或肯特尔等级相关系数</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MzA3MGMzNDVhYmM4YWFiMjBmODc5OTk4ZjIwNGQ5ZjdfVDJnR2h3ZHJGak5nQlVRYXU2UldyZTdVV0F4WnhndXZfVG9rZW46S3E4eWJRalRNb1pKY2l4QzFISGNBUEtibnZoXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="8-2-1-cor-cov-var"><a href="#8-2-1-cor-cov-var" class="headerlink" title="8.2.1 cor(),cov(),var()"></a>8.2.1 cor(),cov(),var()</h3><p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YmFjNzZlZTY1NTAxMWRkOWI2Y2RmNmI3YzdjZDIxZjdfTkZHZ3dNU3FPNU45U0VQY0JZN29YS1ZIZnk0cXVzTnJfVG9rZW46RU1sUmJJdFNMb2Y4V1B4Z1RoVGNENlphbm1jXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>在 R 语言中，<code>cor()</code> 函数用于计算 <strong>相关系数</strong>（correlation coefficient），即衡量两个变量之间线性关系的强度和方向。</p>
+<p><strong>语法：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Plain">cor(x, y = NULL, method = c(&quot;pearson&quot;, &quot;kendall&quot;, &quot;spearman&quot;), use = &quot;everything&quot;, ...)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>x</strong> 和 <strong>y</strong>：两个数值型向量、矩阵或数据框，表示要计算相关性的变量。如果只传入一个矩阵或数据框，<code>cor()</code> 会返回各列之间的相关系数矩阵。</li>
+<li><strong>method</strong>：指定计算相关系数的方法。可以是以下三种之一：<ul>
+<li><code>&quot;pearson&quot;</code>（默认值）：皮尔逊相关系数，用于衡量两个变量之间的线性关系。</li>
+<li><code>&quot;kendall&quot;</code>：肯德尔秩相关系数，适用于秩数据，评估变量之间的单调关系。</li>
+<li><code>&quot;spearman&quot;</code>：斯皮尔曼秩相关系数，评估变量之间的单调关系，适用于非线性关系。</li>
+</ul>
+</li>
+<li><strong>use</strong>：指定如何处理缺失值（NA）。常见的选项有：<ul>
+<li><code>&quot;everything&quot;</code>：默认值，要求没有缺失值。</li>
+<li><code>&quot;complete.obs&quot;</code>：仅使用完整的观测值（忽略含有缺失值的行）。</li>
+<li><code>&quot;pairwise.complete.obs&quot;</code>：使用每对观测值的完整数据。</li>
+</ul>
+</li>
+</ul>
+<h2 id="8-3-相关系数显著性差异"><a href="#8-3-相关系数显著性差异" class="headerlink" title="8.3 相关系数显著性差异"></a>8.3 相关系数显著性差异</h2><ul>
+<li>cor.test()</li>
+</ul>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2VkZThjNzZiYTlmZDg3MjYwNjcyYzI5M2RjYTY0NTJfYnVvUjdMWGtDSmNrbWpBcERDRTIxTGN4bjh6Rk5Uck1fVG9rZW46SGFYdWJzbWhqb09RMXZ4NjFpZ2NTWTdKbmtjXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTZhMTcyNDA1Y2NjZDk5YjY4NTc1YzA2NzI2YjMyYjdfbWJmMGpRaDZWQkV6dUk3dkxpTmRqSVlUMGNSbElIQ0xfVG9rZW46U29yY2JJYWpyb01LWm14aFNFSWNsQng5blhnXzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDMzM2RhZmIyOGUwMThlZmFlM2Q2N2VlMDUxNmFiOTZfck43dFBrNUhNY1F1b2x5elZ4cGl0bjJjcDM4TmtmeDFfVG9rZW46UzY1ZGJXM0dZb1VoeHZ4UGhucGNFZEhwbjF0XzE3NDAzMTc1OTc6MTc0MDMyMTE5N19WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AC%94%E8%AE%B0/" class="category-chain-item">笔记</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AC%94%E8%AE%B0/%E5%A4%A7%E5%AD%A6%E8%AF%BE%E7%A8%8B/" class="category-chain-item">大学课程</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/R/" class="print-no-link">#R</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>R语言期中复习</div>
+      <div>https://bshtj.github.io/2024/12/04/R语言期中复习/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年12月4日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/12/26/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="软件设计模式期末复习笔记">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">软件设计模式期末复习笔记</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/10/03/vue3/" title="vue3">
+                        <span class="hidden-mobile">vue3</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

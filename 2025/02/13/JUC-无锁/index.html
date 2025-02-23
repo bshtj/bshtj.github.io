@@ -1,0 +1,1148 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/wuliannan.png">
+  <link rel="icon" href="/img/wuliannan.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="blog">
+  
+    <meta name="description" content="无锁CAS原理无锁编程：Lock Free CAS 的全称是 Compare-And-Swap，是 CPU 并发原语  CAS 并发原语体现在 Java 语言中就是 sun.misc.Unsafe 类的各个方法，调用 UnSafe 类中的 CAS 方法，JVM 会实现出 CAS 汇编指令，这是一种完全依赖于硬件的功能，实现了原子操作 CAS 是一种系统原语，原语属于操作系统范畴，是由若干条指令组成">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JUC_无锁">
+<meta property="og:url" content="https://bshtj.github.io/2025/02/13/JUC-%E6%97%A0%E9%94%81/index.html">
+<meta property="og:site_name" content="bshtj_blog">
+<meta property="og:description" content="无锁CAS原理无锁编程：Lock Free CAS 的全称是 Compare-And-Swap，是 CPU 并发原语  CAS 并发原语体现在 Java 语言中就是 sun.misc.Unsafe 类的各个方法，调用 UnSafe 类中的 CAS 方法，JVM 会实现出 CAS 汇编指令，这是一种完全依赖于硬件的功能，实现了原子操作 CAS 是一种系统原语，原语属于操作系统范畴，是由若干条指令组成">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDEwOTBhMTE0MjJkYTBiNmZjMDBiY2NkZjE2MWMyNjZfZ0JJYUpNeHlmMkw4ZUd2b1oxb2J6MUVrcnE5Vlg2aDZfVG9rZW46UHdpMGJTd09pb3lDcUZ4S2ZxNWNYczZnbjgxXzE3NDAzMTg1NzE6MTc0MDMyMjE3MV9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MDk3ZTY4MDljYzFmZTUyMzU2ZWJkMjEyODljY2Y1NjBfQTBTNk5KS1I2cDlsNWU3RDZMOGx4T0llWXA1cW0xc3JfVG9rZW46SXp3dGJWVGhKb3k1bTV4UXl1MGMzbTRybnBmXzE3NDAzMTg1NzE6MTc0MDMyMjE3MV9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NzE4NzQ1OTk3MTkwN2M3NGM3ODJiNDkwMDNkNDJiZGNfWnB1U2FEUmswRmcyb1liNjVVdG0wU0JyVmxFVDZ3aUFfVG9rZW46QWVVemJadEhkb1p3eW14Y0xTRGNlRmFTbndjXzE3NDAzMTg1NzE6MTc0MDMyMjE3MV9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YWIzMzYzYmJiZGI1NWJlMDdjZmM1MDE5YWNkMmU4YmVfQnBpS0xSaXhYRjJwdGRKZGhWMEF6b3Rqb1Y1cmdNc2ZfVG9rZW46WDlYeGJrQzJib1pwVG54eE9EQWNFTzM4bkpnXzE3NDAzMTg1NzE6MTc0MDMyMjE3MV9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NzMwNmJlYmU2NzU2NGY3M2Q1ZDk3ODc4OGFlYjJiZDJfbXREUTg0Z0EyVG84aEZFSG0wWnM1VlVyZGFKZnlpVzZfVG9rZW46SjU1WWI0WVFBb25rbzV4RlQzdWN2RU9EbjdlXzE3NDAzMTg1NzE6MTc0MDMyMjE3MV9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MjMyZTgzODUwZWVlYjFiYjA4NDRhODY5Y2IyY2JjZTZfUUNoeXZ4SmtMOFkyNnIxM0VMaU1ONDBKb2dqUVN4NTBfVG9rZW46SkdJeWJVZ3g0b0N0V0t4c1ZiUGNlWmpJbkJiXzE3NDAzMTg1NzE6MTc0MDMyMjE3MV9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MjRmZDJhMTU4NzEwMzMzOTNkZjgxMjcwNzhkZTU0N2JfU0NPS1hRNUl4TWV6SDFZYVpvaU91dmdDQTVLbVNhVmJfVG9rZW46V3U1Q2JHTlVsb0lxS2t4QTJmd2NiVmxybkxBXzE3NDAzMTg1NzE6MTc0MDMyMjE3MV9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=OGQ0YzM3MWI3YmNkNWMzMWI0NmYwM2Q0ODY3MTZkNGVfVTZTb1BOa3JtRzN3S1ZSQ1Z5M2l1ajF6a3ZGd3hxRHBfVG9rZW46QmhkZWJnTzJSb0U0ZDR4WThRbWNwUDh0bmFnXzE3NDAzMTg1NzE6MTc0MDMyMjE3MV9WNA">
+<meta property="og:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MmFhZDEwZmZhNjM5NGQ3YjY1ZTU2Y2MyMTlmNGQzODJfZlpPdVUwS0ppN01aTGI0bGxrdFpvWHpWSzFyaUpMN3hfVG9rZW46S2ZVRGJ2d01Xb2VLTWV4Q2xKWWNnVHV2bkZmXzE3NDAzMTg1NzE6MTc0MDMyMjE3MV9WNA">
+<meta property="article:published_time" content="2025-02-13T13:49:55.000Z">
+<meta property="article:modified_time" content="2025-02-23T13:56:58.392Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="JUC">
+<meta property="article:tag" content="CAS">
+<meta property="article:tag" content="Atomic">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDEwOTBhMTE0MjJkYTBiNmZjMDBiY2NkZjE2MWMyNjZfZ0JJYUpNeHlmMkw4ZUd2b1oxb2J6MUVrcnE5Vlg2aDZfVG9rZW46UHdpMGJTd09pb3lDcUZ4S2ZxNWNYczZnbjgxXzE3NDAzMTg1NzE6MTc0MDMyMjE3MV9WNA">
+  
+  
+  
+  <title>JUC_无锁 - bshtj_blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"bshtj.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>bshtj</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="JUC_无锁"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-13 21:49" pubdate>
+          2025年2月13日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          11k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          92 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">JUC_无锁</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="无锁"><a href="#无锁" class="headerlink" title="无锁"></a>无锁</h2><h3 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h3><h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>无锁编程：Lock Free</p>
+<p>CAS 的全称是 Compare-And-Swap，是 <strong>CPU</strong> <strong>并发原语</strong></p>
+<ul>
+<li>CAS 并发原语体现在 Java 语言中就是 sun.misc.Unsafe 类的各个方法，调用 UnSafe 类中的 CAS 方法，JVM 会实现出 CAS 汇编指令，这是一种完全依赖于硬件的功能，实现了原子操作</li>
+<li>CAS 是一种系统原语，原语属于操作系统范畴，是由若干条指令组成 ，用于完成某个功能的一个过程，并且原语的执行必须是连续的，执行过程中不允许被中断，所以 CAS 是一条 CPU 的原子指令，不会造成数据不一致的问题，是线程安全的</li>
+</ul>
+<p>底层原理：CAS 的底层是 <code>lock cmpxchg</code> 指令（X86 架构），在单核和多核 CPU 下都能够保证比较交换的原子性</p>
+<ul>
+<li>程序是在单核处理器上运行，会省略 lock 前缀，单处理器自身会维护处理器内的顺序一致性，不需要 lock 前缀的内存屏障效果</li>
+<li>程序是在多核处理器上运行，会为 cmpxchg 指令加上 lock 前缀。当某个核执行到带 lock 的指令时，CPU 会执行<strong>总线锁定或缓存锁定</strong>，将修改的变量写入到主存，这个过程不会被线程的调度机制所打断，保证了多个线程对内存操作的原子性</li>
+</ul>
+<p>作用：比较当前工作内存中的值和主物理内存中的值，如果相同则执行规定操作，否则继续比较直到主内存和工作内存的值一致为止</p>
+<p>CAS 特点：</p>
+<ul>
+<li>CAS 体现的是<strong>无锁并发、无阻塞并发</strong>，线程不会陷入阻塞，线程不需要频繁切换状态（上下文切换，系统调用）</li>
+<li>CAS 是基于乐观锁的思想</li>
+</ul>
+<p>CAS 缺点：</p>
+<ul>
+<li>执行的是循环操作，如果比较不成功一直在循环，最差的情况某个线程一直取到的值和预期值都不一样，就会无限循环导致饥饿，<strong>使用</strong> <strong>CAS</strong> <strong>线程数****不要超过</strong> <strong>CPU</strong> <strong>的核心数</strong>，采用分段 CAS 和自动迁移机制</li>
+<li>只能保证一个共享变量的原子操作<ul>
+<li>对于一个共享变量执行操作时，可以通过循环 CAS 的方式来保证原子操作</li>
+<li>对于多个共享变量操作时，循环 CAS 就无法保证操作的原子性，这个时候<strong>只能用锁来保证原子性</strong></li>
+</ul>
+</li>
+<li>引出来 ABA 问题</li>
+</ul>
+<h4 id="乐观锁"><a href="#乐观锁" class="headerlink" title="乐观锁"></a>乐观锁</h4><p>CAS 与 synchronized 总结：</p>
+<ul>
+<li>synchronized 是从悲观的角度出发：总是假设最坏的情况，每次去拿数据的时候都认为别人会修改，所以每次在拿数据的时候都会上锁，这样别人想拿这个数据就会阻塞（共享资源每次只给一个线程使用，其它线程阻塞，用完后再把资源转让给其它线程），因此 synchronized 也称之为悲观锁，ReentrantLock 也是一种悲观锁，性能较差</li>
+<li>CAS 是从乐观的角度出发：总是假设最好的情况，每次去拿数据的时候都认为别人不会修改，所以不会上锁，但是在更新的时候会判断一下在此期间别人有没有去更新这个数据。<strong>如果别人修改过，则获取现在最新的值，如果别人没修改过，直接修改共享数据的值</strong>，CAS 这种机制也称之为乐观锁，综合性能较好</li>
+</ul>
+<h3 id="Atomic"><a href="#Atomic" class="headerlink" title="Atomic"></a>Atomic</h3><h4 id="常用API"><a href="#常用API" class="headerlink" title="常用API"></a>常用API</h4><p>常见原子类：AtomicInteger、AtomicBoolean、AtomicLong</p>
+<p>构造方法：</p>
+<ul>
+<li><code>public AtomicInteger()</code>：初始化一个默认值为 0 的原子型 Integer</li>
+<li><code>public AtomicInteger(int initialValue)</code>：初始化一个指定值的原子型 Integer</li>
+</ul>
+<p>常用API：</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public final int get()</td>
+<td>获取 AtomicInteger 的值</td>
+</tr>
+<tr>
+<td>public final int getAndIncrement()</td>
+<td>以原子方式将当前值加 1，返回的是自增前的值</td>
+</tr>
+<tr>
+<td>public final int incrementAndGet()</td>
+<td>以原子方式将当前值加 1，返回的是自增后的值</td>
+</tr>
+<tr>
+<td>public final int getAndSet(int value)</td>
+<td>以原子方式设置为 newValue 的值，返回旧值</td>
+</tr>
+<tr>
+<td>public final int addAndGet(int data)</td>
+<td>以原子方式将输入的数值与实例中的值相加并返回 实例：AtomicInteger 里的 value</td>
+</tr>
+</tbody></table>
+<h4 id="原理分析"><a href="#原理分析" class="headerlink" title="原理分析"></a>原理分析</h4><p><strong>AtomicInteger 原理</strong>：自旋锁 + CAS 算法</p>
+<p>CAS 算法：有 3 个操作数（内存值 V， 旧的预期值 A，要修改的值 B）</p>
+<ul>
+<li>当旧的预期值 A &#x3D;&#x3D; 内存值 V 此时可以修改，将 V 改为 B</li>
+<li>当旧的预期值 A !&#x3D; 内存值 V 此时不能修改，并重新获取现在的最新值，重新获取的动作就是自旋</li>
+</ul>
+<p>分析 getAndSet 方法：</p>
+<ul>
+<li>AtomicInteger：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-title function_">getAndSet</span><span class="hljs-params">(<span class="hljs-type">int</span> newValue)</span> &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">    * this:                 当前对象</span><br><span class="hljs-comment">    * valueOffset:        内存偏移量，内存地址</span><br><span class="hljs-comment">    */</span><br>    <span class="hljs-keyword">return</span> unsafe.getAndSetInt(<span class="hljs-built_in">this</span>, valueOffset, newValue);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>valueOffset：偏移量表示该变量值相对于当前对象地址的偏移，Unsafe 就是根据内存偏移地址获取数据</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs Java">valueOffset = unsafe.objectFieldOffset<br>                (AtomicInteger.class.getDeclaredField(<span class="hljs-string">&quot;value&quot;</span>));<br><span class="hljs-comment">//调用本地方法   --&gt;</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> <span class="hljs-type">long</span> <span class="hljs-title function_">objectFieldOffset</span><span class="hljs-params">(Field var1)</span>;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>unsafe 类：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-comment">// val1: AtomicInteger对象本身，var2: 该对象值得引用地址，var4: 需要变动的数</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-title function_">getAndSetInt</span><span class="hljs-params">(Object var1, <span class="hljs-type">long</span> var2, <span class="hljs-type">int</span> var4)</span> &#123;<br>    <span class="hljs-type">int</span> var5;<br>    <span class="hljs-keyword">do</span> &#123;<br>        <span class="hljs-comment">// var5: 用 var1 和 var2 找到的内存中的真实值</span><br>        var5 = <span class="hljs-built_in">this</span>.getIntVolatile(var1, var2);<br>    &#125; <span class="hljs-keyword">while</span>(!<span class="hljs-built_in">this</span>.compareAndSwapInt(var1, var2, var5, var4));<br><br>    <span class="hljs-keyword">return</span> var5;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>var5：从主内存中拷贝到工作内存中的值（每次都要从主内存拿到最新的值到本地内存），然后执行 <code>compareAndSwapInt()</code> 再和主内存的值进行比较，假设方法返回 false，那么就一直执行 while 方法，直到期望的值和真实值一样，修改数据</li>
+<li>变量 value 用 volatile 修饰，保证了多线程之间的内存可见性，避免线程从工作缓存中获取失效的变量</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">volatile</span> <span class="hljs-type">int</span> value<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>CAS 必须借助 volatile 才能读取到共享变量的最新值来实现比较并交换的效果</strong></li>
+</ul>
+<p>分析 getAndUpdate 方法：</p>
+<ul>
+<li>getAndUpdate：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-title function_">getAndUpdate</span><span class="hljs-params">(IntUnaryOperator updateFunction)</span> &#123;<br>    <span class="hljs-type">int</span> prev, next;<br>    <span class="hljs-keyword">do</span> &#123;<br>        prev = get();        <span class="hljs-comment">//当前值，cas的期望值</span><br>        next = updateFunction.applyAsInt(prev);<span class="hljs-comment">//期望值更新到该值</span><br>    &#125; <span class="hljs-keyword">while</span> (!compareAndSet(prev, next));<span class="hljs-comment">//自旋</span><br>    <span class="hljs-keyword">return</span> prev;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>函数式接口：可以自定义操作逻辑</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-type">AtomicInteger</span> <span class="hljs-variable">a</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">AtomicInteger</span>();<br>a.getAndUpdate(i -&gt; i + <span class="hljs-number">10</span>);<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>compareAndSet：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">compareAndSet</span><span class="hljs-params">(<span class="hljs-type">int</span> expect, <span class="hljs-type">int</span> update)</span> &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">    * this:                 当前对象</span><br><span class="hljs-comment">    * valueOffset:        内存偏移量，内存地址</span><br><span class="hljs-comment">    * expect:                期望的值</span><br><span class="hljs-comment">    * update:                 更新的值</span><br><span class="hljs-comment">    */</span><br>    <span class="hljs-keyword">return</span> unsafe.compareAndSwapInt(<span class="hljs-built_in">this</span>, valueOffset, expect, update);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="原子引用"><a href="#原子引用" class="headerlink" title="原子引用"></a>原子引用</h4><p>原子引用：对 Object 进行原子操作，提供一种读和写都是原子性的对象引用变量</p>
+<p>原子引用类：AtomicReference、AtomicStampedReference、AtomicMarkableReference</p>
+<p>AtomicReference 类：</p>
+<ul>
+<li>构造方法：<code>AtomicReference&lt;T&gt; atomicReference = new AtomicReference&lt;T&gt;()</code></li>
+<li>常用 API：<ul>
+<li><code>public final boolean compareAndSet(V expectedValue, V newValue)</code>：CAS 操作</li>
+<li><code>public final void set(V newValue)</code>：将值设置为 newValue</li>
+<li><code>public final V get()</code>：返回当前值</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AtomicReferenceDemo</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-type">Student</span> <span class="hljs-variable">s1</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Student</span>(<span class="hljs-number">33</span>, <span class="hljs-string">&quot;z3&quot;</span>);<br>        <br>        <span class="hljs-comment">// 创建原子引用包装类</span><br>        AtomicReference&lt;Student&gt; atomicReference = <span class="hljs-keyword">new</span> <span class="hljs-title class_">AtomicReference</span>&lt;&gt;();<br>        <span class="hljs-comment">// 设置主内存共享变量为s1</span><br>        atomicReference.set(s1);<br><br>        <span class="hljs-comment">// 比较并交换，如果现在主物理内存的值为 z3，那么交换成 l4</span><br>        <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;<br>            <span class="hljs-type">Student</span> <span class="hljs-variable">s2</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Student</span>(<span class="hljs-number">44</span>, <span class="hljs-string">&quot;l4&quot;</span>);<br>            <span class="hljs-keyword">if</span> (atomicReference.compareAndSet(s1, s2)) &#123;<br>                <span class="hljs-keyword">break</span>;<br>            &#125;<br>        &#125;<br>        System.out.println(atomicReference.get());<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Student</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> id;<br>    <span class="hljs-keyword">private</span> String name;<br>    <span class="hljs-comment">//。。。。</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="原子数组"><a href="#原子数组" class="headerlink" title="原子数组"></a>原子数组</h4><p>原子数组类：AtomicIntegerArray、AtomicLongArray、AtomicReferenceArray</p>
+<p>AtomicIntegerArray 类方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-comment">/**</span><br><span class="hljs-comment">*   i                the index</span><br><span class="hljs-comment">* expect         the expected value</span><br><span class="hljs-comment">* update         the new value</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">compareAndSet</span><span class="hljs-params">(<span class="hljs-type">int</span> i, <span class="hljs-type">int</span> expect, <span class="hljs-type">int</span> update)</span> &#123;<br>    <span class="hljs-keyword">return</span> compareAndSetRaw(checkedByteOffset(i), expect, update);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="原子更新器"><a href="#原子更新器" class="headerlink" title="原子更新器"></a>原子更新器</h4><p>原子更新器类：AtomicReferenceFieldUpdater、AtomicIntegerFieldUpdater、AtomicLongFieldUpdater</p>
+<p>利用字段更新器，可以针对对象的某个域（Field）进行原子操作，只能配合 volatile 修饰的字段使用，否则会出现异常 <code>IllegalArgumentException: Must be volatile type</code></p>
+<p>常用 API：</p>
+<ul>
+<li><code>static &lt;U&gt; AtomicIntegerFieldUpdater&lt;U&gt; newUpdater(Class&lt;U&gt; c, String fieldName)</code>：构造方法</li>
+<li><code>abstract boolean compareAndSet(T obj, int expect, int update)</code>：CAS</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UpdateDemo</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">volatile</span> <span class="hljs-type">int</span> field;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-type">AtomicIntegerFieldUpdater</span> <span class="hljs-variable">fieldUpdater</span> <span class="hljs-operator">=</span> AtomicIntegerFieldUpdater<br>                            .newUpdater(UpdateDemo.class, <span class="hljs-string">&quot;field&quot;</span>);<br>        <span class="hljs-type">UpdateDemo</span> <span class="hljs-variable">updateDemo</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UpdateDemo</span>();<br>        fieldUpdater.compareAndSet(updateDemo, <span class="hljs-number">0</span>, <span class="hljs-number">10</span>);<br>        System.out.println(updateDemo.field);<span class="hljs-comment">//10</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="原子累加器"><a href="#原子累加器" class="headerlink" title="原子累加器"></a>原子累加器</h4><p>原子累加器类：LongAdder、DoubleAdder、LongAccumulator、DoubleAccumulator</p>
+<p>LongAdder 和 LongAccumulator 区别：</p>
+<p>相同点：</p>
+<ul>
+<li>LongAddr 与 LongAccumulator 类都是使用非阻塞算法 CAS 实现的</li>
+<li>LongAddr 类是 LongAccumulator 类的一个特例，只是 LongAccumulator 提供了更强大的功能，可以自定义累加规则，当accumulatorFunction 为 null 时就等价于 LongAddr</li>
+</ul>
+<p>不同点：</p>
+<ul>
+<li>调用 casBase 时，LongAccumulator 使用 function.applyAsLong(b &#x3D; base, x) 来计算，LongAddr 使用 casBase(b &#x3D; base, b + x)</li>
+<li>LongAccumulator 类功能更加强大，构造方法参数中<ul>
+<li>accumulatorFunction 是一个双目运算器接口，可以指定累加规则，比如累加或者相乘，其根据输入的两个参数返回一个计算值，LongAdder 内置累加规则</li>
+<li>identity 则是 LongAccumulator 累加器的初始值，LongAccumulator 可以为累加器提供非0的初始值，而 LongAdder 只能提供默认的 0</li>
+</ul>
+</li>
+</ul>
+<h3 id="Adder"><a href="#Adder" class="headerlink" title="Adder"></a>Adder</h3><h4 id="优化机制"><a href="#优化机制" class="headerlink" title="优化机制"></a>优化机制</h4><p>LongAdder 是 Java8 提供的类，跟 AtomicLong 有相同的效果，但对 CAS 机制进行了优化，尝试使用分段 CAS 以及自动分段迁移的方式来大幅度提升多线程高并发执行 CAS 操作的性能</p>
+<p>CAS 底层实现是在一个循环中不断地尝试修改目标值，直到修改成功。如果竞争不激烈修改成功率很高，否则失败率很高，失败后这些重复的原子性操作会耗费性能（导致大量线程<strong>空循环，自旋转</strong>）</p>
+<p>优化核心思想：数据分离，将 AtomicLong 的<strong>单点的更新压力分担到各个节点，空间换时间</strong>，在低并发的时候直接更新，可以保障和 AtomicLong 的性能基本一致，而在高并发的时候通过分散减少竞争，提高了性能</p>
+<p><strong>分段 CAS 机制</strong>：</p>
+<ul>
+<li>在发生竞争时，创建 Cell 数组用于将不同线程的操作离散（通过 hash 等算法映射）到不同的节点上</li>
+<li>设置多个累加单元（会根据需要扩容，最大为 CPU 核数），Therad-0 累加 Cell[0]，而 Thread-1 累加 Cell[1] 等，最后将结果汇总</li>
+<li>在累加时操作的不同的 Cell 变量，因此减少了 CAS 重试失败，从而提高性能</li>
+</ul>
+<p><strong>自动分段迁移机制</strong>：某个 Cell 的 value 执行 CAS 失败，就会自动寻找另一个 Cell 分段内的 value 值进行 CAS 操作</p>
+<h4 id="伪共享"><a href="#伪共享" class="headerlink" title="伪共享"></a>伪共享</h4><p>Cell 为累加单元：数组访问索引是通过 Thread 里的 threadLocalRandomProbe 域取模实现的，这个域是 ThreadLocalRandom 更新的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-comment">// Striped64.Cell</span><br><span class="hljs-meta">@sun</span>.misc.Contended <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Cell</span> &#123;<br>    <span class="hljs-keyword">volatile</span> <span class="hljs-type">long</span> value;<br>    Cell(<span class="hljs-type">long</span> x) &#123; value = x; &#125;<br>    <span class="hljs-comment">// 用 cas 方式进行累加, prev 表示旧值, next 表示新值</span><br>    <span class="hljs-keyword">final</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">cas</span><span class="hljs-params">(<span class="hljs-type">long</span> prev, <span class="hljs-type">long</span> next)</span> &#123;<br>            <span class="hljs-keyword">return</span> UNSAFE.compareAndSwapLong(<span class="hljs-built_in">this</span>, valueOffset, prev, next);<br>    &#125;<br>    <span class="hljs-comment">// 省略不重要代码</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>Cell 是数组形式，<strong>在内存中是连续存储的</strong>，64 位系统中，一个 Cell 为 24 字节（16 字节的对象头和 8 字节的 value），每一个 cache line 为 64 字节，因此缓存行可以存下 2 个的 Cell 对象，当 Core-0 要修改 Cell[0]、Core-1 要修改 Cell[1]，无论谁修改成功都会导致当前缓存行失效，从而导致对方的数据失效，需要重新去主存获取，影响效率</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDEwOTBhMTE0MjJkYTBiNmZjMDBiY2NkZjE2MWMyNjZfZ0JJYUpNeHlmMkw4ZUd2b1oxb2J6MUVrcnE5Vlg2aDZfVG9rZW46UHdpMGJTd09pb3lDcUZ4S2ZxNWNYczZnbjgxXzE3NDAzMTg1NzE6MTc0MDMyMjE3MV9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>@sun.misc.Contended：防止缓存行伪共享，在使用此注解的对象或字段的前后各增加 128 字节大小的 padding，使用 2 倍于大多数硬件缓存行让 CPU 将对象预读至缓存时<strong>占用不同的缓存行</strong>，这样就不会造成对方缓存行的失效</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MDk3ZTY4MDljYzFmZTUyMzU2ZWJkMjEyODljY2Y1NjBfQTBTNk5KS1I2cDlsNWU3RDZMOGx4T0llWXA1cW0xc3JfVG9rZW46SXp3dGJWVGhKb3k1bTV4UXl1MGMzbTRybnBmXzE3NDAzMTg1NzE6MTc0MDMyMjE3MV9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h4><p>Striped64 类成员属性：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-comment">// 表示当前计算机CPU数量</span><br><span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">NCPU</span> <span class="hljs-operator">=</span> Runtime.getRuntime().availableProcessors()<br><span class="hljs-comment">// 累加单元数组, 懒惰初始化</span><br><span class="hljs-keyword">transient</span> <span class="hljs-keyword">volatile</span> Cell[] cells;<br><span class="hljs-comment">// 基础值, 如果没有竞争, 则用 cas 累加这个域，当 cells 扩容时，也会将数据写到 base 中</span><br><span class="hljs-keyword">transient</span> <span class="hljs-keyword">volatile</span> <span class="hljs-type">long</span> base;<br><span class="hljs-comment">// 在 cells 初始化或扩容时只能有一个线程执行, 通过 CAS 更新 cellsBusy 置为 1 来实现一个锁</span><br><span class="hljs-keyword">transient</span> <span class="hljs-keyword">volatile</span> <span class="hljs-type">int</span> cellsBusy;<br></code></pre></td></tr></table></figure>
+
+<p>工作流程：</p>
+<ul>
+<li>cells 占用内存是相对比较大的，是惰性加载的，在无竞争或者其他线程正在初始化 cells 数组的情况下，直接更新 base 域</li>
+<li>在第一次发生竞争时（casBase 失败）会创建一个大小为 2 的 cells 数组，将当前累加的值包装为 Cell 对象，放入映射的槽位上</li>
+<li>分段累加的过程中，如果当前线程对应的 cells 槽位为空，就会新建 Cell 填充，如果出现竞争，就会重新计算线程对应的槽位，继续自旋尝试修改</li>
+<li>分段迁移后还出现竞争就会扩容 cells 数组长度为原来的两倍，然后 rehash，<strong>数组长度总是 2 的 n 次幂</strong>，默认最大为 CPU 核数，但是可以超过，如果核数是 6 核，数组最长是 8</li>
+</ul>
+<p>方法分析：</p>
+<ul>
+<li>LongAdder#add：累加方法</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">add</span><span class="hljs-params">(<span class="hljs-type">long</span> x)</span> &#123;<br>    <span class="hljs-comment">// as 为累加单元数组的引用，b 为基础值，v 表示期望值</span><br>    <span class="hljs-comment">// m 表示 cells 数组的长度 - 1，a 表示当前线程命中的 cell 单元格</span><br>    Cell[] as; <span class="hljs-type">long</span> b, v; <span class="hljs-type">int</span> m; Cell a;<br><br>    <span class="hljs-comment">// cells 不为空说明 cells 已经被初始化，线程发生了竞争，去更新对应的 cell 槽位</span><br>    <span class="hljs-comment">// 进入 || 后的逻辑去更新 base 域，更新失败表示发生竞争进入条件</span><br>    <span class="hljs-keyword">if</span> ((as = cells) != <span class="hljs-literal">null</span> || !casBase(b = base, b + x)) &#123;<br>        <span class="hljs-comment">// uncontended 为 true 表示 cell 没有竞争</span><br>        <span class="hljs-type">boolean</span> <span class="hljs-variable">uncontended</span> <span class="hljs-operator">=</span> <span class="hljs-literal">true</span>;<br><br>        <span class="hljs-comment">// 条件一: true 说明 cells 未初始化，多线程写 base 发生竞争需要进行初始化 cells 数组</span><br>        <span class="hljs-comment">//                  fasle 说明 cells 已经初始化，进行下一个条件寻找自己的 cell 去累加</span><br>        <span class="hljs-comment">// 条件二: getProbe() 获取 hash 值，&amp; m 的逻辑和 HashMap 的逻辑相同，保证散列的均匀性</span><br>        <span class="hljs-comment">//                   true 说明当前线程对应下标的 cell 为空，需要创建 cell</span><br>        <span class="hljs-comment">//        false 说明当前线程对应的 cell 不为空，进行下一个条件【将 x 值累加到对应的 cell 中】</span><br>        <span class="hljs-comment">// 条件三: 有取反符号，false 说明 cas 成功，直接返回，true 说明失败，当前线程对应的 cell 有竞争</span><br>        <span class="hljs-keyword">if</span> (as == <span class="hljs-literal">null</span> || (m = as.length - <span class="hljs-number">1</span>) &lt; <span class="hljs-number">0</span> ||<br>            (a = as[getProbe() &amp; m]) == <span class="hljs-literal">null</span> ||<br>            !(uncontended = a.cas(v = a.value, v + x)))<br>            longAccumulate(x, <span class="hljs-literal">null</span>, uncontended);<br>                <span class="hljs-comment">// 【uncontended 在对应的 cell 上累加失败的时候才为 false，其余情况均为 true】</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>Striped64#longAccumulate：cell 数组创建</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><code class="hljs Java">                                                        <span class="hljs-comment">// x                          null                         false | true</span><br><span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">longAccumulate</span><span class="hljs-params">(<span class="hljs-type">long</span> x, LongBinaryOperator fn, <span class="hljs-type">boolean</span> wasUncontended)</span> &#123;<br>    <span class="hljs-type">int</span> h;<br>    <span class="hljs-comment">// 当前线程还没有对应的 cell, 需要随机生成一个 hash 值用来将当前线程绑定到 cell</span><br>    <span class="hljs-keyword">if</span> ((h = getProbe()) == <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-comment">// 初始化 probe，获取 hash 值</span><br>        ThreadLocalRandom.current(); <br>        h = getProbe();        <br>        <span class="hljs-comment">// 默认情况下 当前线程肯定是写入到了 cells[0] 位置，不把它当做一次真正的竞争</span><br>        wasUncontended = <span class="hljs-literal">true</span>;<br>    &#125;<br>    <span class="hljs-comment">// 表示【扩容意向】，false 一定不会扩容，true 可能会扩容</span><br>    <span class="hljs-type">boolean</span> <span class="hljs-variable">collide</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>; <br>    <span class="hljs-comment">//自旋</span><br>    <span class="hljs-keyword">for</span> (;;) &#123;<br>        <span class="hljs-comment">// as 表示cells引用，a 表示当前线程命中的 cell，n 表示 cells 数组长度，v 表示 期望值</span><br>        Cell[] as; Cell a; <span class="hljs-type">int</span> n; <span class="hljs-type">long</span> v;<br>        <span class="hljs-comment">// 【CASE1】: 表示 cells 已经初始化了，当前线程应该将数据写入到对应的 cell 中</span><br>        <span class="hljs-keyword">if</span> ((as = cells) != <span class="hljs-literal">null</span> &amp;&amp; (n = as.length) &gt; <span class="hljs-number">0</span>) &#123;<br>            <span class="hljs-comment">// CASE1.1: true 表示当前线程对应的索引下标的 Cell 为 null，需要创建 new Cell</span><br>            <span class="hljs-keyword">if</span> ((a = as[(n - <span class="hljs-number">1</span>) &amp; h]) == <span class="hljs-literal">null</span>) &#123;<br>                <span class="hljs-comment">// 判断 cellsBusy 是否被锁</span><br>                <span class="hljs-keyword">if</span> (cellsBusy == <span class="hljs-number">0</span>) &#123;   <br>                    <span class="hljs-comment">// 创建 cell, 初始累加值为 x</span><br>                    <span class="hljs-type">Cell</span> <span class="hljs-variable">r</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cell</span>(x);  <br>                    <span class="hljs-comment">// 加锁</span><br>                    <span class="hljs-keyword">if</span> (cellsBusy == <span class="hljs-number">0</span> &amp;&amp; casCellsBusy()) &#123;<br>                        <span class="hljs-comment">// 创建成功标记，进入【创建 cell 逻辑】</span><br>                        <span class="hljs-type">boolean</span> <span class="hljs-variable">created</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;        <br>                        <span class="hljs-keyword">try</span> &#123;<br>                            Cell[] rs; <span class="hljs-type">int</span> m, j;<br>                            <span class="hljs-comment">// 把当前 cells 数组赋值给 rs，并且不为 null</span><br>                            <span class="hljs-keyword">if</span> ((rs = cells) != <span class="hljs-literal">null</span> &amp;&amp;<br>                                (m = rs.length) &gt; <span class="hljs-number">0</span> &amp;&amp;<br>                                <span class="hljs-comment">// 再次判断防止其它线程初始化过该位置，当前线程再次初始化该位置会造成数据丢失</span><br>                                <span class="hljs-comment">// 因为这里是线程安全的判断，进行的逻辑不会被其他线程影响</span><br>                                rs[j = (m - <span class="hljs-number">1</span>) &amp; h] == <span class="hljs-literal">null</span>) &#123;<br>                                <span class="hljs-comment">// 把新创建的 cell 填充至当前位置</span><br>                                rs[j] = r;<br>                                created = <span class="hljs-literal">true</span>;        <span class="hljs-comment">// 表示创建完成</span><br>                            &#125;<br>                        &#125; <span class="hljs-keyword">finally</span> &#123;<br>                            cellsBusy = <span class="hljs-number">0</span>;                <span class="hljs-comment">// 解锁</span><br>                        &#125;<br>                        <span class="hljs-keyword">if</span> (created)                        <span class="hljs-comment">// true 表示创建完成，可以推出循环了</span><br>                            <span class="hljs-keyword">break</span>;<br>                        <span class="hljs-keyword">continue</span>;<br>                    &#125;<br>                &#125;<br>                collide = <span class="hljs-literal">false</span>;<br>            &#125;<br>            <span class="hljs-comment">// CASE1.2: 条件成立说明线程对应的 cell 有竞争, 改变线程对应的 cell 来重试 cas</span><br>            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!wasUncontended)<br>                wasUncontended = <span class="hljs-literal">true</span>;<br>            <span class="hljs-comment">// CASE 1.3: 当前线程 rehash 过，如果新命中的 cell 不为空，就尝试累加，false 说明新命中也有竞争</span><br>            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (a.cas(v = a.value, ((fn == <span class="hljs-literal">null</span>) ? v + x : fn.applyAsLong(v, x))))<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-comment">// CASE 1.4: cells 长度已经超过了最大长度 CPU 内核的数量或者已经扩容</span><br>            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (n &gt;= NCPU || cells != as)<br>                collide = <span class="hljs-literal">false</span>;                 <span class="hljs-comment">// 扩容意向改为false，【表示不能扩容了】</span><br>            <span class="hljs-comment">// CASE 1.5: 更改扩容意向，如果 n &gt;= NCPU，这里就永远不会执行到，case1.4 永远先于 1.5 执行</span><br>            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!collide)<br>                collide = <span class="hljs-literal">true</span>;<br>            <span class="hljs-comment">// CASE 1.6: 【扩容逻辑】，进行加锁</span><br>            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cellsBusy == <span class="hljs-number">0</span> &amp;&amp; casCellsBusy()) &#123;<br>                <span class="hljs-keyword">try</span> &#123;<br>                    <span class="hljs-comment">// 线程安全的检查，防止期间被其他线程扩容了</span><br>                    <span class="hljs-keyword">if</span> (cells == as) &#123;     <br>                        <span class="hljs-comment">// 扩容为以前的 2 倍</span><br>                        Cell[] rs = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cell</span>[n &lt;&lt; <span class="hljs-number">1</span>];<br>                        <span class="hljs-comment">// 遍历移动值</span><br>                        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; ++i)<br>                            rs[i] = as[i];<br>                        <span class="hljs-comment">// 把扩容后的引用给 cells</span><br>                        cells = rs;<br>                    &#125;<br>                &#125; <span class="hljs-keyword">finally</span> &#123;<br>                    cellsBusy = <span class="hljs-number">0</span>;        <span class="hljs-comment">// 解锁</span><br>                &#125;<br>                collide = <span class="hljs-literal">false</span>;        <span class="hljs-comment">// 扩容意向改为 false，表示不扩容了</span><br>                <span class="hljs-keyword">continue</span>;<br>            &#125;<br>            <span class="hljs-comment">// 重置当前线程 Hash 值，这就是【分段迁移机制】</span><br>            h = advanceProbe(h);<br>        &#125;<br><br>        <span class="hljs-comment">// 【CASE2】: 运行到这说明 cells 还未初始化，as 为null</span><br>        <span class="hljs-comment">// 判断是否没有加锁，没有加锁就用 CAS 加锁</span><br>        <span class="hljs-comment">// 条件二判断是否其它线程在当前线程给 as 赋值之后修改了 cells，这里不是线程安全的判断</span><br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (cellsBusy == <span class="hljs-number">0</span> &amp;&amp; cells == as &amp;&amp; casCellsBusy()) &#123;<br>            <span class="hljs-comment">// 初始化标志，开始 【初始化 cells 数组】</span><br>            <span class="hljs-type">boolean</span> <span class="hljs-variable">init</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;<br>            <span class="hljs-keyword">try</span> &#123; <br>                       <span class="hljs-comment">// 再次判断 cells == as 防止其它线程已经提前初始化了，当前线程再次初始化导致丢失数据</span><br>                <span class="hljs-comment">// 因为这里是【线程安全的，重新检查，经典 DCL】</span><br>                <span class="hljs-keyword">if</span> (cells == as) &#123;<br>                    Cell[] rs = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cell</span>[<span class="hljs-number">2</span>];        <span class="hljs-comment">// 初始化数组大小为2</span><br>                    rs[h &amp; <span class="hljs-number">1</span>] = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Cell</span>(x);        <span class="hljs-comment">// 填充线程对应的cell</span><br>                    cells = rs;<br>                    init = <span class="hljs-literal">true</span>;                                <span class="hljs-comment">// 初始化成功，标记置为 true</span><br>                &#125;<br>            &#125; <span class="hljs-keyword">finally</span> &#123;<br>                cellsBusy = <span class="hljs-number">0</span>;                                        <span class="hljs-comment">// 解锁啊</span><br>            &#125;<br>            <span class="hljs-keyword">if</span> (init)<br>                <span class="hljs-keyword">break</span>;                                                        <span class="hljs-comment">// 初始化成功直接跳出自旋</span><br>        &#125;<br>        <span class="hljs-comment">// 【CASE3】: 运行到这说明其他线程在初始化 cells，当前线程将值累加到 base，累加成功直接结束自旋</span><br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (casBase(v = base, ((fn == <span class="hljs-literal">null</span>) ? v + x :<br>                                    fn.applyAsLong(v, x))))<br>            <span class="hljs-keyword">break</span>; <br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>sum：获取最终结果通过 sum 整合，<strong>保证最终一致性，不保证强一致性</strong></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-type">long</span> <span class="hljs-title function_">sum</span><span class="hljs-params">()</span> &#123;<br>    Cell[] as = cells; Cell a;<br>    <span class="hljs-type">long</span> <span class="hljs-variable">sum</span> <span class="hljs-operator">=</span> base;<br>    <span class="hljs-keyword">if</span> (as != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-comment">// 遍历 累加</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; as.length; ++i) &#123;<br>            <span class="hljs-keyword">if</span> ((a = as[i]) != <span class="hljs-literal">null</span>)<br>                sum += a.value;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> sum;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="ABA"><a href="#ABA" class="headerlink" title="ABA"></a>ABA</h3><p>ABA 问题：当进行获取主内存值时，该内存值在写入主内存时已经被修改了 N 次，但是最终又改成原来的值</p>
+<p>其他线程先把 A 改成 B 又改回 A，主线程<strong>仅能判断出共享变量的值与最初值 A 是否相同</strong>，不能感知到这种从 A 改为 B 又 改回 A 的情况，这时 CAS 虽然成功，但是过程存在问题</p>
+<ul>
+<li>构造方法：<ul>
+<li><code>public AtomicStampedReference(V initialRef, int initialStamp)</code>：初始值和初始版本号</li>
+</ul>
+</li>
+<li>常用API：<ul>
+<li><code>public boolean compareAndSet(V expectedReference, V newReference, int expectedStamp, int newStamp)</code>：<strong>期望引用和期望版本号都一致</strong>才进行 CAS 修改数据</li>
+<li><code>public void set(V newReference, int newStamp)</code>：设置值和版本号</li>
+<li><code>public V getReference()</code>：返回引用的值</li>
+<li><code>public int getStamp()</code>：返回当前版本号</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>    AtomicStampedReference&lt;Integer&gt; atomicReference = <span class="hljs-keyword">new</span> <span class="hljs-title class_">AtomicStampedReference</span>&lt;&gt;(<span class="hljs-number">100</span>,<span class="hljs-number">1</span>);<br>    <span class="hljs-type">int</span> <span class="hljs-variable">startStamp</span> <span class="hljs-operator">=</span> atomicReference.getStamp();<br>    <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(() -&gt;&#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">stamp</span> <span class="hljs-operator">=</span> atomicReference.getStamp();<br>        atomicReference.compareAndSet(<span class="hljs-number">100</span>, <span class="hljs-number">101</span>, stamp, stamp + <span class="hljs-number">1</span>);<br>        stamp = atomicReference.getStamp();<br>        atomicReference.compareAndSet(<span class="hljs-number">101</span>, <span class="hljs-number">100</span>, stamp, stamp + <span class="hljs-number">1</span>);<br>    &#125;,<span class="hljs-string">&quot;t1&quot;</span>).start();<br><br>    <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(() -&gt;&#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            Thread.sleep(<span class="hljs-number">1000</span>);<br>        &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>            e.printStackTrace();<br>        &#125;<br>        <span class="hljs-keyword">if</span> (!atomicReference.compareAndSet(<span class="hljs-number">100</span>, <span class="hljs-number">200</span>, startStamp, startStamp + <span class="hljs-number">1</span>)) &#123;<br>            System.out.println(atomicReference.getReference());<span class="hljs-comment">//100</span><br>            System.out.println(Thread.currentThread().getName() + <span class="hljs-string">&quot;线程修改失败&quot;</span>);<br>        &#125;<br>    &#125;,<span class="hljs-string">&quot;t2&quot;</span>).start();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="Unsafe"><a href="#Unsafe" class="headerlink" title="Unsafe"></a>Unsafe</h3><p>Unsafe 是 CAS 的核心类，由于 Java 无法直接访问底层系统，需要通过本地（Native）方法来访问</p>
+<p>Unsafe 类存在 sun.misc 包，其中所有方法都是 native 修饰的，都是直接调用<strong>操作系统底层资源</strong>执行相应的任务，基于该类可以直接操作特定的内存数据，其内部方法操作类似 C 的指针</p>
+<p>模拟实现原子整数：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>    <span class="hljs-type">MyAtomicInteger</span> <span class="hljs-variable">atomicInteger</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">MyAtomicInteger</span>(<span class="hljs-number">10</span>);<br>    <span class="hljs-keyword">if</span> (atomicInteger.compareAndSwap(<span class="hljs-number">20</span>)) &#123;<br>        System.out.println(atomicInteger.getValue());<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyAtomicInteger</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Unsafe UNSAFE;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">long</span> VALUE_OFFSET;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">volatile</span> <span class="hljs-type">int</span> value;<br><br>    <span class="hljs-keyword">static</span> &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-comment">//Unsafe unsafe = Unsafe.getUnsafe()这样会报错，需要反射获取</span><br>            <span class="hljs-type">Field</span> <span class="hljs-variable">theUnsafe</span> <span class="hljs-operator">=</span> Unsafe.class.getDeclaredField(<span class="hljs-string">&quot;theUnsafe&quot;</span>);<br>            theUnsafe.setAccessible(<span class="hljs-literal">true</span>);<br>            UNSAFE = (Unsafe) theUnsafe.get(<span class="hljs-literal">null</span>);<br>            <span class="hljs-comment">// 获取 value 属性的内存地址，value 属性指向该地址，直接设置该地址的值可以修改 value 的值</span><br>            VALUE_OFFSET = UNSAFE.objectFieldOffset(<br>                                   MyAtomicInteger.class.getDeclaredField(<span class="hljs-string">&quot;value&quot;</span>));<br>        &#125; <span class="hljs-keyword">catch</span> (NoSuchFieldException | IllegalAccessException e) &#123;<br>            e.printStackTrace();<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>();<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">MyAtomicInteger</span><span class="hljs-params">(<span class="hljs-type">int</span> value)</span> &#123;<br>        <span class="hljs-built_in">this</span>.value = value;<br>    &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">getValue</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> value;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">compareAndSwap</span><span class="hljs-params">(<span class="hljs-type">int</span> update)</span> &#123;<br>        <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">prev</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.value;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">next</span> <span class="hljs-operator">=</span> update;<br>            <span class="hljs-comment">//                                                        当前对象  内存偏移量    期望值 更新值</span><br>            <span class="hljs-keyword">if</span> (UNSAFE.compareAndSwapInt(<span class="hljs-built_in">this</span>, VALUE_OFFSET, prev, update)) &#123;<br>                System.out.println(<span class="hljs-string">&quot;CAS成功&quot;</span>);<br>                <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="final"><a href="#final" class="headerlink" title="final"></a>final</h3><h4 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TestFinal</span> &#123;<br>        <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">a</span> <span class="hljs-operator">=</span> <span class="hljs-number">20</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>字节码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-number">0</span>: aload_0<br><span class="hljs-number">1</span>: invokespecial #<span class="hljs-number">1</span> <span class="hljs-comment">// Method java/lang/Object.&quot;&lt;init&gt;&quot;:()V</span><br><span class="hljs-number">4</span>: aload_0<br><span class="hljs-number">5</span>: bipush <span class="hljs-number">20</span>                <span class="hljs-comment">// 将值直接放入栈中</span><br><span class="hljs-number">7</span>: putfield #<span class="hljs-number">2</span>                 <span class="hljs-comment">// Field a:I</span><br>&lt;-- 写屏障<br><span class="hljs-number">10</span>: <span class="hljs-keyword">return</span><br></code></pre></td></tr></table></figure>
+
+<p>final 变量的赋值通过 putfield 指令来完成，在这条指令之后也会加入写屏障，保证在其它线程读到它的值时不会出现为 0 的情况</p>
+<p>其他线程访问 final 修饰的变量</p>
+<ul>
+<li><strong>复制一份放入栈中</strong>直接访问，效率高</li>
+<li>大于 short 最大值会将其复制到类的常量池，访问时从常量池获取</li>
+</ul>
+<h4 id="不可变"><a href="#不可变" class="headerlink" title="不可变"></a>不可变</h4><p>不可变：如果一个对象不能够修改其内部状态（属性），那么就是不可变对象</p>
+<p>不可变对象线程安全的，不存在并发修改和可见性问题，是另一种避免竞争的方式</p>
+<p>String 类也是不可变的，该类和类中所有属性都是 final 的</p>
+<ul>
+<li>类用 final 修饰保证了该类中的方法不能被覆盖，防止子类无意间破坏不可变性</li>
+<li>无写入方法（set）确保外部不能对内部属性进行修改</li>
+<li>属性用 final 修饰保证了该属性是只读的，不能修改</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">String</span><br>    <span class="hljs-keyword">implements</span> <span class="hljs-title class_">java</span>.io.Serializable, Comparable&lt;String&gt;, CharSequence &#123;<br>    <span class="hljs-comment">/** The value is used for character storage. */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-type">char</span> value[];<br>    <span class="hljs-comment">//....</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>更改 String 类数据时，会构造新字符串对象，生成新的 char[] value，通过<strong>创建副本对象来避免共享的方式称之为保护性拷贝</strong></li>
+</ul>
+<h3 id="State"><a href="#State" class="headerlink" title="State"></a>State</h3><p>无状态：成员变量保存的数据也可以称为状态信息，无状态就是没有成员变量</p>
+<p>Servlet 为了保证其线程安全，一般不为 Servlet 设置成员变量，这种没有任何成员变量的类是线程安全的</p>
+<h3 id="Local"><a href="#Local" class="headerlink" title="Local"></a>Local</h3><h4 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h4><p>ThreadLocal 类用来提供线程内部的局部变量，这种变量在多线程环境下访问（通过 get 和 set 方法访问）时能保证各个线程的变量相对独立于其他线程内的变量，分配在堆内的 <strong>TLAB</strong> 中</p>
+<p>ThreadLocal 实例通常来说都是 <code>private static</code> 类型的，属于一个线程的本地变量，用于关联线程和线程上下文。每个线程都会在 ThreadLocal 中保存一份该线程独有的数据，所以是线程安全的</p>
+<p>ThreadLocal 作用：</p>
+<ul>
+<li>线程并发：应用在多线程并发的场景下</li>
+<li>传递数据：通过 ThreadLocal 实现在同一线程不同函数或组件中传递公共变量，减少传递复杂度</li>
+<li>线程隔离：每个线程的变量都是独立的，不会互相影响</li>
+</ul>
+<p>对比 synchronized：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>synchronized</th>
+<th>ThreadLocal</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>原理</td>
+<td>同步机制采用<strong>以时间换空间</strong>的方式，只提供了一份变量，让不同的线程排队访问</td>
+<td>ThreadLocal 采用<strong>以空间换时间</strong>的方式，为每个线程都提供了一份变量的副本，从而实现同时访问而相不干扰</td>
+</tr>
+<tr>
+<td>侧重点</td>
+<td>多个线程之间访问资源的同步</td>
+<td>多线程中让每个线程之间的数据相互隔离</td>
+</tr>
+</tbody></table>
+<h4 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h4><h5 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h5><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ThreadLocal&lt;&gt;()</td>
+<td>创建 ThreadLocal 对象</td>
+</tr>
+<tr>
+<td>protected T initialValue()</td>
+<td>返回当前线程局部变量的初始值</td>
+</tr>
+<tr>
+<td>public void set( T value)</td>
+<td>设置当前线程绑定的局部变量</td>
+</tr>
+<tr>
+<td>public T get()</td>
+<td>获取当前线程绑定的局部变量</td>
+</tr>
+<tr>
+<td>public void remove()</td>
+<td>移除当前线程绑定的局部变量</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyDemo</span> &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> ThreadLocal&lt;String&gt; tl = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ThreadLocal</span>&lt;&gt;();<br><br>    <span class="hljs-keyword">private</span> String content;<br><br>    <span class="hljs-keyword">private</span> String <span class="hljs-title function_">getContent</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">// 获取当前线程绑定的变量</span><br>        <span class="hljs-keyword">return</span> tl.get();<br>    &#125;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setContent</span><span class="hljs-params">(String content)</span> &#123;<br>        <span class="hljs-comment">// 变量content绑定到当前线程</span><br>        tl.set(content);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-type">MyDemo</span> <span class="hljs-variable">demo</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">MyDemo</span>();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">5</span>; i++) &#123;<br>            <span class="hljs-type">Thread</span> <span class="hljs-variable">thread</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Runnable</span>() &#123;<br>                <span class="hljs-meta">@Override</span><br>                <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">run</span><span class="hljs-params">()</span> &#123;<br>                    <span class="hljs-comment">// 设置数据</span><br>                    demo.setContent(Thread.currentThread().getName() + <span class="hljs-string">&quot;的数据&quot;</span>);<br>                    System.out.println(<span class="hljs-string">&quot;-----------------------&quot;</span>);<br>                    System.out.println(Thread.currentThread().getName() + <span class="hljs-string">&quot;---&gt;&quot;</span> + demo.getContent());<br>                &#125;<br>            &#125;);<br>            thread.setName(<span class="hljs-string">&quot;线程&quot;</span> + i);<br>            thread.start();<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h5><p>ThreadLocal 适用于下面两种场景：</p>
+<ul>
+<li>每个线程需要有自己单独的实例</li>
+<li>实例需要在多个方法中共享，但不希望被多线程共享</li>
+</ul>
+<p>ThreadLocal 方案有两个突出的优势：</p>
+<ol>
+<li>传递数据：保存每个线程绑定的数据，在需要的地方可以直接获取，避免参数直接传递带来的代码耦合问题</li>
+<li>线程隔离：各线程之间的数据相互隔离却又具备并发性，避免同步方式带来的性能损失</li>
+</ol>
+<p>ThreadLocal 用于数据连接的事务管理：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">JdbcUtils</span> &#123;<br>    <span class="hljs-comment">// ThreadLocal对象，将connection绑定在当前线程中</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> ThreadLocal&lt;Connection&gt; tl = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ThreadLocal</span>();<br>    <span class="hljs-comment">// c3p0 数据库连接池对象属性</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">ComboPooledDataSource</span> <span class="hljs-variable">ds</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ComboPooledDataSource</span>();<br>    <span class="hljs-comment">// 获取连接</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Connection <span class="hljs-title function_">getConnection</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> SQLException &#123;<br>        <span class="hljs-comment">//取出当前线程绑定的connection对象</span><br>        <span class="hljs-type">Connection</span> <span class="hljs-variable">conn</span> <span class="hljs-operator">=</span> tl.get();<br>        <span class="hljs-keyword">if</span> (conn == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-comment">//如果没有，则从连接池中取出</span><br>            conn = ds.getConnection();<br>            <span class="hljs-comment">//再将connection对象绑定到当前线程中，非常重要的操作</span><br>            tl.set(conn);<br>        &#125;<br>        <span class="hljs-keyword">return</span> conn;<br>    &#125;<br>        <span class="hljs-comment">// ...</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>用 ThreadLocal 使 SimpleDateFormat 从独享变量变成单个线程变量：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ThreadLocalDateUtil</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> ThreadLocal&lt;DateFormat&gt; threadLocal = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ThreadLocal</span>&lt;DateFormat&gt;() &#123;<br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-keyword">protected</span> DateFormat <span class="hljs-title function_">initialValue</span><span class="hljs-params">()</span> &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">SimpleDateFormat</span>(<span class="hljs-string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>);<br>        &#125;<br>    &#125;;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Date <span class="hljs-title function_">parse</span><span class="hljs-params">(String dateStr)</span> <span class="hljs-keyword">throws</span> ParseException &#123;<br>        <span class="hljs-keyword">return</span> threadLocal.get().parse(dateStr);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">format</span><span class="hljs-params">(Date date)</span> &#123;<br>        <span class="hljs-keyword">return</span> threadLocal.get().format(date);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h4><h5 id="底层结构"><a href="#底层结构" class="headerlink" title="底层结构"></a>底层结构</h5><p>JDK8 以前：每个 ThreadLocal 都创建一个 Map，然后用线程作为 Map 的 key，要存储的局部变量作为 Map 的 value，达到各个线程的局部变量隔离的效果。这种结构会造成 Map 结构过大和内存泄露，因为 Thread 停止后无法通过 key 删除对应的数据</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NzE4NzQ1OTk3MTkwN2M3NGM3ODJiNDkwMDNkNDJiZGNfWnB1U2FEUmswRmcyb1liNjVVdG0wU0JyVmxFVDZ3aUFfVG9rZW46QWVVemJadEhkb1p3eW14Y0xTRGNlRmFTbndjXzE3NDAzMTg1NzE6MTc0MDMyMjE3MV9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>JDK8 以后：每个 Thread 维护一个 ThreadLocalMap，这个 Map 的 key 是 ThreadLocal 实例本身，value 是真正要存储的值</p>
+<ul>
+<li><strong>每个 Thread 线程内部都有一个 Map (ThreadLocalMap)</strong></li>
+<li>Map 里面存储 ThreadLocal 对象（key）和线程的私有变量（value）</li>
+<li>Thread 内部的 Map 是由 ThreadLocal 维护的，由 ThreadLocal 负责向 map 获取和设置线程的变量值</li>
+<li>对于不同的线程，每次获取副本值时，别的线程并不能获取到当前线程的副本值，形成副本的隔离，互不干扰</li>
+</ul>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=YWIzMzYzYmJiZGI1NWJlMDdjZmM1MDE5YWNkMmU4YmVfQnBpS0xSaXhYRjJwdGRKZGhWMEF6b3Rqb1Y1cmdNc2ZfVG9rZW46WDlYeGJrQzJib1pwVG54eE9EQWNFTzM4bkpnXzE3NDAzMTg1NzE6MTc0MDMyMjE3MV9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>JDK8 前后对比：</p>
+<ul>
+<li>每个 Map 存储的 Entry 数量会变少，因为之前的存储数量由 Thread 的数量决定，现在由 ThreadLocal 的数量决定，在实际编程当中，往往 ThreadLocal 的数量要少于 Thread 的数量</li>
+<li>当 Thread 销毁之后，对应的 ThreadLocalMap 也会随之销毁，能减少内存的使用，<strong>防止内存泄露</strong></li>
+</ul>
+<h5 id="成员变量"><a href="#成员变量" class="headerlink" title="成员变量"></a>成员变量</h5><ul>
+<li>Thread 类的相关属性：<strong>每一个线程持有一个 ThreadLocalMap 对象</strong>，存放由 ThreadLocal 和数据组成的 Entry 键值对</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Java">ThreadLocal.<span class="hljs-type">ThreadLocalMap</span> <span class="hljs-variable">threadLocals</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>计算 ThreadLocal 对象的哈希值：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">threadLocalHashCode</span> <span class="hljs-operator">=</span> nextHashCode()<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>使用 <code>threadLocalHashCode &amp; (table.length - 1)</code> 计算当前 entry 需要存放的位置</li>
+<li>每创建一个 ThreadLocal 对象就会使用 nextHashCode 分配一个 hash 值给这个对象：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">AtomicInteger</span> <span class="hljs-variable">nextHashCode</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">AtomicInteger</span>()<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>斐波那契数也叫黄金分割数，hash 的<strong>增量</strong>就是这个数字，带来的好处是 hash 分布非常均匀：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">HASH_INCREMENT</span> <span class="hljs-operator">=</span> <span class="hljs-number">0x61c88647</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="成员方法"><a href="#成员方法" class="headerlink" title="成员方法"></a>成员方法</h5><p>方法都是线程安全的，因为 ThreadLocal 属于一个线程的，ThreadLocal 中的方法，逻辑都是获取当前线程维护的 ThreadLocalMap 对象，然后进行数据的增删改查，没有指定初始值的 threadlcoal 对象默认赋值为 null</p>
+<ul>
+<li>initialValue()：返回该线程局部变量的初始值<ul>
+<li>延迟调用的方法，在执行 get 方法时才执行</li>
+<li>该方法缺省（默认）实现直接返回一个 null</li>
+<li>如果想要一个初始值，可以重写此方法， 该方法是一个 <code>protected</code> 的方法，为了让子类覆盖而设计的</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">protected</span> T <span class="hljs-title function_">initialValue</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>nextHashCode()：计算哈希值，ThreadLocal 的散列方式称之为<strong>斐波那契散列</strong>，每次获取哈希值都会加上 HASH_INCREMENT，这样做可以尽量避免 hash 冲突，让哈希值能均匀的分布在 2 的 n 次方的数组中</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">nextHashCode</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-comment">// 哈希值自增一个 HASH_INCREMENT 数值</span><br>    <span class="hljs-keyword">return</span> nextHashCode.getAndAdd(HASH_INCREMENT);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>set()：修改当前线程与当前 threadlocal 对象相关联的线程局部变量</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">set</span><span class="hljs-params">(T value)</span> &#123;<br>    <span class="hljs-comment">// 获取当前线程对象</span><br>    <span class="hljs-type">Thread</span> <span class="hljs-variable">t</span> <span class="hljs-operator">=</span> Thread.currentThread();<br>    <span class="hljs-comment">// 获取此线程对象中维护的 ThreadLocalMap 对象</span><br>    <span class="hljs-type">ThreadLocalMap</span> <span class="hljs-variable">map</span> <span class="hljs-operator">=</span> getMap(t);<br>    <span class="hljs-comment">// 判断 map 是否存在</span><br>    <span class="hljs-keyword">if</span> (map != <span class="hljs-literal">null</span>)<br>        <span class="hljs-comment">// 调用 threadLocalMap.set 方法进行重写或者添加</span><br>        map.set(<span class="hljs-built_in">this</span>, value);<br>    <span class="hljs-keyword">else</span><br>        <span class="hljs-comment">// map 为空，调用 createMap 进行 ThreadLocalMap 对象的初始化。参数1是当前线程，参数2是局部变量</span><br>        createMap(t, value);<br>&#125;<br><span class="hljs-comment">// 获取当前线程 Thread 对应维护的 ThreadLocalMap </span><br>ThreadLocalMap <span class="hljs-title function_">getMap</span><span class="hljs-params">(Thread t)</span> &#123;<br>    <span class="hljs-keyword">return</span> t.threadLocals;<br>&#125;<br><span class="hljs-comment">// 创建当前线程Thread对应维护的ThreadLocalMap </span><br><span class="hljs-keyword">void</span> <span class="hljs-title function_">createMap</span><span class="hljs-params">(Thread t, T firstValue)</span> &#123;<br>    <span class="hljs-comment">// 【这里的 this 是调用此方法的 threadLocal】，创建一个新的 Map 并设置第一个数据</span><br>    t.threadLocals = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ThreadLocalMap</span>(<span class="hljs-built_in">this</span>, firstValue);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>get()：获取当前线程与当前 ThreadLocal 对象相关联的线程局部变量</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> T <span class="hljs-title function_">get</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-type">Thread</span> <span class="hljs-variable">t</span> <span class="hljs-operator">=</span> Thread.currentThread();<br>    <span class="hljs-type">ThreadLocalMap</span> <span class="hljs-variable">map</span> <span class="hljs-operator">=</span> getMap(t);<br>    <span class="hljs-comment">// 如果此map存在</span><br>    <span class="hljs-keyword">if</span> (map != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-comment">// 以当前的 ThreadLocal 为 key，调用 getEntry 获取对应的存储实体 e</span><br>        ThreadLocalMap.<span class="hljs-type">Entry</span> <span class="hljs-variable">e</span> <span class="hljs-operator">=</span> map.getEntry(<span class="hljs-built_in">this</span>);<br>        <span class="hljs-comment">// 对 e 进行判空 </span><br>        <span class="hljs-keyword">if</span> (e != <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-comment">// 获取存储实体 e 对应的 value值</span><br>            <span class="hljs-type">T</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> (T)e.value;<br>            <span class="hljs-keyword">return</span> result;<br>        &#125;<br>    &#125;<br>    <span class="hljs-comment">/*有两种情况有执行当前代码</span><br><span class="hljs-comment">      第一种情况: map 不存在，表示此线程没有维护的 ThreadLocalMap 对象</span><br><span class="hljs-comment">      第二种情况: map 存在, 但是【没有与当前 ThreadLocal 关联的 entry】，就会设置为默认值 */</span><br>    <span class="hljs-comment">// 初始化当前线程与当前 threadLocal 对象相关联的 value</span><br>    <span class="hljs-keyword">return</span> setInitialValue();<br>&#125;<br><span class="hljs-keyword">private</span> T <span class="hljs-title function_">setInitialValue</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-comment">// 调用initialValue获取初始化的值，此方法可以被子类重写, 如果不重写默认返回 null</span><br>    <span class="hljs-type">T</span> <span class="hljs-variable">value</span> <span class="hljs-operator">=</span> initialValue();<br>    <span class="hljs-type">Thread</span> <span class="hljs-variable">t</span> <span class="hljs-operator">=</span> Thread.currentThread();<br>    <span class="hljs-type">ThreadLocalMap</span> <span class="hljs-variable">map</span> <span class="hljs-operator">=</span> getMap(t);<br>    <span class="hljs-comment">// 判断 map 是否初始化过</span><br>    <span class="hljs-keyword">if</span> (map != <span class="hljs-literal">null</span>)<br>        <span class="hljs-comment">// 存在则调用 map.set 设置此实体 entry，value 是默认的值</span><br>        map.set(<span class="hljs-built_in">this</span>, value);<br>    <span class="hljs-keyword">else</span><br>        <span class="hljs-comment">// 调用 createMap 进行 ThreadLocalMap 对象的初始化中</span><br>        createMap(t, value);<br>    <span class="hljs-comment">// 返回线程与当前 threadLocal 关联的局部变量</span><br>    <span class="hljs-keyword">return</span> value;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>remove()：移除当前线程与当前 threadLocal 对象相关联的线程局部变量</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">remove</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-comment">// 获取当前线程对象中维护的 ThreadLocalMap 对象</span><br>    <span class="hljs-type">ThreadLocalMap</span> <span class="hljs-variable">m</span> <span class="hljs-operator">=</span> getMap(Thread.currentThread());<br>    <span class="hljs-keyword">if</span> (m != <span class="hljs-literal">null</span>)<br>        <span class="hljs-comment">// map 存在则调用 map.remove，this时当前ThreadLocal，以this为key删除对应的实体</span><br>        m.remove(<span class="hljs-built_in">this</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="LocalMap"><a href="#LocalMap" class="headerlink" title="LocalMap"></a>LocalMap</h4><h5 id="成员属性"><a href="#成员属性" class="headerlink" title="成员属性"></a>成员属性</h5><p>ThreadLocalMap 是 ThreadLocal 的内部类，没有实现 Map 接口，用独立的方式实现了 Map 的功能，其内部 Entry 也是独立实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-comment">// 初始化当前 map 内部散列表数组的初始长度 16</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">INITIAL_CAPACITY</span> <span class="hljs-operator">=</span> <span class="hljs-number">16</span>;<br><br><span class="hljs-comment">// 存放数据的table，数组长度必须是2的整次幂。</span><br><span class="hljs-keyword">private</span> Entry[] table;<br><br><span class="hljs-comment">// 数组里面 entrys 的个数，可以用于判断 table 当前使用量是否超过阈值</span><br><span class="hljs-keyword">private</span> <span class="hljs-type">int</span> <span class="hljs-variable">size</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br><br><span class="hljs-comment">// 进行扩容的阈值，表使用量大于它的时候进行扩容。</span><br><span class="hljs-keyword">private</span> <span class="hljs-type">int</span> threshold;<br></code></pre></td></tr></table></figure>
+
+<p>存储结构 Entry：</p>
+<ul>
+<li>Entry 继承 WeakReference，key 是弱引用，目的是将 ThreadLocal 对象的生命周期和线程生命周期解绑</li>
+<li>Entry 限制只能用 ThreadLocal 作为 key，key 为 null (entry.get() &#x3D;&#x3D; null) 意味着 key 不再被引用，entry 也可以从 table 中清除</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Entry</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">WeakReference</span>&lt;ThreadLocal&lt;?&gt;&gt; &#123;<br>    Object value;<br>    Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;<br>        <span class="hljs-comment">// this.referent = referent = key;</span><br>        <span class="hljs-built_in">super</span>(k);<br>        value = v;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>构造方法：延迟初始化的，线程第一次存储 threadLocal - value 时才会创建 threadLocalMap 对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs Java">ThreadLocalMap(ThreadLocal&lt;?&gt; firstKey, Object firstValue) &#123;<br>    <span class="hljs-comment">// 初始化table，创建一个长度为16的Entry数组</span><br>    table = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Entry</span>[INITIAL_CAPACITY];<br>    <span class="hljs-comment">// 【寻址算法】计算索引</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> firstKey.threadLocalHashCode &amp; (INITIAL_CAPACITY - <span class="hljs-number">1</span>);<br>    <span class="hljs-comment">// 创建 entry 对象，存放到指定位置的 slot 中</span><br>    table[i] = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Entry</span>(firstKey, firstValue);<br>    <span class="hljs-comment">// 数据总量是 1</span><br>    size = <span class="hljs-number">1</span>;<br>    <span class="hljs-comment">// 将阈值设置为 （当前数组长度 * 2）/ 3。</span><br>    setThreshold(INITIAL_CAPACITY);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="成员方法-1"><a href="#成员方法-1" class="headerlink" title="成员方法"></a>成员方法</h5><ul>
+<li>set()：添加数据，ThreadLocalMap 使用<strong>线性探测法来解决哈希冲突</strong><ul>
+<li>该方法会一直探测下一个地址，直到有空的地址后插入，若插入后 Map 数量超过阈值，数组会扩容为原来的 2 倍</li>
+<li>假设当前 table 长度为16，计算出来 key 的 hash 值为 14，如果 table[14] 上已经有值，并且其 key 与当前 key 不一致，那么就发生了 hash 冲突，这个时候将 14 加 1 得到 15，取 table[15] 进行判断，如果还是冲突会回到 0，取 table[0]，以此类推，直到可以插入，可以把 Entry[] table 看成一个<strong>环形数组</strong></li>
+<li>线性探测法会出现<strong>堆积问题</strong>，可以采取平方探测法解决</li>
+<li>在探测过程中 ThreadLocal 会复用 key 为 null 的脏 Entry 对象，并进行垃圾清理，防止出现内存泄漏</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">set</span><span class="hljs-params">(ThreadLocal&lt;?&gt; key, Object value)</span> &#123;<br>    <span class="hljs-comment">// 获取散列表</span><br>    ThreadLocal.ThreadLocalMap.Entry[] tab = table;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">len</span> <span class="hljs-operator">=</span> tab.length;<br>    <span class="hljs-comment">// 哈希寻址</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> key.threadLocalHashCode &amp; (len-<span class="hljs-number">1</span>);<br>    <span class="hljs-comment">// 使用线性探测法向后查找元素，碰到 entry 为空时停止探测</span><br>    <span class="hljs-keyword">for</span> (ThreadLocal.ThreadLocalMap.<span class="hljs-type">Entry</span> <span class="hljs-variable">e</span> <span class="hljs-operator">=</span> tab[i]; e != <span class="hljs-literal">null</span>; e = tab[i = nextIndex(i, len)]) &#123;<br>        <span class="hljs-comment">// 获取当前元素 key</span><br>        ThreadLocal&lt;?&gt; k = e.get();<br>        <span class="hljs-comment">// ThreadLocal 对应的 key 存在，【直接覆盖之前的值】</span><br>        <span class="hljs-keyword">if</span> (k == key) &#123;<br>            e.value = value;<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br>        <span class="hljs-comment">// 【这两个条件谁先成立不一定，所以 replaceStaleEntry 中还需要判断 k == key 的情况】</span><br><br>        <span class="hljs-comment">// key 为 null，但是值不为 null，说明之前的 ThreadLocal 对象已经被回收了，当前是【过期数据】</span><br>        <span class="hljs-keyword">if</span> (k == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-comment">// 【碰到一个过期的 slot，当前数据复用该槽位，替换过期数据】</span><br>            <span class="hljs-comment">// 这个方法还进行了垃圾清理动作，防止内存泄漏</span><br>            replaceStaleEntry(key, value, i);<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br>    &#125;<br>        <span class="hljs-comment">// 逻辑到这说明碰到 slot == null 的位置，则在空元素的位置创建一个新的 Entry</span><br>    tab[i] = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Entry</span>(key, value);<br>    <span class="hljs-comment">// 数量 + 1</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">sz</span> <span class="hljs-operator">=</span> ++size;<br><br>    <span class="hljs-comment">// 【做一次启发式清理】，如果没有清除任何 entry 并且【当前使用量达到了负载因子所定义，那么进行 rehash</span><br>    <span class="hljs-keyword">if</span> (!cleanSomeSlots(i, sz) &amp;&amp; sz &gt;= threshold)<br>        <span class="hljs-comment">// 扩容</span><br>        rehash();<br>&#125;<br><span class="hljs-comment">// 获取【环形数组】的下一个索引</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">nextIndex</span><span class="hljs-params">(<span class="hljs-type">int</span> i, <span class="hljs-type">int</span> len)</span> &#123;<br>    <span class="hljs-comment">// 索引越界后从 0 开始继续获取</span><br>    <span class="hljs-keyword">return</span> ((i + <span class="hljs-number">1</span> &lt; len) ? i + <span class="hljs-number">1</span> : <span class="hljs-number">0</span>);<br>&#125;<br><span class="hljs-comment">// 在指定位置插入指定的数据</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">replaceStaleEntry</span><span class="hljs-params">(ThreadLocal&lt;?&gt; key, Object value, <span class="hljs-type">int</span> staleSlot)</span> &#123;<br>    <span class="hljs-comment">// 获取散列表</span><br>    Entry[] tab = table;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">len</span> <span class="hljs-operator">=</span> tab.length;<br>    Entry e;<br>        <span class="hljs-comment">// 探测式清理的开始下标，默认从当前 staleSlot 开始</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">slotToExpunge</span> <span class="hljs-operator">=</span> staleSlot;<br>    <span class="hljs-comment">// 以当前 staleSlot 开始【向前迭代查找】，找到索引靠前过期数据，找到以后替换 slotToExpunge 值</span><br>    <span class="hljs-comment">// 【保证在一个区间段内，从最前面的过期数据开始清理】</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> prevIndex(staleSlot, len); (e = tab[i]) != <span class="hljs-literal">null</span>; i = prevIndex(i, len))<br>        <span class="hljs-keyword">if</span> (e.get() == <span class="hljs-literal">null</span>)<br>            slotToExpunge = i;<br><br>        <span class="hljs-comment">// 以 staleSlot 【向后去查找】，直到碰到 null 为止，还是线性探测</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> nextIndex(staleSlot, len); (e = tab[i]) != <span class="hljs-literal">null</span>; i = nextIndex(i, len)) &#123;<br>        <span class="hljs-comment">// 获取当前节点的 key</span><br>        ThreadLocal&lt;?&gt; k = e.get();<br>                <span class="hljs-comment">// 条件成立说明是【替换逻辑】</span><br>        <span class="hljs-keyword">if</span> (k == key) &#123;<br>            e.value = value;<br>            <span class="hljs-comment">// 因为本来要在 staleSlot 索引处插入该数据，现在找到了i索引处的key与数据一致</span><br>            <span class="hljs-comment">// 但是 i 位置距离正确的位置更远，因为是向后查找，所以还是要在 staleSlot 位置插入当前 entry</span><br>            <span class="hljs-comment">// 然后将 table[staleSlot] 这个过期数据放到当前循环到的 table[i] 这个位置，</span><br>            tab[i] = tab[staleSlot];<br>            tab[staleSlot] = e;<br><br>            <span class="hljs-comment">// 条件成立说明向前查找过期数据并未找到过期的 entry，但 staleSlot 位置已经不是过期数据了，i 位置才是</span><br>            <span class="hljs-keyword">if</span> (slotToExpunge == staleSlot)<br>                slotToExpunge = i;<br><br>            <span class="hljs-comment">// 【清理过期数据，expungeStaleEntry 探测式清理，cleanSomeSlots 启发式清理】</span><br>            cleanSomeSlots(expungeStaleEntry(slotToExpunge), len);<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br>                <span class="hljs-comment">// 条件成立说明当前遍历的 entry 是一个过期数据，并且该位置前面也没有过期数据</span><br>        <span class="hljs-keyword">if</span> (k == <span class="hljs-literal">null</span> &amp;&amp; slotToExpunge == staleSlot)<br>            <span class="hljs-comment">// 探测式清理过期数据的开始下标修改为当前循环的 index，因为 staleSlot 会放入要添加的数据</span><br>            slotToExpunge = i;<br>    &#125;<br>        <span class="hljs-comment">// 向后查找过程中并未发现 k == key 的 entry，说明当前是一个【取代过期数据逻辑】</span><br>    <span class="hljs-comment">// 删除原有的数据引用，防止内存泄露</span><br>    tab[staleSlot].value = <span class="hljs-literal">null</span>;<br>    <span class="hljs-comment">// staleSlot 位置添加数据，【上面的所有逻辑都不会更改 staleSlot 的值】</span><br>    tab[staleSlot] = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Entry</span>(key, value);<br><br>    <span class="hljs-comment">// 条件成立说明除了 staleSlot 以外，还发现其它的过期 slot，所以要【开启清理数据的逻辑】</span><br>    <span class="hljs-keyword">if</span> (slotToExpunge != staleSlot)<br>        cleanSomeSlots(expungeStaleEntry(slotToExpunge), len);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NzMwNmJlYmU2NzU2NGY3M2Q1ZDk3ODc4OGFlYjJiZDJfbXREUTg0Z0EyVG84aEZFSG0wWnM1VlVyZGFKZnlpVzZfVG9rZW46SjU1WWI0WVFBb25rbzV4RlQzdWN2RU9EbjdlXzE3NDAzMTg1NzE6MTc0MDMyMjE3MV9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">prevIndex</span><span class="hljs-params">(<span class="hljs-type">int</span> i, <span class="hljs-type">int</span> len)</span> &#123;<br>    <span class="hljs-comment">// 形成一个环绕式的访问，头索引越界后置为尾索引</span><br>    <span class="hljs-keyword">return</span> ((i - <span class="hljs-number">1</span> &gt;= <span class="hljs-number">0</span>) ? i - <span class="hljs-number">1</span> : len - <span class="hljs-number">1</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>getEntry()：ThreadLocal 的 get 方法以当前的 ThreadLocal 为 key，调用 getEntry 获取对应的存储实体 e</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">private</span> Entry <span class="hljs-title function_">getEntry</span><span class="hljs-params">(ThreadLocal&lt;?&gt; key)</span> &#123;<br>    <span class="hljs-comment">// 哈希寻址</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> key.threadLocalHashCode &amp; (table.length - <span class="hljs-number">1</span>);<br>    <span class="hljs-comment">// 访问散列表中指定指定位置的 slot </span><br>    <span class="hljs-type">Entry</span> <span class="hljs-variable">e</span> <span class="hljs-operator">=</span> table[i];<br>    <span class="hljs-comment">// 条件成立，说明 slot 有值并且 key 就是要寻找的 key，直接返回</span><br>    <span class="hljs-keyword">if</span> (e != <span class="hljs-literal">null</span> &amp;&amp; e.get() == key)<br>        <span class="hljs-keyword">return</span> e;<br>    <span class="hljs-keyword">else</span><br>        <span class="hljs-comment">// 进行线性探测</span><br>        <span class="hljs-keyword">return</span> getEntryAfterMiss(key, i, e);<br>&#125;<br><span class="hljs-comment">// 线性探测寻址</span><br><span class="hljs-keyword">private</span> Entry <span class="hljs-title function_">getEntryAfterMiss</span><span class="hljs-params">(ThreadLocal&lt;?&gt; key, <span class="hljs-type">int</span> i, Entry e)</span> &#123;<br>    <span class="hljs-comment">// 获取散列表</span><br>    Entry[] tab = table;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">len</span> <span class="hljs-operator">=</span> tab.length;<br><br>    <span class="hljs-comment">// 开始遍历，碰到 slot == null 的情况，搜索结束</span><br>    <span class="hljs-keyword">while</span> (e != <span class="hljs-literal">null</span>) &#123;<br>                <span class="hljs-comment">// 获取当前 slot 中 entry 对象的 key</span><br>        ThreadLocal&lt;?&gt; k = e.get();<br>        <span class="hljs-comment">// 条件成立说明找到了，直接返回</span><br>        <span class="hljs-keyword">if</span> (k == key)<br>            <span class="hljs-keyword">return</span> e;<br>        <span class="hljs-keyword">if</span> (k == <span class="hljs-literal">null</span>)<br>             <span class="hljs-comment">// 过期数据，【探测式过期数据回收】</span><br>            expungeStaleEntry(i);<br>        <span class="hljs-keyword">else</span><br>            <span class="hljs-comment">// 更新 index 继续向后走</span><br>            i = nextIndex(i, len);<br>        <span class="hljs-comment">// 获取下一个槽位中的 entry</span><br>        e = tab[i];<br>    &#125;<br>    <span class="hljs-comment">// 说明当前区段没有找到相应数据</span><br>    <span class="hljs-comment">// 【因为存放数据是线性的向后寻找槽位，都是紧挨着的，不可能越过一个 空槽位 在后面放】，可以减少遍历的次数</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>rehash()：触发一次全量清理，如果数组长度大于等于长度的 <code>2/3 * 3/4 = 1/2</code>，则进行 resize</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">rehash</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-comment">// 清楚当前散列表内的【所有】过期的数据</span><br>    expungeStaleEntries();<br><br>    <span class="hljs-comment">// threshold = len * 2 / 3，就是 2/3 * (1 - 1/4)</span><br>    <span class="hljs-keyword">if</span> (size &gt;= threshold - threshold / <span class="hljs-number">4</span>)<br>        resize();<br>&#125;<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">expungeStaleEntries</span><span class="hljs-params">()</span> &#123;<br>    Entry[] tab = table;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">len</span> <span class="hljs-operator">=</span> tab.length;<br>    <span class="hljs-comment">// 【遍历所有的槽位，清理过期数据】</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; j &lt; len; j++) &#123;<br>        <span class="hljs-type">Entry</span> <span class="hljs-variable">e</span> <span class="hljs-operator">=</span> tab[j];<br>        <span class="hljs-keyword">if</span> (e != <span class="hljs-literal">null</span> &amp;&amp; e.get() == <span class="hljs-literal">null</span>)<br>            expungeStaleEntry(j);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>Entry <strong>数组为扩容为原来的 2 倍</strong> ，重新计算 key 的散列值，如果遇到 key 为 null 的情况，会将其 value 也置为 null，帮助 GC</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">resize</span><span class="hljs-params">()</span> &#123;<br>    Entry[] oldTab = table;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">oldLen</span> <span class="hljs-operator">=</span> oldTab.length;<br>    <span class="hljs-comment">// 新数组的长度是老数组的二倍</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">newLen</span> <span class="hljs-operator">=</span> oldLen * <span class="hljs-number">2</span>;<br>    Entry[] newTab = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Entry</span>[newLen];<br>    <span class="hljs-comment">// 统计新table中的entry数量</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-comment">// 遍历老表，进行【数据迁移】</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; j &lt; oldLen; ++j) &#123;<br>        <span class="hljs-comment">// 访问老表的指定位置的 entry</span><br>        <span class="hljs-type">Entry</span> <span class="hljs-variable">e</span> <span class="hljs-operator">=</span> oldTab[j];<br>        <span class="hljs-comment">// 条件成立说明老表中该位置有数据，可能是过期数据也可能不是</span><br>        <span class="hljs-keyword">if</span> (e != <span class="hljs-literal">null</span>) &#123;<br>            ThreadLocal&lt;?&gt; k = e.get();<br>            <span class="hljs-comment">// 过期数据</span><br>            <span class="hljs-keyword">if</span> (k == <span class="hljs-literal">null</span>) &#123;<br>                e.value = <span class="hljs-literal">null</span>; <span class="hljs-comment">// Help the GC</span><br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-comment">// 非过期数据，在新表中进行哈希寻址</span><br>                <span class="hljs-type">int</span> <span class="hljs-variable">h</span> <span class="hljs-operator">=</span> k.threadLocalHashCode &amp; (newLen - <span class="hljs-number">1</span>);<br>                <span class="hljs-comment">// 【线程探测】</span><br>                <span class="hljs-keyword">while</span> (newTab[h] != <span class="hljs-literal">null</span>)<br>                    h = nextIndex(h, newLen);<br>                <span class="hljs-comment">// 将数据存放到新表合适的 slot 中</span><br>                newTab[h] = e;<br>                count++;<br>            &#125;<br>        &#125;<br>    &#125;<br>        <span class="hljs-comment">// 设置下一次触发扩容的指标：threshold = len * 2 / 3;</span><br>    setThreshold(newLen);<br>    size = count;<br>    <span class="hljs-comment">// 将扩容后的新表赋值给 threadLocalMap 内部散列表数组引用</span><br>    table = newTab;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>remove()：删除 Entry</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">remove</span><span class="hljs-params">(ThreadLocal&lt;?&gt; key)</span> &#123;<br>    Entry[] tab = table;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">len</span> <span class="hljs-operator">=</span> tab.length;<br>    <span class="hljs-comment">// 哈希寻址</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> key.threadLocalHashCode &amp; (len-<span class="hljs-number">1</span>);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">Entry</span> <span class="hljs-variable">e</span> <span class="hljs-operator">=</span> tab[i]; e != <span class="hljs-literal">null</span>; e = tab[i = nextIndex(i, len)]) &#123;<br>        <span class="hljs-comment">// 找到了对应的 key</span><br>        <span class="hljs-keyword">if</span> (e.get() == key) &#123;<br>            <span class="hljs-comment">// 设置 key 为 null</span><br>            e.clear();<br>            <span class="hljs-comment">// 探测式清理</span><br>            expungeStaleEntry(i);<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h5 id="清理方法"><a href="#清理方法" class="headerlink" title="清理方法"></a>清理方法</h5><ul>
+<li>探测式清理：沿着开始位置向后探测清理过期数据，沿途中碰到未过期数据则将此数据 rehash 在 table 数组中的定位，重定位后的元素理论上更接近 <code>i = entry.key &amp; (table.length - 1)</code>，让<strong>数据的排列更紧凑</strong>，会优化整个散列表查询性能</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-comment">// table[staleSlot] 是一个过期数据，以这个位置开始继续向后查找过期数据</span><br><span class="hljs-keyword">private</span> <span class="hljs-type">int</span> <span class="hljs-title function_">expungeStaleEntry</span><span class="hljs-params">(<span class="hljs-type">int</span> staleSlot)</span> &#123;<br>    <span class="hljs-comment">// 获取散列表和数组长度</span><br>    Entry[] tab = table;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">len</span> <span class="hljs-operator">=</span> tab.length;<br><br>    <span class="hljs-comment">// help gc，先把当前过期的 entry 置空，在取消对 entry 的引用</span><br>    tab[staleSlot].value = <span class="hljs-literal">null</span>;<br>    tab[staleSlot] = <span class="hljs-literal">null</span>;<br>    <span class="hljs-comment">// 数量-1</span><br>    size--;<br><br>    Entry e;<br>    <span class="hljs-type">int</span> i;<br>    <span class="hljs-comment">// 从 staleSlot 开始向后遍历，直到碰到 slot == null 结束，【区间内清理过期数据】</span><br>    <span class="hljs-keyword">for</span> (i = nextIndex(staleSlot, len); (e = tab[i]) != <span class="hljs-literal">null</span>; i = nextIndex(i, len)) &#123;<br>        ThreadLocal&lt;?&gt; k = e.get();<br>        <span class="hljs-comment">// 当前 entry 是过期数据</span><br>        <span class="hljs-keyword">if</span> (k == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-comment">// help gc</span><br>            e.value = <span class="hljs-literal">null</span>;<br>            tab[i] = <span class="hljs-literal">null</span>;<br>            size--;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-comment">// 当前 entry 不是过期数据的逻辑，【rehash】</span><br>            <span class="hljs-comment">// 重新计算当前 entry 对应的 index</span><br>            <span class="hljs-type">int</span> <span class="hljs-variable">h</span> <span class="hljs-operator">=</span> k.threadLocalHashCode &amp; (len - <span class="hljs-number">1</span>);<br>            <span class="hljs-comment">// 条件成立说明当前 entry 存储时发生过 hash 冲突，向后偏移过了</span><br>            <span class="hljs-keyword">if</span> (h != i) &#123;<br>                <span class="hljs-comment">// 当前位置置空</span><br>                tab[i] = <span class="hljs-literal">null</span>;<br>                <span class="hljs-comment">// 以正确位置 h 开始，向后查找第一个可以存放 entry 的位置</span><br>                <span class="hljs-keyword">while</span> (tab[h] != <span class="hljs-literal">null</span>)<br>                    h = nextIndex(h, len);<br>                <span class="hljs-comment">// 将当前元素放入到【距离正确位置更近的位置，有可能就是正确位置】</span><br>                tab[h] = e;<br>            &#125;<br>        &#125;<br>    &#125;<br>    <span class="hljs-comment">// 返回 slot = null 的槽位索引，图例是 7，这个索引代表【索引前面的区间已经清理完成垃圾了】</span><br>    <span class="hljs-keyword">return</span> i;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MjMyZTgzODUwZWVlYjFiYjA4NDRhODY5Y2IyY2JjZTZfUUNoeXZ4SmtMOFkyNnIxM0VMaU1ONDBKb2dqUVN4NTBfVG9rZW46SkdJeWJVZ3g0b0N0V0t4c1ZiUGNlWmpJbkJiXzE3NDAzMTg1NzE6MTc0MDMyMjE3MV9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ul>
+<li></li>
+</ul>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MjRmZDJhMTU4NzEwMzMzOTNkZjgxMjcwNzhkZTU0N2JfU0NPS1hRNUl4TWV6SDFZYVpvaU91dmdDQTVLbVNhVmJfVG9rZW46V3U1Q2JHTlVsb0lxS2t4QTJmd2NiVmxybkxBXzE3NDAzMTg1NzE6MTc0MDMyMjE3MV9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ul>
+<li>启发式清理：向后循环扫描过期数据，发现过期数据调用探测式清理方法，如果连续几次的循环都没有发现过期数据，就停止扫描</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-comment">//  i 表示启发式清理工作开始位置，一般是空 slot，n 一般传递的是 table.length </span><br><span class="hljs-keyword">private</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">cleanSomeSlots</span><span class="hljs-params">(<span class="hljs-type">int</span> i, <span class="hljs-type">int</span> n)</span> &#123;<br>    <span class="hljs-comment">// 表示启发式清理工作是否清除了过期数据</span><br>    <span class="hljs-type">boolean</span> <span class="hljs-variable">removed</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;<br>    <span class="hljs-comment">// 获取当前 map 的散列表引用</span><br>    Entry[] tab = table;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">len</span> <span class="hljs-operator">=</span> tab.length;<br>    <span class="hljs-keyword">do</span> &#123;<br>        <span class="hljs-comment">// 获取下一个索引，因为探测式返回的 slot 为 null</span><br>        i = nextIndex(i, len);<br>        <span class="hljs-type">Entry</span> <span class="hljs-variable">e</span> <span class="hljs-operator">=</span> tab[i];<br>        <span class="hljs-comment">// 条件成立说明是过期的数据，key 被 gc 了</span><br>        <span class="hljs-keyword">if</span> (e != <span class="hljs-literal">null</span> &amp;&amp; e.get() == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-comment">// 【发现过期数据重置 n 为数组的长度】</span><br>            n = len;<br>            <span class="hljs-comment">// 表示清理过过期数据</span><br>            removed = <span class="hljs-literal">true</span>;<br>            <span class="hljs-comment">// 以当前过期的 slot 为开始节点 做一次探测式清理工作</span><br>            i = expungeStaleEntry(i);<br>        &#125;<br>        <span class="hljs-comment">// 假设 table 长度为 16</span><br>        <span class="hljs-comment">// 16 &gt;&gt;&gt; 1 ==&gt; 8，8 &gt;&gt;&gt; 1 ==&gt; 4，4 &gt;&gt;&gt; 1 ==&gt; 2，2 &gt;&gt;&gt; 1 ==&gt; 1，1 &gt;&gt;&gt; 1 ==&gt; 0</span><br>        <span class="hljs-comment">// 连续经过这么多次循环【没有扫描到过期数据】，就停止循环，扫描到空 slot 不算，因为不是过期数据</span><br>    &#125; <span class="hljs-keyword">while</span> ((n &gt;&gt;&gt;= <span class="hljs-number">1</span>) != <span class="hljs-number">0</span>);<br><br>    <span class="hljs-comment">// 返回清除标记</span><br>    <span class="hljs-keyword">return</span> removed;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>参考视频：<a target="_blank" rel="noopener" href="https://space.bilibili.com/457326371/">https://space.bilibili.com/457326371/</a></p>
+<h4 id="内存泄漏"><a href="#内存泄漏" class="headerlink" title="内存泄漏"></a>内存泄漏</h4><p>Memory leak：内存泄漏是指程序中动态分配的堆内存由于某种原因未释放或无法释放，造成系统内存的浪费，导致程序运行速度减慢甚至系统崩溃等严重后果，内存泄漏的堆积终将导致内存溢出</p>
+<ul>
+<li>如果 key 使用强引用：使用完 ThreadLocal ，threadLocal Ref 被回收，但是 threadLocalMap 的 Entry 强引用了 threadLocal，造成 threadLocal 无法被回收，无法完全避免内存泄漏</li>
+</ul>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=OGQ0YzM3MWI3YmNkNWMzMWI0NmYwM2Q0ODY3MTZkNGVfVTZTb1BOa3JtRzN3S1ZSQ1Z5M2l1ajF6a3ZGd3hxRHBfVG9rZW46QmhkZWJnTzJSb0U0ZDR4WThRbWNwUDh0bmFnXzE3NDAzMTg1NzE6MTc0MDMyMjE3MV9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ul>
+<li>如果 key 使用弱引用：使用完 ThreadLocal ，threadLocal Ref 被回收，ThreadLocalMap 只持有 ThreadLocal 的弱引用，所以threadlocal 也可以被回收，此时 Entry 中的 key &#x3D; null。但没有手动删除这个 Entry 或者 CurrentThread 依然运行，依然存在强引用链，value 不会被回收，而这块 value 永远不会被访问到，也会导致 value 内存泄漏</li>
+</ul>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=MmFhZDEwZmZhNjM5NGQ3YjY1ZTU2Y2MyMTlmNGQzODJfZlpPdVUwS0ppN01aTGI0bGxrdFpvWHpWSzFyaUpMN3hfVG9rZW46S2ZVRGJ2d01Xb2VLTWV4Q2xKWWNnVHV2bkZmXzE3NDAzMTg1NzE6MTc0MDMyMjE3MV9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ul>
+<li>两个主要原因：<ul>
+<li>没有手动删除这个 Entry</li>
+<li>CurrentThread 依然运行</li>
+</ul>
+</li>
+</ul>
+<p>根本原因：ThreadLocalMap 是 Thread的一个属性，<strong>生命周期跟 Thread 一样长</strong>，如果没有手动删除对应 Entry 就会导致内存泄漏</p>
+<p>解决方法：使用完 ThreadLocal 中存储的内容后将它 remove 掉就可以</p>
+<p>ThreadLocal 内部解决方法：在 ThreadLocalMap 中的 set&#x2F;getEntry 方法中，通过线性探测法对 key 进行判断，如果 key 为 null（ThreadLocal 为 null）会对 Entry 进行垃圾回收。所以<strong>使用<strong><strong>弱引用</strong></strong>比强引用多一层保障</strong>，就算不调用 remove，也有机会进行 GC</p>
+<h4 id="变量传递"><a href="#变量传递" class="headerlink" title="变量传递"></a>变量传递</h4><h5 id="基本使用-1"><a href="#基本使用-1" class="headerlink" title="基本使用"></a>基本使用</h5><p>父子线程：创建子线程的线程是父线程，比如实例中的 main 线程就是父线程</p>
+<p>ThreadLocal 中存储的是线程的局部变量，如果想<strong>实现线程间局部变量传递</strong>可以使用 InheritableThreadLocal 类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>    ThreadLocal&lt;String&gt; threadLocal = <span class="hljs-keyword">new</span> <span class="hljs-title class_">InheritableThreadLocal</span>&lt;&gt;();<br>    threadLocal.set(<span class="hljs-string">&quot;父线程设置的值&quot;</span>);<br><br>    <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(() -&gt; System.out.println(<span class="hljs-string">&quot;子线程输出：&quot;</span> + threadLocal.get())).start();<br>&#125;<br><span class="hljs-comment">// 子线程输出：父线程设置的值</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="实现原理-1"><a href="#实现原理-1" class="headerlink" title="实现原理"></a>实现原理</h5><p>InheritableThreadLocal 源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">InheritableThreadLocal</span>&lt;T&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title class_">ThreadLocal</span>&lt;T&gt; &#123;<br>    <span class="hljs-keyword">protected</span> T <span class="hljs-title function_">childValue</span><span class="hljs-params">(T parentValue)</span> &#123;<br>        <span class="hljs-keyword">return</span> parentValue;<br>    &#125;<br>    ThreadLocalMap <span class="hljs-title function_">getMap</span><span class="hljs-params">(Thread t)</span> &#123;<br>       <span class="hljs-keyword">return</span> t.inheritableThreadLocals;<br>    &#125;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">createMap</span><span class="hljs-params">(Thread t, T firstValue)</span> &#123;<br>        t.inheritableThreadLocals = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ThreadLocalMap</span>(<span class="hljs-built_in">this</span>, firstValue);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>实现父子线程间的局部变量共享需要追溯到 Thread 对象的构造方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">init</span><span class="hljs-params">(ThreadGroup g, Runnable target, String name, <span class="hljs-type">long</span> stackSize, AccessControlContext acc,</span><br><span class="hljs-params">                  // 该参数默认是 <span class="hljs-literal">true</span></span><br><span class="hljs-params">                  <span class="hljs-type">boolean</span> inheritThreadLocals)</span> &#123;<br>          <span class="hljs-comment">// ...</span><br>    <span class="hljs-type">Thread</span> <span class="hljs-variable">parent</span> <span class="hljs-operator">=</span> currentThread();<br><br>    <span class="hljs-comment">// 判断父线程（创建子线程的线程）的 inheritableThreadLocals 属性不为 null</span><br>    <span class="hljs-keyword">if</span> (inheritThreadLocals &amp;&amp; parent.inheritableThreadLocals != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-comment">// 复制父线程的 inheritableThreadLocals 属性，实现父子线程局部变量共享</span><br>        <span class="hljs-built_in">this</span>.inheritableThreadLocals = ThreadLocal.createInheritedMap(parent.inheritableThreadLocals); <br>    &#125;<br>    <span class="hljs-comment">// ..</span><br>&#125;<br><span class="hljs-comment">// 【本质上还是创建 ThreadLocalMap，只是把父类中的可继承数据设置进去了】</span><br><span class="hljs-keyword">static</span> ThreadLocalMap <span class="hljs-title function_">createInheritedMap</span><span class="hljs-params">(ThreadLocalMap parentMap)</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ThreadLocalMap</span>(parentMap);<br>&#125;<br><span class="hljs-keyword">private</span> <span class="hljs-title function_">ThreadLocalMap</span><span class="hljs-params">(ThreadLocalMap parentMap)</span> &#123;<br>    <span class="hljs-comment">// 获取父线程的哈希表</span><br>    Entry[] parentTable = parentMap.table;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">len</span> <span class="hljs-operator">=</span> parentTable.length;<br>    setThreshold(len);<br>    table = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Entry</span>[len];<br>        <span class="hljs-comment">// 【逐个复制父线程 ThreadLocalMap 中的数据】</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; j &lt; len; j++) &#123;<br>        <span class="hljs-type">Entry</span> <span class="hljs-variable">e</span> <span class="hljs-operator">=</span> parentTable[j];<br>        <span class="hljs-keyword">if</span> (e != <span class="hljs-literal">null</span>) &#123;<br>            ThreadLocal&lt;Object&gt; key = (ThreadLocal&lt;Object&gt;) e.get();<br>            <span class="hljs-keyword">if</span> (key != <span class="hljs-literal">null</span>) &#123;<br>                <span class="hljs-comment">// 调用的是 InheritableThreadLocal#childValue(T parentValue)</span><br>                <span class="hljs-type">Object</span> <span class="hljs-variable">value</span> <span class="hljs-operator">=</span> key.childValue(e.value);<br>                <span class="hljs-type">Entry</span> <span class="hljs-variable">c</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Entry</span>(key, value);<br>                <span class="hljs-type">int</span> <span class="hljs-variable">h</span> <span class="hljs-operator">=</span> key.threadLocalHashCode &amp; (len - <span class="hljs-number">1</span>);<br>                <span class="hljs-comment">// 线性探测</span><br>                <span class="hljs-keyword">while</span> (table[h] != <span class="hljs-literal">null</span>)<br>                    h = nextIndex(h, len);<br>                table[h] = c;<br>                size++;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>参考文章：<a target="_blank" rel="noopener" href="https://blog.csdn.net/feichitianxia/article/details/110495764">https://blog.csdn.net/feichitianxia/article/details/110495764</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AC%94%E8%AE%B0/" class="category-chain-item">笔记</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/java/" class="print-no-link">#java</a>
+      
+        <a href="/tags/JUC/" class="print-no-link">#JUC</a>
+      
+        <a href="/tags/CAS/" class="print-no-link">#CAS</a>
+      
+        <a href="/tags/Atomic/" class="print-no-link">#Atomic</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>JUC_无锁</div>
+      <div>https://bshtj.github.io/2025/02/13/JUC-无锁/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年2月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/02/14/JUC-%E5%86%85%E5%AD%98/" title="JUC_内存">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">JUC_内存</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/02/11/JUC-%E5%90%8C%E6%AD%A5/" title="JUC_同步">
+                        <span class="hidden-mobile">JUC_同步</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

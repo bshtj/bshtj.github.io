@@ -26,12 +26,14 @@
 <meta property="og:site_name" content="bshtj_blog">
 <meta property="og:description" content="动态规划（分组背包）分组问题是动态规划里面常见的问题，分组背包就是其中的一种。 个人感觉分组背包和01背包或者完全背包不同，他没有很多的样板题，更多的还是根据题目的意思写二维的dp数组，最后在尝试能不能化成一维的。 前缀和单独讨论这个是因为分组背包问题往往和前缀和联系起来，这里注意一下前缀和的写法 1234 int[] prefixNum &#x3D; new double[nums.length + 1]">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://assets.leetcode.com/uploads/2019/11/09/e1.png">
 <meta property="article:published_time" content="2025-02-28T14:11:43.000Z">
-<meta property="article:modified_time" content="2025-02-28T14:15:34.019Z">
+<meta property="article:modified_time" content="2025-02-28T14:20:08.940Z">
 <meta property="article:author" content="bshtj">
 <meta property="article:tag" content="动态规划">
 <meta property="article:tag" content="前缀和">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://assets.leetcode.com/uploads/2019/11/09/e1.png">
   
   
   
@@ -293,7 +295,8 @@
 <p>一张桌子上总共有 <code>n</code> 个硬币 <strong>栈</strong> 。每个栈有 <strong>正整数</strong> 个带面值的硬币。</p>
 <p>每一次操作中，你可以从任意一个栈的 <strong>顶部</strong> 取出 1 个硬币，从栈中移除它，并放入你的钱包里。</p>
 <p>给你一个列表 <code>piles</code> ，其中 <code>piles[i]</code> 是一个整数数组，分别表示第 <code>i</code> 个栈里 <strong>从顶到底</strong> 的硬币面值。同时给你一个正整数 <code>k</code> ，请你返回在 <strong>恰好</strong> 进行 <code>k</code> 次操作的前提下，你钱包里硬币面值之和 <strong>最大为多少</strong> 。</p>
-<p>暂时无法在飞书文档外展示此内容</p>
+<p><img src="https://assets.leetcode.com/uploads/2019/11/09/e1.png" srcset="/img/loading.gif" lazyload alt="示例图片"></p>
+<hr>
 <p>思路：</p>
 <ul>
 <li>观察题目发现求的是<strong>最大为多少，</strong>所以感觉递推公式中<strong>要遇到<code>Math.max</code>操作。</strong>如果说是求多少种方法，那一般就是通过加减法来计算。</li>
@@ -320,6 +323,7 @@
 <ul>
 <li><strong>输入：</strong>n &#x3D; 30, k &#x3D; 30, target &#x3D; 500 <strong>输出：</strong>222616187 <strong>解释：</strong>返回的结果必须对 10(9)7 取模。</li>
 </ul>
+<hr>
 <p>思路：</p>
 <ul>
 <li>甩n个骰子，分组背包（骰子相当于背包）。</li>
@@ -340,6 +344,7 @@
 <p><strong>输入:</strong> nums &#x3D; [9,1,2,3,9], k &#x3D; 3 <strong>输出:</strong> 20.00000 <strong>解释:</strong>  nums 的最优分组是[9], [1, 2, 3], [9]. 得到的分数是 9 + (1 + 2 + 3) &#x2F; 3 + 9 &#x3D; 20.  我们也可以把 nums 分成[9, 1], [2], [3, 9].  这样的分组得到的分数为 5 + 2 + 6 &#x3D; 13, 但不是最大值.</p>
 <p><strong>示例 2:</strong></p>
 <p><strong>输入:</strong> nums &#x3D; [1,2,3,4,5,6,7], k &#x3D; 4 <strong>输出:</strong> 20.50000</p>
+<hr>
 <p>思路：</p>
 <ul>
 <li>题目要求返回最大的分数，预计递归表达式中存在<code>Math.max</code>。</li>

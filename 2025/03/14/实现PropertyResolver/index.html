@@ -1,0 +1,227 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>实现PropertyResolver | bshtj_blog</title><meta name="author" content="bshtj"><meta name="copyright" content="bshtj"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="实现PropertyResolverhttps:&#x2F;&#x2F;liaoxuefeng.com&#x2F;books&#x2F;summerframework&#x2F;ioc&#x2F;property-resolver&#x2F;index.html Spring的注入分为@Autowired和@Value两种。对于@Autowired，涉及到Bean的依赖，而对于@Value，则仅仅是将对应的配置注入，不涉及Bean的依赖，相对比较简单。为了注入配置，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实现PropertyResolver">
+<meta property="og:url" content="https://bshtj.github.io/2025/03/14/%E5%AE%9E%E7%8E%B0PropertyResolver/index.html">
+<meta property="og:site_name" content="bshtj_blog">
+<meta property="og:description" content="实现PropertyResolverhttps:&#x2F;&#x2F;liaoxuefeng.com&#x2F;books&#x2F;summerframework&#x2F;ioc&#x2F;property-resolver&#x2F;index.html Spring的注入分为@Autowired和@Value两种。对于@Autowired，涉及到Bean的依赖，而对于@Value，则仅仅是将对应的配置注入，不涉及Bean的依赖，相对比较简单。为了注入配置，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bshtj.github.io/img/wuliannan.png">
+<meta property="article:published_time" content="2025-03-14T09:00:41.000Z">
+<meta property="article:modified_time" content="2025-03-14T12:26:11.037Z">
+<meta property="article:author" content="bshtj">
+<meta property="article:tag" content="ioc">
+<meta property="article:tag" content="廖雪峰">
+<meta property="article:tag" content="properties">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bshtj.github.io/img/wuliannan.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "实现PropertyResolver",
+  "url": "https://bshtj.github.io/2025/03/14/%E5%AE%9E%E7%8E%B0PropertyResolver/",
+  "image": "https://bshtj.github.io/img/wuliannan.png",
+  "datePublished": "2025-03-14T09:00:41.000Z",
+  "dateModified": "2025-03-14T12:26:11.037Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "bshtj",
+      "url": "https://bshtj.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/wuliannan.png"><link rel="canonical" href="https://bshtj.github.io/2025/03/14/%E5%AE%9E%E7%8E%B0PropertyResolver/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '实现PropertyResolver',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/wuliannan.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">50</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">51</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/bg.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">bshtj_blog</span></a><a class="nav-page-title" href="/"><span class="site-name">实现PropertyResolver</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">实现PropertyResolver</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-03-14T09:00:41.000Z" title="发表于 2025-03-14 17:00:41">2025-03-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-14T12:26:11.037Z" title="更新于 2025-03-14 20:26:11">2025-03-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%89%8B%E5%86%99spring/">手写spring</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="实现PropertyResolver"><a href="#实现PropertyResolver" class="headerlink" title="实现PropertyResolver"></a>实现PropertyResolver</h1><p><a target="_blank" rel="noopener" href="https://liaoxuefeng.com/books/summerframework/ioc/property-resolver/index.html">https://liaoxuefeng.com/books/summerframework/ioc/property-resolver/index.html</a></p>
+<p>Spring的注入分为<code>@Autowired</code>和<code>@Value</code>两种。对于<code>@Autowired</code>，涉及到Bean的依赖，而对于<code>@Value</code>，则仅仅是将对应的配置注入，不涉及Bean的依赖，相对比较简单。为了注入配置，我们用<code>PropertyResolver</code>保存所有配置项，对外提供查询功能。</p>
+<p>本节我们来实现<code>PropertyResolver</code>，它支持3种查询方式：</p>
+<ol>
+<li>按配置的key查询，例如：<code>getProperty(&quot;app.title&quot;)</code>;</li>
+<li>以<code>$&#123;abc.xyz&#125;</code>形式的查询，例如，<code>getProperty(&quot;$&#123;app.title&#125;&quot;)</code>，常用于<code>@Value(&quot;$&#123;app.title&#125;&quot;)</code>注入；</li>
+<li>带默认值的，以<code>$&#123;abc.xyz:defaultValue&#125;</code>形式的查询，例如，<code>getProperty(&quot;$&#123;app.title:Summer&#125;&quot;)</code>，常用于<code>@Value(&quot;$&#123;app.title:Summer&#125;&quot;)</code>注入。</li>
+</ol>
+<p>Java本身提供了按key-value查询的<code>Properties</code>，传入<code>Properties</code>，内部按key-value存储。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">PropertyResolver</span><span class="params">(Properties props)</span> &#123;</span><br><span class="line">    <span class="comment">// 存入环境变量</span></span><br><span class="line">    <span class="built_in">this</span>.properties.putAll(System.getenv());</span><br><span class="line">    <span class="comment">// 获取props中的所有的key，成为一个set</span></span><br><span class="line">    Set&lt;String&gt; names = props.stringPropertyNames();</span><br><span class="line">    <span class="keyword">for</span> (String name : names) &#123;</span><br><span class="line">        <span class="comment">// 将props中的所有键值对存储到properties中</span></span><br><span class="line">        <span class="comment">//props.getProperty获取value</span></span><br><span class="line">        <span class="built_in">this</span>.properties.put(name, props.getProperty(name));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 如果开启了调试日志模式</span></span><br><span class="line">    <span class="keyword">if</span> (logger.isDebugEnabled()) &#123;</span><br><span class="line">        <span class="comment">// 对key按照字典序进行排序</span></span><br><span class="line">        List&lt;String&gt; keys = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(<span class="built_in">this</span>.properties.keySet());</span><br><span class="line">        Collections.sort(keys);</span><br><span class="line">        <span class="keyword">for</span> (String key : keys) &#123;</span><br><span class="line">            logger.debug(<span class="string">&quot;PropertyResolver: &#123;&#125; = &#123;&#125;&quot;</span>, key, <span class="built_in">this</span>.properties.get(key));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// register converters:</span></span><br><span class="line">    converters.put(String.class, s -&gt; s);</span><br><span class="line">    converters.put(<span class="type">boolean</span>.class, s -&gt; Boolean.parseBoolean(s));</span><br><span class="line">    converters.put(Boolean.class, s -&gt; Boolean.valueOf(s));</span><br><span class="line">    .....<span class="comment">//略</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="关于Java提供的Properties"><a href="#关于Java提供的Properties" class="headerlink" title="关于Java提供的Properties"></a>关于Java提供的<code>Properties</code></h2><p><code>Properties</code> 是 Java 中的一个类，位于 <code>java.util</code> 包中，用于管理键值对（key-value pairs）形式的配置数据。它继承自 <code>Hashtable&lt;Object, Object&gt;</code>，但通常用于处理字符串类型的键和值。<code>Properties</code> 类常用于读取和写入配置文件（如 <code>.properties</code> 文件）。</p>
+<p><img src="https://wvmc78hl9ey.feishu.cn/space/api/box/stream/download/asynccode/?code=NDBmYTc0NDkyZGM4NzgxZmNkYjEzMjEwNDhlZWQxYWJfbVRpOW5BQkp4cVlCNW92WU5hZ25JQVVsRmFpTVUzMW9fVG9rZW46UzFoOGIxMjlNb21HMHh4Q0lJaWNxbWRrbkFmXzE3NDE5NTUwMjM6MTc0MTk1ODYyM19WNA" alt="img"></p>
+<h3 id="properties特点"><a href="#properties特点" class="headerlink" title="properties特点"></a>properties特点</h3><ol>
+<li><strong>配置文件支持</strong>：</li>
+</ol>
+<p>可以从 <code>.properties</code> 文件加载数据，或将数据保存到 <code>.properties</code> 文件。<code>Properties</code> 是 Java 中专门用于处理键值对配置数据的类，它继承自 <code>Hashtable</code>，但在设计上有一些特定的优势，使其在处理配置文件时比 <code>Hashtable</code> 或其他键值对集合（如 <code>HashMap</code>）更合适。以下是 <code>Properties</code> 的优势和使用场景：</p>
+<ol>
+<li><strong>专为配置设计</strong></li>
+</ol>
+<p><code>Properties</code> 是为管理配置数据而设计的，它的 API 更加简洁和直观，适合处理字符串类型的键值对。例如：</p>
+<ul>
+<li><code>setProperty(String key, String value)</code>：设置键值对。</li>
+<li><code>getProperty(String key)</code>：获取键对应的值。</li>
+<li><code>getProperty(String key, String defaultValue)</code>：获取值，如果键不存在，返回默认值。</li>
+</ul>
+<p> 这些方法专门为配置场景设计，比 <code>Hashtable</code> 的通用方法（如 <code>put()</code> 和 <code>get()</code>）更符合配置管理的需求。</p>
+<ol>
+<li><strong>配置文件支持</strong></li>
+</ol>
+<p><code>Properties</code> 提供了直接读写配置文件的功能，这是它最大的优势之一：</p>
+<ul>
+<li><strong>加载配置文件</strong>：通过 <code>load(InputStream in)</code> 方法，可以从 <code>.properties</code> 文件或输入流中加载配置。</li>
+<li><strong>保存配置文件</strong>：通过 <code>store(OutputStream out, String comments)</code> 方法，可以将配置保存到文件或输出流中。</li>
+</ul>
+<p> 这种功能是 <code>Hashtable</code> 和其他键值对集合所不具备的。</p>
+<p> 示例代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Map</span>&lt;<span class="title class_">String</span>, <span class="title class_">String</span>&gt; env = <span class="title class_">System</span>.<span class="title function_">getenv</span>();</span><br><span class="line"><span class="keyword">for</span> (<span class="title class_">Map</span>.<span class="property">Entry</span>&lt;<span class="title class_">String</span>, <span class="title class_">String</span>&gt; entry : env.<span class="title function_">entrySet</span>()) &#123;</span><br><span class="line">    <span class="title class_">System</span>.<span class="property">out</span>.<span class="title function_">println</span>(entry.<span class="title function_">getKey</span>() + <span class="string">&quot; = &quot;</span> + entry.<span class="title function_">getValue</span>());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 以上代码通过<code>System.getenv();</code>获得环境变量。环境变量应是如JAVA_HOME&#x3D;’xxx&#x2F;bin’的形式，他会自动将&#x3D;分割，前面的作为key，后面的作为value。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.FileOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.OutputStream;</span><br><span class="line"><span class="keyword">import</span> java.util.Properties;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">test</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Properties</span> <span class="variable">props</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 加载配置文件（此时config.properties与test在同一文件夹中）</span></span><br><span class="line">        <span class="comment">// 如果想通过classloader进行加载，可以这样写</span></span><br><span class="line">        <span class="comment">// test.class.getClassLoader().getResourceAsStream(&quot;com/propertyResolver/config.properties&quot;))</span></span><br><span class="line">        <span class="comment">// 注意用的是/而不是.</span></span><br><span class="line">        <span class="keyword">try</span> (<span class="type">InputStream</span> <span class="variable">input</span> <span class="operator">=</span> test.class.getResourceAsStream(<span class="string">&quot;config.properties&quot;</span>)) &#123;</span><br><span class="line">            <span class="keyword">if</span> (input == <span class="literal">null</span>) &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;抱歉，找不到配置文件!&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 加载配置文件</span></span><br><span class="line">            props.load(input);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 显示配置文件内容</span></span><br><span class="line">            System.out.println(<span class="string">&quot;配置文件加载成功！&quot;</span>);</span><br><span class="line">            System.out.println(<span class="string">&quot;配置内容：&quot;</span>);</span><br><span class="line">            <span class="keyword">for</span> (String key : props.stringPropertyNames()) &#123;</span><br><span class="line">                <span class="type">String</span> <span class="variable">value</span> <span class="operator">=</span> props.getProperty(key);</span><br><span class="line">                System.out.println(key + <span class="string">&quot; = &quot;</span> + value);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException ex) &#123;</span><br><span class="line">            ex.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 存储配置文件</span></span><br><span class="line">        <span class="keyword">try</span> (<span class="type">OutputStream</span> <span class="variable">output</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(<span class="string">&quot;output.properties&quot;</span>)) &#123;</span><br><span class="line">            <span class="comment">// 将属性存储到文件中</span></span><br><span class="line">            props.store(output, <span class="string">&quot;这是存储的配置文件&quot;</span>);</span><br><span class="line">            System.out.println(<span class="string">&quot;配置文件存储成功！&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException ex) &#123;</span><br><span class="line">            ex.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码会输出和test在同一个文件夹中的config.properties的内容。</p>
+<ol>
+<li><strong>继承****自</strong> <code>Hashtable</code>：可以使用 <code>Hashtable</code> 的方法，如 <code>put()</code>、<code>get()</code> 等。</li>
+<li><strong>线程安全</strong>：由于继承自 <code>Hashtable</code>，<code>Properties</code> 是线程安全的。</li>
+<li><strong>键值对存储</strong>：存储的数据是字符串类型的键值对。</li>
+</ol>
+<h2 id="Map-作用"><a href="#Map-作用" class="headerlink" title="Map&lt;Class&lt;?&gt;, Function&lt;String, Object&gt;&gt; 作用"></a>Map&lt;Class&lt;?&gt;, Function&lt;String, Object&gt;&gt; 作用</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;Class&lt;?&gt;, Function&lt;String, Object&gt;&gt; converters = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br></pre></td></tr></table></figure>
+
+<p>key是.class（作用是后续value函数式接口返回值的类型），value是函数式接口function接收一个String参数，返回一个结果Object。</p>
+<h3 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a><strong>使用方式</strong></h3><p>首先注册以下转换方式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">converters.put(String.class, s -&gt; s);</span><br><span class="line">converters.put(<span class="type">boolean</span>.class, s -&gt; Boolean.parseBoolean(s));</span><br><span class="line">converters.put(Boolean.class, s -&gt; Boolean.valueOf(s));</span><br></pre></td></tr></table></figure>
+
+<p>假设你有一个配置文件，其中包含以下内容：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">name</span>=<span class="string">John</span></span><br><span class="line"><span class="attr">isAdmin</span>=<span class="string">true</span></span><br></pre></td></tr></table></figure>
+
+<p>你可以使用 <code>converters</code> 来将这些字符串值转换为对应的类型：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> (String) converters.get(String.class).apply(<span class="string">&quot;John&quot;</span>);</span><br><span class="line"><span class="type">boolean</span> <span class="variable">isAdmin</span> <span class="operator">=</span> (<span class="type">boolean</span>) converters.get(<span class="type">boolean</span>.class).apply(<span class="string">&quot;true&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>这样，<code>name</code> 会被转换为 <code>String</code> 类型，<code>isAdmin</code> 会被转换为 <code>boolean</code> 类型。</p>
+<p>在这个项目中，他对外提供的接口是：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SuppressWarnings(&quot;unchecked&quot;)</span></span><br><span class="line">&lt;T&gt; T <span class="title function_">convert</span><span class="params">(Class&lt;?&gt; clazz, String value)</span> &#123;</span><br><span class="line">    Function&lt;String, Object&gt; fn = <span class="built_in">this</span>.converters.get(clazz);</span><br><span class="line">    <span class="keyword">if</span> (fn == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Unsupported value type: &quot;</span> + clazz.getName());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// apply使用function接口中的方法</span></span><br><span class="line">    <span class="keyword">return</span> (T) fn.apply(value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://bshtj.github.io">bshtj</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://bshtj.github.io/2025/03/14/%E5%AE%9E%E7%8E%B0PropertyResolver/">https://bshtj.github.io/2025/03/14/%E5%AE%9E%E7%8E%B0PropertyResolver/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://bshtj.github.io" target="_blank">bshtj_blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ioc/">ioc</a><a class="post-meta__tags" href="/tags/%E5%BB%96%E9%9B%AA%E5%B3%B0/">廖雪峰</a><a class="post-meta__tags" href="/tags/properties/">properties</a></div><div class="post-share"><div class="social-share" data-image="/img/wuliannan.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/03/13/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%B1%82%E5%AD%90%E6%95%B0%E7%BB%84%E4%B8%AA%E6%95%B0/" title="滑动窗口求子数组个数"><img class="cover" src="/2025/03/13/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%B1%82%E5%AD%90%E6%95%B0%E7%BB%84%E4%B8%AA%E6%95%B0/home.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">滑动窗口求子数组个数</div></div><div class="info-2"><div class="info-item-1">参考视屏：恰好型滑动窗口【力扣周赛 417】_哔哩哔哩_bilibili 3306.元音辅音字符串技术212345678910111213141516171819202122232425262728293031323334class Solution &#123;    public long countOfSubstrings(String word, int k) &#123;        char[] s = word.toCharArray();        return f(s, k) - f(s, k + 1);    &#125;    private long f(char[] word, int k) &#123;        long ans = 0;        // 这里用哈希表实现，替换成数组会更快        HashMap&lt;Character, Integer&gt; cnt1 = new HashMap&lt;&gt;(); // 每种元音的个数        int cnt2 = 0; // 辅音个数        int...</div></div></div></a><a class="pagination-related" href="/2025/03/15/7-3%E6%A0%91%E5%BD%A2%E6%9F%A5%E6%89%BE/" title="7.3 树形查找"><img class="cover" src="/2025/03/15/7-3%E6%A0%91%E5%BD%A2%E6%9F%A5%E6%89%BE/image-12.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">7.3 树形查找</div></div><div class="info-2"><div class="info-item-1">平衡二叉树 AVL树 AVL定义取发明者的姓名开头字母——AVL。 结点的平衡因子&#x3D;...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/03/16/%E5%88%9B%E5%BB%BABeanDefiniton/" title="创建BeanDefiniton"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-16</div><div class="info-item-2">创建BeanDefiniton</div></div><div class="info-2"><div class="info-item-1">创建BeanDefiniton本章概述本章实现的是Bean的结构定义 主要实现 123456789101112131415161718public class AnnotationConfigApplicationContext &#123;    protected final Logger logger = LoggerFactory.getLogger(getClass());    protected final PropertyResolver propertyResolver;    protected final Map&lt;String, BeanDefinition&gt; beans;    public AnnotationConfigApplicationContext(Class&lt;?&gt; configClass, PropertyResolver propertyResolver) &#123;        this.propertyResolver = propertyResolver;        //...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/wuliannan.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">bshtj</div><div class="author-info-description">学术辣鸡，不定时更新</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">50</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">51</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0PropertyResolver"><span class="toc-number">1.</span> <span class="toc-text">实现PropertyResolver</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8EJava%E6%8F%90%E4%BE%9B%E7%9A%84Properties"><span class="toc-number">1.1.</span> <span class="toc-text">关于Java提供的Properties</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#properties%E7%89%B9%E7%82%B9"><span class="toc-number">1.1.1.</span> <span class="toc-text">properties特点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Map-%E4%BD%9C%E7%94%A8"><span class="toc-number">1.2.</span> <span class="toc-text">Map&lt;Class&lt;?&gt;, Function&lt;String, Object&gt;&gt; 作用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">1.2.1.</span> <span class="toc-text">使用方式</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/05/13/%E4%B8%8D%E5%90%8C%E5%BD%A2%E5%BC%8F%E7%9A%84%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" title="不同形式的二分查找"><img src="/2025/05/13/%E4%B8%8D%E5%90%8C%E5%BD%A2%E5%BC%8F%E7%9A%84%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/home.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="不同形式的二分查找"/></a><div class="content"><a class="title" href="/2025/05/13/%E4%B8%8D%E5%90%8C%E5%BD%A2%E5%BC%8F%E7%9A%84%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" title="不同形式的二分查找">不同形式的二分查找</a><time datetime="2025-05-13T02:13:03.000Z" title="发表于 2025-05-13 10:13:03">2025-05-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/05/08/%E4%BB%8E%E8%95%BE%E7%BC%AA%E5%AE%89%E7%9A%84%E6%8A%80%E8%83%BD%E5%85%A5%E6%89%8B%E8%AE%BE%E6%83%B3%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" title="从蕾缪安的技能入手设想设计模式"><img src="/2025/05/08/%E4%BB%8E%E8%95%BE%E7%BC%AA%E5%AE%89%E7%9A%84%E6%8A%80%E8%83%BD%E5%85%A5%E6%89%8B%E8%AE%BE%E6%83%B3%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/home.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="从蕾缪安的技能入手设想设计模式"/></a><div class="content"><a class="title" href="/2025/05/08/%E4%BB%8E%E8%95%BE%E7%BC%AA%E5%AE%89%E7%9A%84%E6%8A%80%E8%83%BD%E5%85%A5%E6%89%8B%E8%AE%BE%E6%83%B3%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" title="从蕾缪安的技能入手设想设计模式">从蕾缪安的技能入手设想设计模式</a><time datetime="2025-05-08T15:48:03.000Z" title="发表于 2025-05-08 23:48:03">2025-05-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/04/28/bitset%E4%BD%BF%E7%94%A8/" title="1.3 计算机的性能指标"><img src="/2025/04/28/bitset%E4%BD%BF%E7%94%A8/home.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="1.3 计算机的性能指标"/></a><div class="content"><a class="title" href="/2025/04/28/bitset%E4%BD%BF%E7%94%A8/" title="1.3 计算机的性能指标">1.3 计算机的性能指标</a><time datetime="2025-04-28T12:08:48.000Z" title="发表于 2025-04-28 20:08:48">2025-04-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/04/27/%E6%89%8B%E5%86%99%E5%A4%A7%E5%B0%8F%E6%A0%B9%E5%A0%86/" title="手写大小根堆"><img src="/2025/04/27/%E6%89%8B%E5%86%99%E5%A4%A7%E5%B0%8F%E6%A0%B9%E5%A0%86/home.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="手写大小根堆"/></a><div class="content"><a class="title" href="/2025/04/27/%E6%89%8B%E5%86%99%E5%A4%A7%E5%B0%8F%E6%A0%B9%E5%A0%86/" title="手写大小根堆">手写大小根堆</a><time datetime="2025-04-27T07:43:56.000Z" title="发表于 2025-04-27 15:43:56">2025-04-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/04/27/%E9%9D%99%E6%80%81%E5%86%85%E9%83%A8%E7%B1%BB/" title="静态内部类"><img src="/2025/04/27/%E9%9D%99%E6%80%81%E5%86%85%E9%83%A8%E7%B1%BB/home.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="静态内部类"/></a><div class="content"><a class="title" href="/2025/04/27/%E9%9D%99%E6%80%81%E5%86%85%E9%83%A8%E7%B1%BB/" title="静态内部类">静态内部类</a><time datetime="2025-04-27T07:06:29.000Z" title="发表于 2025-04-27 15:06:29">2025-04-27</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By bshtj</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 6.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.3</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

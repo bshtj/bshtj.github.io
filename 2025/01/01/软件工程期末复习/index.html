@@ -1,0 +1,1659 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>软件工程期末复习 | bshtj_blog</title><meta name="author" content="bshtj"><meta name="copyright" content="bshtj"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一共6个题 &amp;#x20; 十个选择 每个3分 单选+多选，错一个扣0.5 第二题 和敏捷开发有关，分析题 10 第三题，看图分析题，和需求分析建模有关 12 第四题，应用分析题 15 第五题，图形题，和分析设计（需求分析+概要设计）有关 第六题，概要设计 &amp;#x20; 第一章 1.1 中的 1.1.1，1.1.2，1.1.3 1.2 中 1.2.2，1.2.3 &amp;#x20; 第二章 2.1，2.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="软件工程期末复习">
+<meta property="og:url" content="https://bshtj.github.io/2025/01/01/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/index.html">
+<meta property="og:site_name" content="bshtj_blog">
+<meta property="og:description" content="一共6个题 &amp;#x20; 十个选择 每个3分 单选+多选，错一个扣0.5 第二题 和敏捷开发有关，分析题 10 第三题，看图分析题，和需求分析建模有关 12 第四题，应用分析题 15 第五题，图形题，和分析设计（需求分析+概要设计）有关 第六题，概要设计 &amp;#x20; 第一章 1.1 中的 1.1.1，1.1.2，1.1.3 1.2 中 1.2.2，1.2.3 &amp;#x20; 第二章 2.1，2.">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bshtj.github.io/2025/01/01/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/baike.jpg">
+<meta property="article:published_time" content="2025-01-01T15:21:07.000Z">
+<meta property="article:modified_time" content="2025-03-02T01:58:26.428Z">
+<meta property="article:author" content="bshtj">
+<meta property="article:tag" content="软件工程">
+<meta property="article:tag" content="敏捷开发">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bshtj.github.io/2025/01/01/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/baike.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "软件工程期末复习",
+  "url": "https://bshtj.github.io/2025/01/01/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/",
+  "image": "https://bshtj.github.io/2025/01/01/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/baike.jpg",
+  "datePublished": "2025-01-01T15:21:07.000Z",
+  "dateModified": "2025-03-02T01:58:26.428Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "bshtj",
+      "url": "https://bshtj.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/wuliannan.png"><link rel="canonical" href="https://bshtj.github.io/2025/01/01/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '软件工程期末复习',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/wuliannan.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">50</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">51</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://www.helloimg.com/i/2025/03/02/67c3b864134af.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">bshtj_blog</span></a><a class="nav-page-title" href="/"><span class="site-name">软件工程期末复习</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">软件工程期末复习</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-01-01T15:21:07.000Z" title="发表于 2025-01-01 23:21:07">2025-01-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-02T01:58:26.428Z" title="更新于 2025-03-02 09:58:26">2025-03-02</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%AC%94%E8%AE%B0/">笔记</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%AC%94%E8%AE%B0/%E5%A4%A7%E5%AD%A6%E8%AF%BE%E7%A8%8B/">大学课程</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><blockquote>
+<p>一共6个题</p>
+<p>&#x20;</p>
+<p>十个选择 每个3分</p>
+<p>单选+多选，错一个扣0.5</p>
+<p>第二题 和敏捷开发有关，分析题 10</p>
+<p>第三题，看图分析题，和需求分析建模有关 12</p>
+<p>第四题，应用分析题 15</p>
+<p>第五题，图形题，和分析设计（需求分析+概要设计）有关</p>
+<p>第六题，概要设计</p>
+<p>&#x20;</p>
+<p>第一章</p>
+<p>1.1 中的 1.1.1，1.1.2，1.1.3</p>
+<p>1.2 中 1.2.2，1.2.3</p>
+<p>&#x20;</p>
+<p>第二章</p>
+<p>2.1，2.2（2.2.1,2.2.2,2.2.3）</p>
+<p>2.3(2.3.1,2.3.2)</p>
+<p>2.4</p>
+<p>&#x20;</p>
+<p>第三章</p>
+<p>3.1,3.2,3.3,3.4</p>
+<p>&#x20;</p>
+<p>第四章</p>
+<p>4.1（4.1.1，4.1.2，4.1.3（prototype model，spiral model））</p>
+<p>&#x20;</p>
+<p>第五章</p>
+<p>5.1,5.2,5.4(重中之重，5.4.1)，5.5.1</p>
+<p>&#x20;</p>
+<p>第六章</p>
+<p>无</p>
+<p>&#x20;</p>
+<p>第七章</p>
+<p>先看描述，7.1,7.2（7.2.1,7.2.2）,7.3（7.3.1~5），7.4（很重要）</p>
+<p>&#x20;</p>
+<p>第八章</p>
+<p>8.1，8.2.1~8.2.5(标题含义弄懂)，8.5（8.5.1），8.6，8.8</p>
+<p>&#x20;</p>
+<p>第九章</p>
+<p>9.1(9.1.1~9.1.4),9.3(9.3.1~9.3.2很重要)</p>
+<p>&#x20;</p>
+<p>第十章</p>
+<p>10.1,10.2,10.3,10.4,10.5,10.6</p>
+<p>&#x20;</p>
+<p>第十一章</p>
+<p>11.1,11.2,11.3,11.4,11.5(11.5.3~11.5.8)</p>
+<p>&#x20;</p>
+<p>第十二章</p>
+<p>12.1,12.2(尤其是12.2.1),12.3(12.3.1~12.3.8,12.3.10,12.3.12(重点))</p>
+<p>&#x20;</p>
+<p>第十三章</p>
+<p>13.1.1,13.1.2,13.2,13.3.1,13.6(13.6.1重点)</p>
+<p>&#x20;</p>
+<p>第十四章</p>
+<p>14.1.1,14.1.2,14.3（重中之重）</p>
+</blockquote>
+<p><img src="/2025/01/01/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/a559444415f487ca99181662b39ed23.jpg"></p>
+<h1 id="第1章"><a href="#第1章" class="headerlink" title="第1章"></a>第1章</h1><blockquote>
+<p>1.1中的1.1.1，1.1.2，1.1.3</p>
+</blockquote>
+<p><img src="/2025/01/01/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/image-10.png"></p>
+<h2 id="1-1-软件的本质-the-nature-of-software"><a href="#1-1-软件的本质-the-nature-of-software" class="headerlink" title="1.1 (软件的本质)the nature of software"></a>1.1 (软件的本质)the nature of software</h2><h3 id="1-1-1-Defining-Software"><a href="#1-1-1-Defining-Software" class="headerlink" title="1.1.1 Defining Software"></a>1.1.1 Defining Software</h3><p>软件是指：</p>
+<p>（1）当执行时能提供所需功能、性能和特性的指令（计算机程序）。</p>
+<p>（2）使程序能够有效处理信息的数据结构。</p>
+<p>（3）以纸质和虚拟形式存在的描述程序操作和使用的说明信息。</p>
+<p>软件是logical rather than physical system element。</p>
+<p>每一次软件故障都表明在分析或设计中存在错误将误差转化为机器的其他阶段可执行代码。</p>
+<h3 id="1-1-2-Software-Application-Domains"><a href="#1-1-2-Software-Application-Domains" class="headerlink" title="1.1.2 Software Application Domains"></a>1.1.2 <strong>Software Application Domains</strong></h3><p>今天，计算机软件有七大类别软件工程师面临的持续挑战：</p>
+<ul>
+<li><p><strong>System software</strong></p>
+</li>
+<li><p><strong>Engineering&#x2F;scientific software</strong></p>
+</li>
+<li><p><strong>Embedded software</strong></p>
+</li>
+<li><p><strong>Product-line software（产品线软件）</strong></p>
+</li>
+<li><p><strong>Web&#x2F;Mobile applications</strong></p>
+</li>
+<li><p><strong>Artificial intelligence software</strong></p>
+</li>
+</ul>
+<h3 id="1-1-3-Legacy-Software（年代遗留软件）"><a href="#1-1-3-Legacy-Software（年代遗留软件）" class="headerlink" title="1.1.3 Legacy Software（年代遗留软件）"></a>1.1.3 Legacy Software（年代遗留软件）</h3><p>传统软件的特点是寿命（<strong>longevity</strong>）和业务关键性（<strong>business criticality</strong>）。不幸的是，有时还有一个额外的特征这存在于遗留软件中——质量差（<strong>poor quality</strong>）。</p>
+<p><strong>As time passes, legacy systems often evolve for one or more of the following reasons:</strong></p>
+<ul>
+<li><p>该软件必须经过调整才能满足新用户的需要计算环境或技术。</p>
+</li>
+<li><p>软件必须增强以实现新的业务要求。</p>
+</li>
+<li><p>软件必须经过扩展才能与其它软件互操作其他更现代的系统或数据库。</p>
+</li>
+<li><p>软件必须重新架构，使其在一个可行的不断发展的计算环境。</p>
+</li>
+</ul>
+<h2 id="1-2-（软件的变化）THE-CHANGING-NATURE-OF-SOFTWARE"><a href="#1-2-（软件的变化）THE-CHANGING-NATURE-OF-SOFTWARE" class="headerlink" title="1.2 （软件的变化）THE CHANGING NATURE OF SOFTWARE"></a>1.2 <strong>（软件的变化）THE CHANGING NATURE OF SOFTWARE</strong></h2><h3 id="1-2-2-Mobile-Applications"><a href="#1-2-2-Mobile-Applications" class="headerlink" title="1.2.2 Mobile Applications"></a>1.2.2 <strong>Mobile Applications</strong></h3><p>在大多数情况下，移动应用程序包含用户界面、互操作性（<strong>interoperability</strong>）具有基于web的资源和本地处理能力。</p>
+<h3 id="1-2-3-Cloud-Computing"><a href="#1-2-3-Cloud-Computing" class="headerlink" title="1.2.3 Cloud Computing"></a>1.2.3 <strong>Cloud Computing</strong></h3><p><strong>computing devices reside outside the cloud and have access to a variety of resources within the cloud. （计算设备驻留在云之外，可以访问云中的各种资源。）</strong></p>
+<p>*<em>These resources encompass <em>applications(Saas,software as service), platforms(Paas),&#x20;</em>&#x61;nd <em>infrastructure(Iaas)</em></em>*</p>
+<p>2.1，2.2（2.2.1,2.2.2,2.2.3）</p>
+<p>2.3(2.3.1,2.3.2)</p>
+<p>2.4</p>
+<h1 id="第2章-software-engineering-x20"><a href="#第2章-software-engineering-x20" class="headerlink" title="第2章 software engineering &#x20;"></a>第2章 software engineering &#x20;</h1><h2 id="2-1-软件工程定义-definition-for-software-engineering"><a href="#2-1-软件工程定义-definition-for-software-engineering" class="headerlink" title="2.1 软件工程定义(definition for software  engineering)"></a>2.1 软件工程定义(<strong>definition for software  engineering</strong>)</h2><p>电气和电子工程师协会（IEEE）对软件工程的定义如下：</p>
+<p>软件工程：</p>
+<p>（1）将系统化、有纪律、可量化（<em><strong>systematic, disciplined, quantifiable</strong></em>）的方法应用于软件的开发、运行和维护(<em><strong>development,  operation, and maintenance of software</strong></em>)；也就是说，将工程应用于软件。</p>
+<p>（2）研究如上所述的方法。</p>
+<h2 id="2-2-软件工程过程-software-process"><a href="#2-2-软件工程过程-software-process" class="headerlink" title="2.2 软件工程过程(software process)"></a>2.2 软件工程过程(software process)</h2><p>*<em>A process is a collection of <em>activities, actions</em>, and <em>tasks&#x20;</em>&#x74;hat are  performed when some work product is to be created.</em>*</p>
+<ul>
+<li><p>An activity strives to achieve a broad objective (e.g., architectural design).  &#x20;</p>
+</li>
+<li><p>An action (e.g., interface design in architectural design) encompasses a set of tasks that produce a major work product (e.g., interface specification).&#x20;</p>
+</li>
+<li><p>A task focuses on a small, but well-defined objective (e.g., conducting interface design) that produces a  tangible outcome.</p>
+</li>
+</ul>
+<h3 id="2-2-1-the-process-framework"><a href="#2-2-1-the-process-framework" class="headerlink" title="2.2.1 the process framework"></a>2.2.1 the process framework</h3><p><strong>A process framework establishes the foundation for a complete software engineering process&#x20;</strong>&#x62;y identifying a small number of framework activities that are applicable to all software projects regardless of their size or complexity.&#x20;</p>
+<p><strong>A generic (通用的) process  framework for software engineering encompasses five activities</strong></p>
+<ul>
+<li><p>Communication.&#x20;</p>
+</li>
+<li><p>Planning（umbrella activities）.&#x20;</p>
+</li>
+<li><p>Modeling.&#x20;</p>
+</li>
+<li><p>Construction.&#x20;</p>
+</li>
+<li><p>Deployment.</p>
+</li>
+</ul>
+<p>The details of the software process will be quit&#x65;<strong>&#x20;different</strong> in each case, but the framework activities remain th&#x65;<strong>&#x20;same.</strong></p>
+<h3 id="2-2-2-umbrella-activities"><a href="#2-2-2-umbrella-activities" class="headerlink" title="2.2.2 umbrella activities"></a>2.2.2 umbrella activities</h3><p>In genera&#x6C;<strong>, &#x20;</strong>&#x75;mbrella activities are applie&#x64;<strong>&#x20;throughout</strong> a software project and <strong>help a software team manage and control progress, quality, change, and risk.&#x20;</strong></p>
+<ul>
+<li><p>Software project planning,tracking and control.</p>
+</li>
+<li><p>Risk management.</p>
+</li>
+<li><p>Software quality assurance</p>
+</li>
+<li><p>Technical reviews</p>
+</li>
+<li><p>Measurement</p>
+</li>
+<li><p>Software configuration management.</p>
+</li>
+<li><p>Reusability management</p>
+</li>
+<li><p>Work product preparation and production</p>
+</li>
+</ul>
+<h3 id="2-2-3-process-adaptation"><a href="#2-2-3-process-adaptation" class="headerlink" title="2.2.3 process adaptation"></a>2.2.3 process adaptation</h3><p>在本节的前面，我们注意到软件工程过程不是必须遵循的严格规定由软件团队独断专行。相反，它应该是敏捷的</p>
+<p>适应性强（对问题、对项目、对团队、对环境、组织文化)。</p>
+<p><strong>Therefore, a process adopted for one project might be significantly different than a process adopted for another project.</strong> 不同之处在于：</p>
+<ul>
+<li><p>Overall flow of activities, actions, and tasks and the interdependencies among them.</p>
+</li>
+<li><p>Degree to which actions and tasks are defined within each framework activity.</p>
+</li>
+<li><p>Degree to which work products are identified and required.</p>
+</li>
+<li><p>Manner in which quality assurance activities are applied.</p>
+</li>
+<li><p>Manner in which project tracking and control activities are applied.</p>
+</li>
+<li><p>Overall degree of detail and rigor with which the process is described.</p>
+</li>
+<li><p>Degree to which the customer and other stakeholders are involved with the project.</p>
+</li>
+<li><p>Level of autonomy given to the software team.</p>
+</li>
+<li><p>Degree to which team organization and roles are prescribed.</p>
+</li>
+</ul>
+<h2 id="2-3-software-engineering-practice"><a href="#2-3-software-engineering-practice" class="headerlink" title="2.3 software engineering practice"></a>2.3 software engineering practice</h2><p>在2.2节中，我们介绍了一个通用的软件过程模型由一组为其建立框架的活动组成软件工程实践。一般框架活动-沟通，规划，建模，施工，以及部署和伞形活动建立了一个框架软件工程工作的体系结构。</p>
+<p>But how does the <strong>practice of software engineering fit in</strong>？在接下来的章节中，您&#x5C06;<strong>&#x20;</strong>&#x67;ain a basic understanding of th&#x65;<strong>&#x20;generic concepts and principles&#x20;</strong>&#x74;hat apply t&#x6F;<strong>&#x20;framework activities.</strong></p>
+<h3 id="2-3-1-The-Essence-of-Practice"><a href="#2-3-1-The-Essence-of-Practice" class="headerlink" title="2.3.1 The Essence of Practice"></a>2.3.1 <strong>The Essence of Practice</strong></h3><ol>
+<li><p><strong>Understand the problem (communication,analysis modeling).&#x20;</strong></p>
+</li>
+<li><p><strong>Plan a solution ( design modeling).&#x20;</strong></p>
+</li>
+<li><p><strong>Carry out the plan (code generation).&#x20;</strong></p>
+</li>
+<li><p><strong>Examine the result for accuracy (testing and quality assurance)</strong></p>
+</li>
+</ol>
+<h3 id="2-3-2-General-Principles-x20"><a href="#2-3-2-General-Principles-x20" class="headerlink" title="2.3.2 General Principles&#x20;"></a><strong>2.3.2 General Principles&#x20;</strong></h3><p>David Hooker has proposed seven principles that focus on  software engineering practice as a whole:&#x20;</p>
+<ul>
+<li><p><strong>The Reason It All Exists&#x20;</strong></p>
+</li>
+<li><p><strong>KISS (Keep It Simple, Stupid!)&#x20;</strong></p>
+</li>
+<li><p><strong>Maintain the Vision&#x20;</strong></p>
+</li>
+<li><p><strong>What You Produce, Others Will Consume&#x20;</strong></p>
+</li>
+<li><p><strong>Be Open to the Future&#x20;</strong></p>
+</li>
+<li><p><strong>Plan Ahead for Reuse&#x20;</strong></p>
+</li>
+<li><p><strong>Think!</strong></p>
+</li>
+</ul>
+<h2 id="2-4-SOFTWARE-DEVELOPMENT-MYTHS"><a href="#2-4-SOFTWARE-DEVELOPMENT-MYTHS" class="headerlink" title="2.4 SOFTWARE DEVELOPMENT MYTHS"></a>2.4 <strong>SOFTWARE DEVELOPMENT MYTHS</strong></h2><ul>
+<li><p><strong>Management myths</strong></p>
+</li>
+<li><p><strong>Customer myths.</strong></p>
+</li>
+<li><p><strong>Practitioner’s myths.</strong></p>
+</li>
+</ul>
+<h1 id="第3章-the-software-process"><a href="#第3章-the-software-process" class="headerlink" title="第3章 the software process"></a>第3章 the software process</h1><p>3.1,3.2,3.3,3.4</p>
+<h2 id="3-1-a-generic-process-model"><a href="#3-1-a-generic-process-model" class="headerlink" title="3.1 a generic process model"></a>3.1 a generic process model</h2><p>A generic process framework for software engineering defines five framework activities</p>
+<ul>
+<li><p>communication</p>
+</li>
+<li><p>Planning</p>
+</li>
+<li><p>Modeling</p>
+</li>
+<li><p>Construction</p>
+</li>
+<li><p>Deployment</p>
+</li>
+</ul>
+<h2 id="3-2-define-a-framework-activity"><a href="#3-2-define-a-framework-activity" class="headerlink" title="3.2 define a framework activity"></a>3.2 define a framework activity</h2><p>the <strong>communication activity</strong> might have six distinct actions (described in Chapter 8):&#x20;</p>
+<ul>
+<li><p>Inception</p>
+</li>
+<li><p>Elicitation</p>
+</li>
+<li><p>Elaboration</p>
+</li>
+<li><p>negotiation</p>
+</li>
+<li><p>Specification</p>
+</li>
+<li><p>validation</p>
+</li>
+</ul>
+<h2 id="3-3-identifying-a-task-set"><a href="#3-3-identifying-a-task-set" class="headerlink" title="3.3 identifying a task set"></a>3.3 identifying a task set</h2><h2 id="3-4-process-patterns"><a href="#3-4-process-patterns" class="headerlink" title="3.4 process patterns"></a>3.4 process patterns</h2><p>流程模式描述了在软件工程工作中遇到的与流程相关的问题，识别了遇到问题的环境，并为该问题提出一个或多个已经过验证的解决方案。</p>
+<p>4.1（4.1.1，4.1.2，4.1.3（prototype model，spiral model））</p>
+<h1 id="第4章-process-models"><a href="#第4章-process-models" class="headerlink" title="第4章 process models"></a>第4章 process models</h1><h2 id="4-1-PRESCRIPTIVE-PROCESS-MODELS"><a href="#4-1-PRESCRIPTIVE-PROCESS-MODELS" class="headerlink" title="4.1 PRESCRIPTIVE PROCESS MODELS"></a>4.1 <strong>PRESCRIPTIVE PROCESS MODELS</strong></h2><p>It defines the flow of all activities , actions and tasks.</p>
+<p><strong>Each process model also prescribes a process flow (also called a work flow )</strong></p>
+<h3 id="4-1-1-The-Waterfall-Model"><a href="#4-1-1-The-Waterfall-Model" class="headerlink" title="4.1.1 The Waterfall Model"></a>4.1.1 <strong>The Waterfall Model</strong></h3><p><img src="/2025/01/01/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/image-9.png"></p>
+<p>瀑布模型，有时称为经典生命周期，提出了一种系统化、顺序化的软件开发方法，从客户需求规格开始，经过计划、建模、构建和部署，最终完成软件的支持。</p>
+<p>实际项目很少遵循模型提出的顺序流程。尽管线性模型可以间接地适应迭代，但变更可能导致项目团队在推进过程中产生混乱。</p>
+<p>客户通常难以明确陈述所有需求。瀑布模型要求这一点，并且难以应对许多项目初期的自然不确定性。</p>
+<p><img src="/2025/01/01/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/image-8.png"></p>
+<p>V模型是瀑布模型的一种变体，描述了质量保证动作与沟通、建模和早期构建活动之间的关系。</p>
+<h3 id="4-1-2-Incremental-Process-Models"><a href="#4-1-2-Incremental-Process-Models" class="headerlink" title="4.1.2 Incremental Process Models"></a>4.1.2 <strong>Incremental Process Models</strong></h3><p>增量模型结合了线性和并行过程流 <strong>linear and parallel</strong>，适用于初始需求明确但整体开发范围较大的情况。它通过分阶段交付软件功能，逐步完善和扩展功能。</p>
+<p><strong>优点</strong>：</p>
+<ul>
+<li><p>快速交付核心功能，用户可以在早期使用和评估。</p>
+</li>
+<li><p>逐步完善功能，降低风险。</p>
+</li>
+</ul>
+<p><strong>缺点</strong>：</p>
+<ul>
+<li>需要良好的计划和协调，确保各增量的集成和一致性。</li>
+</ul>
+<p><img src="/2025/01/01/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/image-7.png"></p>
+<h3 id="4-1-3-Evolutionary-Process-Models"><a href="#4-1-3-Evolutionary-Process-Models" class="headerlink" title="4.1.3 Evolutionary Process Models"></a>4.1.3 <strong>Evolutionary Process Models</strong></h3><p>Evolutionary models are iterative. They are characterized in a manner that enables you to develop increasingly more complete versions of the software.</p>
+<p><strong>包含prototyping和sprial model</strong></p>
+<p><strong>原型模型Prototyping</strong>：<br>原型模型适用于需求不明确或开发者不确定算法效率、操作系统适应性等情况。通过快速构建原型，帮助利益相关者更好地理解需求，并在迭代中逐步完善。</p>
+<p>The prototyping paradigm assists you and other stakeholders to better understand what is to be built when requirements are fuzzy.</p>
+<p><strong>优点</strong>：</p>
+<ul>
+<li><p>快速验证需求，减少不确定性。</p>
+</li>
+<li><p>用户和开发者都能早期看到系统雏形。</p>
+</li>
+</ul>
+<p><strong>缺点</strong>：</p>
+<ul>
+<li><p>原型可能被误认为是最终产品，忽略整体软件质量和长期可维护性。</p>
+</li>
+<li><p>开发者可能为了快速实现原型而做出不合适的实现选择。</p>
+</li>
+</ul>
+<p><img src="/2025/01/01/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/image-5.png"></p>
+<p><img src="/2025/01/01/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/image-6.png"></p>
+<p><strong>螺旋模型The Spiral Model</strong>：<br>螺旋模型结合了原型模型的迭代特性和瀑布模型的系统化控制。它通过一系列演化发布逐步开发软件，每个迭代都包括风险分析和计划调整。</p>
+<p>The spiral model is an evolutionary software process model that couples the iterative nature of prototyping with the controlled and systematic aspects of the waterfall model.</p>
+<p>The spiral model demands a direct consideration of technical risks at all stages of the project.</p>
+<p><strong>优点</strong>：</p>
+<ul>
+<li><p>适用于大型系统开发，能够更好地理解和应对风险。</p>
+</li>
+<li><p>强调技术风险的直接考虑。</p>
+</li>
+</ul>
+<p><strong>缺点</strong>：</p>
+<ul>
+<li><p>需要较高的风险评估和管理能力。</p>
+</li>
+<li><p>客户可能难以接受这种演化方法的可控性。</p>
+</li>
+</ul>
+<p>总结</p>
+<ul>
+<li><p><strong>瀑布模型</strong>适用于需求明确且稳定的项目，但难以应对变更和不确定性。</p>
+</li>
+<li><p><strong>增量模型</strong>通过分阶段交付功能，逐步完善软件，适用于需求明确但范围较大的项目。</p>
+</li>
+<li><p><strong>原型模型</strong>通过快速构建原型验证需求，适用于需求不明确或不确定的情况。</p>
+</li>
+<li><p><strong>螺旋模型</strong>结合了迭代和系统化控制，适用于大型系统开发，强调风险管理和演化发布。</p>
+</li>
+</ul>
+<h1 id="第5章-AGILE-DEVELOPMENT"><a href="#第5章-AGILE-DEVELOPMENT" class="headerlink" title="第5章 AGILE DEVELOPMENT"></a>第5章 <strong>AGILE DEVELOPMENT</strong></h1><p>5.1,5.2,5.4(重中之重，5.4.1)，5.5.1</p>
+<p>现代商业环境催生了基于计算机的系统和软件产品，这种环境节奏快且不断变化。对于某些类别的软件和某些类型的软件项目，敏捷软件工程代表了传统软件工程的合理替代方案。它已被证明能够快速交付成功的系统。</p>
+<p>敏捷软件工程的理念鼓励客户满意度、软件的早期增量交付、小型高度激励的项目团队、非正式方法、最少的软件工程工作产品以及整体开发的简洁性。</p>
+<p>软件工程师和其他项目利益相关者（如经理、客户、最终用户）在敏捷团队中一起工作——这是一个自我组织并掌控自己命运的团队。敏捷团队促进所有成员之间的沟通与协作。</p>
+<h2 id="5-1-WHAT-IS-AGILITY"><a href="#5-1-WHAT-IS-AGILITY" class="headerlink" title="5.1 WHAT IS AGILITY"></a>5.1 <strong>WHAT IS AGILITY</strong></h2><p>敏捷性已成为描述现代软件流程的流行词。每个人都在谈论敏捷。敏捷团队是一个灵活的团队，能够恰当地应对变化。变化是软件开发的核心。无论是正在构建的软件的变化、团队成员的变化、新技术的引入带来的变化，还是任何可能对他们构建的产品或创建产品的项目产生影响的变化，敏捷团队都能应对。</p>
+<h2 id="5-2-AGILITY-AND-THE-COST-OF-CHANGE"><a href="#5-2-AGILITY-AND-THE-COST-OF-CHANGE" class="headerlink" title="5.2 AGILITY AND THE COST OF CHANGE"></a>5.2 <strong>AGILITY AND THE COST OF CHANGE</strong></h2><p>传统的软件开发经验表明，随着项目的进展，变更的成本会非线性地增加（如图5.1中的黑色实线所示）。在项目早期（如需求收集阶段），变更相对容易处理，成本较低。然而，如果项目进行到后期（如验证测试阶段），一个重要的利益相关者提出重大功能变更，变更的成本将迅速上升，因为需要修改架构设计、构建新组件、修改现有组件、设计新测试等。</p>
+<p><img src="/2025/01/01/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/image-3.png"></p>
+<p>敏捷方法的支持者认为，一个设计良好的敏捷过程可以“扁平化”变更成本曲线（如图5.1中的灰色实线所示），使软件团队能够在项目后期容纳变更，而不会显著增加成本和时间。敏捷过程通过增量交付、持续单元测试和成对编程等实践，减少了变更的成本。尽管关于变更成本曲线扁平化程度的争论仍在继续，但有证据表明，敏捷方法可以显著降低变更成本。</p>
+<h2 id="5-4-EXTREME-PROGRAMMING-极限编程"><a href="#5-4-EXTREME-PROGRAMMING-极限编程" class="headerlink" title="5.4 EXTREME PROGRAMMING(极限编程)"></a>5.4 <strong>EXTREME PROGRAMMING(极限编程)</strong></h2><p>In order to illustrate an agile process in a bit more detail, we’ll  provide you with an overview of Extreme Programming (XP)</p>
+<p>极限编程（XP）过程是一种敏捷软件开发方法，强调通过迭代和增量开发快速交付高质量的软件。XP 过程包括四个主要框架活动：规划、设计、编码和测试。每个活动都有一系列特定的实践和规则，旨在提高团队的效率和软件的质量。</p>
+<h3 id="5-4-1-The-XP-Process"><a href="#5-4-1-The-XP-Process" class="headerlink" title="5.4.1 The XP Process"></a>5.4.1 <strong>The XP Process</strong></h3><p><img src="/2025/01/01/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/image-1.png"></p>
+<p><strong>XP 过程的四个框架活动</strong>：</p>
+<ol>
+<li><p><strong>规划（Planning）</strong>：<br>XP 的规划活动从“倾听”开始，这是一个需求收集活动，帮 助技术团队成员理解软件的业务背景，并了解所需的输出和主要功能。客户编写“用户故事”（类似于用例user-case），描述软件的功能和特性，并为每个故事分配优先级。开发团队评估每个故事的成本，并与客户一起决定如何将故事分组到下一个发布（软件增量）中。</p>
+</li>
+<li><p><strong>设计（Design）</strong>：<br>XP 设计遵循“保持简单”（KIS）原则，使用 CRC 卡片（类-责任-协作者卡片）来组织和识别与当前软件增量相关的面向对象类。如果遇到复杂的设计问题，XP 建议立即创建该部分设计的操作原型（称为“尖峰spike解决方案”），以降低风险并验证原始估算。</p>
+</li>
+<li><p><strong>编码（Coding）</strong>：<br>在完成初步设计后，团队不会直接进入编码，而是为当前发布中的每个故事创建一系列单元测试unit tests。XP 强调“成对编程”，即两个开发人员在一台计算机上共同编写代码，以实时解决问题并确保代码质量。代码完成后，立即进行单元测试，并通过“持续集成”continous integration策略将代码与团队其他成员的工作集成，以避免兼容性和接口问题。</p>
+</li>
+<li><p><strong>测试（Testing）</strong>：<br>单元测试应使用自动化框架实现，以便轻松重复执行。XP 的验收测试由客户指定，关注系统的整体功能和特性，确保软件满足客户需求。</p>
+</li>
+</ol>
+<h2 id="5-5-OTHER-AGILE-PROCESS-MODELS"><a href="#5-5-OTHER-AGILE-PROCESS-MODELS" class="headerlink" title="5.5 OTHER AGILE PROCESS MODELS"></a>5.5 <strong>OTHER AGILE PROCESS MODELS</strong></h2><h3 id="5-5-1-scrum"><a href="#5-5-1-scrum" class="headerlink" title="5.5.1 scrum"></a>5.5.1 scrum</h3><p>在这个框架中，整个开发周期包括若干个小的迭代周期，每个小的迭代周期称为一个 Sprint，每个 Sprint的建议长度 2 到 4 周。它强调跨职能团队之间的协作、迭代开发以及快速适应变化的能力。Scrum 的关键组件包括：</p>
+<p>Sprint 中<strong>挑选的需求</strong>经过 Sprint 计划会议上的分析、讨论和估算得到一个 Sprint 的任务列表，称它为 Sprint backlog 。 在每个迭代结束时，Scrum 团队将交付潜在可交付的产品增量。</p>
+<p><strong>scrum的角色：</strong></p>
+<ol>
+<li>产品负责人（Product Owner）&#x20;</li>
+</ol>
+<ul>
+<li><p>确定产品的功能。&#x20;</p>
+</li>
+<li><p>决定发布的日期和发布内容。&#x20;</p>
+</li>
+<li><p>为产品的 ROI(Return On Investment)负责。&#x20;</p>
+</li>
+<li><p>根据市场价值确定功能优先级。&#x20;</p>
+</li>
+<li><p>每个 Sprint，根据需要调整功能和优先级（每个 Sprint 开始前调整）。&#x20;</p>
+</li>
+<li><p>接受或拒绝接受开发团队的工作成果。&#x20;</p>
+</li>
+<li><p>Product Owner 参与 Scrum planning。&#x20;</p>
+</li>
+</ul>
+<ul>
+<li>Scrum Master&#x20;</li>
+</ul>
+<p>将 Team Leader 和 Product owner 紧密地工作在一起，他可以及时地为团队成员提供帮助。&#x20;</p>
+<ul>
+<li><p>保证团队资源完全可被利用并且全部是高产出的。&#x20;</p>
+</li>
+<li><p>保证各个角色及职责的良好协作。&#x20;</p>
+</li>
+<li><p>解决团队开发中的障碍。&#x20;</p>
+</li>
+<li><p>作为团队和外部的接口，屏蔽外界对团队成员的干扰。&#x20;</p>
+</li>
+<li><p>保证开发过程按计划进行，组织 Daily Scrum, Sprint Review and Sprint Planning meetings。&#x20;</p>
+</li>
+</ul>
+<ul>
+<li>团队（team）&#x20;</li>
+</ul>
+<p>负责产品的开发，一般情况人数在 5-9 个左右&#x20;</p>
+<ul>
+<li><p>团队要<strong>跨职能</strong>（包括开发人员、测试人员、用户界面设计师等）&#x20;</p>
+</li>
+<li><p>&#x20;团队成员需要全职。（有些情况例外，比如数据库管理员）&#x20;</p>
+</li>
+<li><p>在项目向导范围内，尽一切努力做任何事情已确保达到 Sprint 的目标。&#x20;</p>
+</li>
+<li><p>高度的<strong>自组织</strong>能力。&#x20;</p>
+</li>
+<li><p>向 Product Owner 演示产品功能。&#x20;</p>
+</li>
+<li><p>团队成员构成在 sprint 内不允许变化。</p>
+</li>
+<li><p><strong>产品待办事项（Product Backlog）</strong>：所有需要完成的任务和功能的列表。</p>
+</li>
+<li><p><strong>Sprint 规划（Sprint Planning）</strong>：在每个 Sprint 开始时，团队从产品待办事项中选择任务，并制定 Sprint 目标。</p>
+</li>
+<li><p><strong>每日站会（Daily Stand-ups）</strong>：团队成员每天短暂会议，汇报进展、计划和遇到的问题。</p>
+</li>
+<li><p><strong>Sprint 审查（Sprint Reviews）</strong>：在 Sprint 结束时，团队展示完成的工作，并接受反馈。</p>
+</li>
+<li><p><strong>Sprint 回顾（Sprint Retrospectives）</strong>：团队反思 Sprint 中的工作流程，寻找改进机会。</p>
+</li>
+</ul>
+<p>Scrum 通过短周期的迭代和持续的反馈，帮助团队快速交付高质量的软件，并能够灵活应对变化。</p>
+<p><strong>DevOps</strong>：</p>
+<p>DevOps 是由 Patrick DeBois 提出的，旨在将开发（Development）和运维（Operations）结合起来。DevOps 尝试将敏捷和精益开发原则应用于整个软件供应链。DevOps 的工作流程包括以下几个阶段，这些阶段循环进行，直到产品达到预期：</p>
+<ul>
+<li><p><strong>持续开发（Continuous Development）</strong>：软件交付物被分解并在多个 Sprint 中开发，增量交付给质量保证团队进行测试。</p>
+</li>
+<li><p><strong>持续测试（Continuous Testing）</strong>：使用自动化测试工具帮助团队成员同时测试多个代码增量，确保在集成之前没有缺陷。</p>
+</li>
+<li><p><strong>持续集成（Continuous Integration）</strong>：将具有新功能的代码添加到现有代码和运行时环境中，并检查部署后是否有错误。</p>
+</li>
+<li><p><strong>持续部署（Continuous Deployment）</strong>：将集成的代码部署到生产环境中，可能包括全球多个站点。</p>
+</li>
+<li><p><strong>持续监控（Continuous Monitoring）</strong>：运维团队成员监控生产环境中的软件性能，主动寻找潜在问题，确保软件质量。</p>
+</li>
+</ul>
+<p>DevOps 通过快速响应客户需求的变化，增强了客户的体验，提高了品牌忠诚度和市场份额。它通过减少返工和转向更高价值的业务活动，为组织提供了更大的创新能力。</p>
+<h1 id="第7章-PRINCIPLES-THAT-GUIDE-PRACTICE"><a href="#第7章-PRINCIPLES-THAT-GUIDE-PRACTICE" class="headerlink" title="第7章 PRINCIPLES THAT GUIDE PRACTICE"></a>第7章 <strong>PRINCIPLES THAT GUIDE PRACTICE</strong></h1><p>先看描述，7.1,7.2（7.2.1,7.2.2）,7.3（7.3.1~5），7.4（很重要）</p>
+<h2 id="7-1-SOFTWARE-ENGINEERING-KNOWLEDGE"><a href="#7-1-SOFTWARE-ENGINEERING-KNOWLEDGE" class="headerlink" title="7.1 SOFTWARE ENGINEERING KNOWLEDGE"></a>7.1 <strong>SOFTWARE ENGINEERING KNOWLEDGE</strong></h2><p>你经常听到人们说，软件开发知识的半衰期为3年：今天你需要知道的知识，有一半将在3年内过时。在技术相关的知识领域，这可能是正确的。但还有另一种软件开发知识——我称之为“软件工程原则”——它的半衰期并不是3年。这些软件工程原则很可能在程序员的整个职业生涯中都适用。</p>
+<h2 id="7-2-CORE-PRINCIPLES"><a href="#7-2-CORE-PRINCIPLES" class="headerlink" title="7.2 CORE PRINCIPLES"></a>7.2 <strong>CORE PRINCIPLES</strong></h2><p>在过程层面，核心原则为软件团队在执行框架活动framework和伞活动umbrella activities、导航过程流以及生成一系列软件工程工作产品时，奠定了哲学基础。</p>
+<p>在实践层面，核心原则建立了一系列价值观和规则，指导你分析问题、设计解决方案、实施和测试解决方案，并最终部署软件。</p>
+<h3 id="7-2-1-Principles-That-Guide-Process"><a href="#7-2-1-Principles-That-Guide-Process" class="headerlink" title="7.2.1 Principles That Guide Process"></a>7.2.1 <strong>Principles That Guide Process</strong></h3><p>The following set o&#x66;<strong>&#x20;core principles</strong> can be applied to the framework, and by extension, to every software process:</p>
+<ol>
+<li><p><strong>Principle 1: Be agile</strong>.</p>
+</li>
+<li><p><strong>Principle 2: Focus on quality at every step</strong>.</p>
+</li>
+<li><p><strong>Principle 3: Be ready to adapt</strong>.</p>
+</li>
+<li><p><strong>Principle 4: Build an effective team</strong>.</p>
+</li>
+<li><p><strong>Principle 5: Establish mechanisms for communication and coordination</strong>.</p>
+</li>
+<li><p><strong>Principle 6: Manage change</strong>.</p>
+</li>
+<li><p><strong>Principle 7: Assess risk</strong>.</p>
+</li>
+<li><p><strong>Principle 8: Create work products that provide value for others</strong>.</p>
+</li>
+</ol>
+<h3 id="7-2-2-Principles-That-Guide-Practice"><a href="#7-2-2-Principles-That-Guide-Practice" class="headerlink" title="7.2.2 Principles That Guide Practice"></a>7.2.2 <strong>Principles That Guide Practice</strong></h3><p>软件工程实践有一个首要目标——按时交付高质量的、可操作的软件，该软件包含满足所有利益相关者需求的功能和特性。以下是软件工程实践中的核心原则：</p>
+<ol>
+<li><p><strong>Principle 1: Divide and conquer</strong>.</p>
+</li>
+<li><p><strong>Principle 2: Understand the use of abstraction</strong>.</p>
+</li>
+<li><p><strong>Principle 3: Strive for consistency</strong>.</p>
+</li>
+<li><p><strong>Principle 4: Focus on the transfer of information</strong>.</p>
+</li>
+<li><p><strong>Principle 5: Build software that exhibits effective modularity</strong>.</p>
+</li>
+<li><p><strong>Principle 6: Look for patterns</strong>.</p>
+</li>
+<li><p><strong>Principle 7: When possible, represent the problem and its solution from a number of different perspectives</strong>.</p>
+</li>
+<li><p><strong>Principle 8: Remember that someone will maintain the software</strong>.</p>
+</li>
+</ol>
+<h2 id="7-3-PRINCIPLES-THAT-GUIDE-EACH-FRAMEWORK-ACTIVITY"><a href="#7-3-PRINCIPLES-THAT-GUIDE-EACH-FRAMEWORK-ACTIVITY" class="headerlink" title="7.3 PRINCIPLES THAT GUIDE EACH FRAMEWORK ACTIVITY"></a>7.3 <strong>PRINCIPLES THAT GUIDE EACH FRAMEWORK ACTIVITY</strong></h2><h3 id="7-3-1-Communication-Principles"><a href="#7-3-1-Communication-Principles" class="headerlink" title="7.3.1 Communication Principles"></a>7.3.1 <strong>Communication Principles</strong></h3><p>在客户需求被分析、建模或指定之前，必须通过沟通活动来收集这些需求。然而，从沟通到理解的道路往往充满障碍。</p>
+<p>有效的沟通（在技术同行之间、与客户和其他利益相关者之间，以及与项目经理之间）是你在软件项目中面临的最具挑战性的活动之一。我们讨论的沟通原则主要适用于与客户的沟通，但其中许多原则同样适用于软件项目中的所有沟通形式：</p>
+<ol>
+<li><p><strong>Principle 1: Listen</strong>.</p>
+</li>
+<li><p><strong>Principle 2: Prepare before you communicate</strong>.</p>
+</li>
+<li><p><strong>Principle 3: Someone should facilitate the activity</strong>.</p>
+</li>
+<li><p><strong>Principle 4: Face-to-face communication is best</strong>.</p>
+</li>
+<li><p><strong>Principle 5: Take notes and document decisions</strong>.</p>
+</li>
+<li><p><strong>Principle 6: Strive for collaboration</strong>.</p>
+</li>
+<li><p><strong>Principle 7: Stay focused; modularize your discussion</strong>.</p>
+</li>
+<li><p><strong>Principle 8: If something is unclear, draw a picture</strong>.</p>
+</li>
+<li><p><strong>Principle 9</strong>:</p>
+<ul>
+<li><p><strong>a) Once you agree to something, move on</strong>.</p>
+</li>
+<li><p><strong>b) If you can’t agree to something, move on</strong>.</p>
+</li>
+<li><p><strong>c) If a feature or function is unclear and cannot be clarified at the moment, move on</strong>.</p>
+</li>
+</ul>
+</li>
+<li><p><strong>Principle 10: Negotiation is not a contest or a game. It works best when both parties win</strong>.</p>
+</li>
+</ol>
+<h3 id="7-3-2-Planning-Principles"><a href="#7-3-2-Planning-Principles" class="headerlink" title="7.3.2 Planning Principles"></a>7.3.2 <strong>Planning Principles</strong></h3><p>计划活动包括一系列管理和技术实践，使软件团队能够定义一条通往战略目标和战术目标的路线图。在许多项目中，过度计划既耗时又无果（因为太多事情会变化），但计划不足则会导致混乱。像生活中的大多数事情一样，计划应该适度进行，为团队提供有用的指导——既不多，也不少。无论计划的严谨性如何，以下原则始终适用：</p>
+<ol>
+<li><p><strong>Principle 1: Understand the scope of the project</strong>.</p>
+</li>
+<li><p><strong>Principle 2: Involve stakeholders in the planning activity</strong>.</p>
+</li>
+<li><p><strong>Principle 3: Recognize that planning is iterative</strong>.</p>
+</li>
+<li><p><strong>Principle 4: Estimate based on what you know</strong>.</p>
+</li>
+<li><p><strong>Principle 5: Consider risk as you define the plan</strong>.</p>
+</li>
+<li><p><strong>Principle 6: Be realistic</strong>.</p>
+</li>
+<li><p><strong>Principle 7: Adjust granularity as you define the plan</strong>.</p>
+</li>
+<li><p><strong>Principle 8: Define how you intend to ensure quality</strong>.</p>
+</li>
+<li><p><strong>Principle 9: Describe how you intend to accommodate change</strong>.</p>
+</li>
+<li><p><strong>Principle 10: Track the plan frequently and make adjustments as required</strong>.</p>
+</li>
+</ol>
+<p>To be most effective, everyone on the software team should participate in the planning activity. Only then will team members “sign up” to the plan.</p>
+<h3 id="7-3-3-modeling-principle"><a href="#7-3-3-modeling-principle" class="headerlink" title="7.3.3 modeling principle"></a>7.3.3 modeling principle</h3><p>在软件工程工作中，可以创建两类模型：<strong>需求模型requirements model</strong>和<strong>设计模型design model</strong>。需求模型（除了场景模型，如用例图）通过在三个不同领域（信息域、功能域和行为域）中描述软件来表示客户需求。设计模型则代表软件的特性，帮助从业者有效地构建软件，包括架构、用户界面、组件级细节等。</p>
+<p>在敏捷建模中，Scott Ambler 和 Ron Jeffries 定义了一组建模原则，这些原则适用于使用敏捷过程模型的人，但也适用于所有执行建模任务和活动的软件工程师：</p>
+<ol>
+<li><p><strong>Principle 1</strong>: The primary goal of the software team is to build software, not create models.</p>
+</li>
+<li><p><strong>Principle 2</strong>: Travel light—don’t create more models than you need.</p>
+</li>
+<li><p><strong>Principle 3</strong>: Strive to produce the simplest model that will describe the problem or the software.</p>
+</li>
+<li><p><strong>Principle 4</strong>: Build models in a way that makes them amenable to change.</p>
+</li>
+<li><p><strong>Principle 5</strong>: Be able to state an explicit purpose for each model that is created.</p>
+</li>
+<li><p><strong>Principle 6</strong>: Adapt the models you develop to the system at hand.</p>
+</li>
+<li><p><strong>Principle 7</strong>: Try to build useful models, but forget about building perfect models.</p>
+</li>
+<li><p><strong>Principle 8</strong>: Don’t become dogmatic about the syntax of the model. If it communicates content successfully, representation is secondary.</p>
+</li>
+<li><p><strong>Principle 9</strong>: If your instincts tell you a model isn’t right even though it seems okay on paper, you probably have reason to be concerned.</p>
+</li>
+<li><p><strong>Principle 10</strong>: Get feedback as soon as you can.</p>
+</li>
+</ol>
+<h4 id="Requirements-Modeling-Principles"><a href="#Requirements-Modeling-Principles" class="headerlink" title="Requirements Modeling Principles:"></a><strong>Requirements Modeling Principles</strong>:</h4><ol>
+<li><p><strong>Principle 1</strong>: The information domain of a problem must be represented and understood.</p>
+</li>
+<li><p><strong>Principle 2</strong>: The functions that the software performs must be defined.</p>
+</li>
+<li><p><strong>Principle 3</strong>: The behavior of the software (as a consequence of external events) must be represented.</p>
+</li>
+<li><p><strong>Principle 4</strong>: The models that depict information, function, and behavior must be partitioned in a manner that uncovers detail in a layered (or hierarchical) fashion.</p>
+</li>
+<li><p><strong>Principle 5</strong>: The analysis task should move from essential information toward implementation detail.</p>
+</li>
+</ol>
+<blockquote>
+<ol>
+<li><p><strong>原则1</strong>：必须表示并理解问题的信息域。</p>
+</li>
+<li><p><strong>原则2</strong>：必须定义软件执行的功能。</p>
+</li>
+<li><p><strong>原则3</strong>：必须表示软件的行为（作为外部事件的结果）。</p>
+</li>
+<li><p><strong>原则4</strong>：描述信息、功能和行为的模型必须以分层（或层次化）的方式划分，以揭示细节。</p>
+</li>
+<li><p><strong>原则5</strong>：分析任务应从基本信息向实现细节推进。</p>
+</li>
+</ol>
+</blockquote>
+<h4 id="Design-Modeling-Principles"><a href="#Design-Modeling-Principles" class="headerlink" title="Design Modeling Principles:"></a><strong>Design Modeling Principles</strong>:</h4><ol>
+<li><p><strong>Principle 1</strong>: Design should be traceable to the requirements model.</p>
+</li>
+<li><p><strong>Principle 2</strong>: Always consider the architecture of the system to be built.</p>
+</li>
+<li><p><strong>Principle 3</strong>: Design of data is as important as design of processing functions.</p>
+</li>
+<li><p><strong>Principle 4</strong>: Interfaces (both internal and external) must be designed with care.</p>
+</li>
+<li><p><strong>Principle 5</strong>: User interface design should be tuned to the needs of the end user. However, in every case, it should stress ease of use.</p>
+</li>
+<li><p><strong>Principle 6</strong>: Component-level design should be functionally independent.</p>
+</li>
+<li><p><strong>Principle 7</strong>: Components should be loosely coupled to one another and to the external environment.</p>
+</li>
+<li><p><strong>Principle 8</strong>: Design representations (models) should be easily understandable.</p>
+</li>
+<li><p><strong>Principle 9</strong>: The design should be developed iteratively.</p>
+</li>
+<li><p><strong>Principle 10</strong>: Creation of a design model does not preclude an agile approach.</p>
+</li>
+</ol>
+<blockquote>
+<ol>
+<li><p><strong>原则1</strong>：设计应可追溯到需求模型。</p>
+</li>
+<li><p><strong>原则2</strong>：始终考虑要构建的系统架构。</p>
+</li>
+<li><p><strong>原则3</strong>：数据设计与处理功能的设计同样重要。</p>
+</li>
+<li><p><strong>原则4</strong>：接口（包括内部和外部）必须精心设计。</p>
+</li>
+<li><p><strong>原则5</strong>：用户界面设计应根据最终用户的需求进行调整，但在任何情况下都应强调易用性。</p>
+</li>
+<li><p><strong>原则6</strong>：组件级设计应具有功能独立性。</p>
+</li>
+<li><p><strong>原则7</strong>：组件之间以及与外部环境之间应松散耦合。</p>
+</li>
+<li><p><strong>原则8</strong>：设计表示（模型）应易于理解。</p>
+</li>
+<li><p><strong>原则9</strong>：设计应迭代开发。</p>
+</li>
+<li><p><strong>原则10</strong>：创建设计模型并不排除敏捷方法。</p>
+</li>
+</ol>
+</blockquote>
+<h3 id="7-3-4-Construction-principle"><a href="#7-3-4-Construction-principle" class="headerlink" title="7.3.4 Construction principle"></a>7.3.4 Construction principle</h3><h3 id="7-3-5-Deployment-principle"><a href="#7-3-5-Deployment-principle" class="headerlink" title="7.3.5 Deployment principle"></a>7.3.5 Deployment principle</h3><h2 id="7-4-WORK-PRACTICES"><a href="#7-4-WORK-PRACTICES" class="headerlink" title="7.4 WORK PRACTICES"></a>7.4 <strong>WORK PRACTICES</strong></h2><p>软件工程中的人为因素与技术领域同样重要。因此，研究成功软件工程师的共同特质和工作习惯是很有意义的。除了基本的特质basic traits 和工作习惯外，Isklod 提出了10个超越编程语言和特定技术的概念（transcend programming languages and specific technologies）。其中一些概念是理解软件工程在软件过程中作用的前提 （prerequisite） 知识</p>
+<ol>
+<li><p><strong>Interfaces</strong>.</p>
+</li>
+<li><p><strong>Conventions and templates</strong>.</p>
+</li>
+<li><p><strong>Layering</strong>.</p>
+</li>
+<li><p><strong>Algorithmic complexity</strong>.</p>
+</li>
+<li><p><strong>Hashing</strong>.</p>
+</li>
+<li><p><strong>Caching</strong>.</p>
+</li>
+<li><p><strong>Concurrency</strong>.</p>
+</li>
+<li><p><strong>Cloud computing</strong>.</p>
+</li>
+<li><p><strong>Relational databases</strong>.</p>
+</li>
+</ol>
+<h1 id="第8章-UNDERSTANDING-REQUIREMENTS"><a href="#第8章-UNDERSTANDING-REQUIREMENTS" class="headerlink" title="第8章 UNDERSTANDING REQUIREMENTS"></a>第8章 <strong>UNDERSTANDING REQUIREMENTS</strong></h1><p>8.1，8.2.1~8.2.5(标题含义弄懂)，8.5（8.5.1），8.6，8.8</p>
+<h2 id="8-1-REQUIREMENTS-ENGINEERING"><a href="#8-1-REQUIREMENTS-ENGINEERING" class="headerlink" title="8.1 REQUIREMENTS ENGINEERING"></a>8.1 <strong>REQUIREMENTS ENGINEERING</strong></h2><p>导致对需求理解的一系列广泛任务和技术被称为<strong>需求工程</strong>。从软件过程的角度来看，需求工程是一个主要的软件工程活动，始于沟通活动communication activity，并延续到需求分析建模活动requirement analysis modeling。它必须根据过程、项目、产品和工作人员的需求进行调整。</p>
+<p>需求工程包括沟通活动和需求分析建模活动，可以理解为七个独立的任务：<strong>初始（Inception）</strong>、<strong>获取（Elicitation）</strong>、<strong>细化（Elaboration）</strong>、<strong>协商（Negotiation）</strong>、<strong>规格说明（Specification）</strong>、<strong>验证（Validation）和管理（Management）</strong>。需要注意的是，这些任务中的一些是并行进行的，并且所有任务都根据项目的需求进行调整。</p>
+<p><strong>1. 初始（Inception）</strong></p>
+<p>在项目初始阶段，团队建立对问题、利益相关者和解决方案的基本理解。这个阶段的主要目标是确定项目的范围、目标和可行性，并确保所有利益相关者对项目的初步方向达成一致。</p>
+<p><strong>关键活动</strong>：</p>
+<ul>
+<li><p>识别问题。</p>
+</li>
+<li><p>确定利益相关者。</p>
+</li>
+<li><p>初步沟通和协作。</p>
+</li>
+</ul>
+<p><strong>2. 启发（Elicitation）</strong></p>
+<p>需求启发是通过与利益相关者的互动，收集他们的需求和期望。这个阶段的目标是明确业务目标，并确保所有利益相关者的需求被充分理解和记录。</p>
+<p><strong>关键活动</strong>：<strong>establish business goals</strong></p>
+<ul>
+<li><p>与利益相关者沟通，获取业务目标。</p>
+</li>
+<li><p>建立需求优先级机制。</p>
+</li>
+<li><p>创建初步的系统架构设计。</p>
+</li>
+</ul>
+<p><strong>常见问题</strong>：</p>
+<ul>
+<li><p><strong>范围问题</strong>：需求范围不明确。</p>
+</li>
+<li><p><strong>理解问题</strong>：利益相关者和开发团队之间的理解不一致。</p>
+</li>
+<li><p><strong>易变性问题</strong>：需求在项目过程中频繁变化。</p>
+</li>
+</ul>
+<p><strong>3. 细化（Elaboration）</strong></p>
+<p>在细化阶段，团队通过创建和细化用户场景，开发详细的需求模型。这个阶段的目标是明确系统的功能、行为和信息结构。</p>
+<p><strong>关键活动</strong>：<strong>developing a refined requirements model</strong></p>
+<ul>
+<li><p>创建用户场景，描述用户与系统的交互。</p>
+</li>
+<li><p>提取分析类（Analysis Classes），定义类的属性和服务。</p>
+</li>
+<li><p>识别类之间的关系和协作，生成补充图表。</p>
+</li>
+</ul>
+<p><strong>4. 协商（Negotiation）</strong></p>
+<p>需求协商是解决利益相关者之间需求冲突的过程。通过协商，团队确保所有利益相关者的需求得到平衡，并达成一致。</p>
+<p><strong>关键活动</strong>：<strong>rank requirements and then discuss conflicts in priority</strong></p>
+<ul>
+<li><p>让利益相关者对需求进行优先级排序。</p>
+</li>
+<li><p>评估每个需求的成本和风险。</p>
+</li>
+<li><p>通过迭代方法消除、合并或修改需求，确保各方满意。</p>
+</li>
+</ul>
+<p><strong>5. 规格说明（Specification）</strong></p>
+<p>规格说明是将需求以明确的形式表达出来，可以是文档、图形模型、数学模型、使用场景或原型的组合。这个阶段的目标是确保所有需求被清晰地记录和传达。</p>
+<p><strong>关键活动</strong>：</p>
+<ul>
+<li><p>编写需求文档。</p>
+</li>
+<li><p>创建图形模型或原型。</p>
+</li>
+<li><p>确保规格说明的完整性和一致性。</p>
+</li>
+</ul>
+<p><strong>6. 验证（Validation）</strong></p>
+<p>需求验证是评估需求工程的工作产品，确保其质量和一致性。通过验证，团队确保所有需求被正确理解、记录，并且符合项目的标准和目标。</p>
+<p><strong>关键活动</strong>：</p>
+<ul>
+<li><p>进行技术评审<strong>technical review</strong>，检查需求规格说明中的错误、遗漏和不一致性。</p>
+</li>
+<li><p>确保所有需求明确、无歧义且可测试。</p>
+</li>
+<li><p>确保需求模型符合系统的信息、功能和行为。</p>
+</li>
+</ul>
+<p><strong>7. 需求管理（Requirement Management）</strong></p>
+<p>需求管理是在整个项目生命周期中识别、控制和跟踪需求及其变更的过程。由于需求在项目过程中可能会发生变化，需求管理确保这些变化被有效处理。</p>
+<p><strong>关键活动</strong>：</p>
+<ul>
+<li><p>识别和跟踪需求及其变更。</p>
+</li>
+<li><p>控制需求变更的影响。</p>
+</li>
+<li><p>使用软件配置管理（SCM）技术管理需求。</p>
+</li>
+</ul>
+<h2 id="8-2-ESTABLISHING-THE-GROUNDWORK-Inception"><a href="#8-2-ESTABLISHING-THE-GROUNDWORK-Inception" class="headerlink" title="8.2 ESTABLISHING THE GROUNDWORK(Inception)"></a>8.2 <strong>ESTABLISHING THE GROUNDWORK(Inception)</strong></h2><h3 id="8-2-1-Identifying-Stakeholders"><a href="#8-2-1-Identifying-Stakeholders" class="headerlink" title="8.2.1 Identifying Stakeholders"></a>8.2.1 <strong>Identifying Stakeholders</strong></h3><h3 id="8-2-2-Recognizing-Multiple-Viewpoints-x20"><a href="#8-2-2-Recognizing-Multiple-Viewpoints-x20" class="headerlink" title="8.2.2 Recognizing Multiple Viewpoints&#x20;"></a><strong>8.2.2 Recognizing Multiple Viewpoints&#x20;</strong></h3><h3 id="8-2-3-Working-toward-Collaboration-x20"><a href="#8-2-3-Working-toward-Collaboration-x20" class="headerlink" title="8.2.3 Working toward Collaboration&#x20;"></a><strong>8.2.3 Working toward Collaboration&#x20;</strong></h3><h3 id="8-2-4-Asking-the-First-Questions-x20"><a href="#8-2-4-Asking-the-First-Questions-x20" class="headerlink" title="8.2.4 Asking the First Questions&#x20;"></a><strong>8.2.4 Asking the First Questions&#x20;</strong></h3><h3 id="8-2-5-Nonfunctional-Requirements"><a href="#8-2-5-Nonfunctional-Requirements" class="headerlink" title="8.2.5 Nonfunctional Requirements"></a><strong>8.2.5 Nonfunctional Requirements</strong></h3><p>解释如下:</p>
+<p><strong>奠定基础（Inception）</strong></p>
+<p>在项目初始阶段，团队需要奠定基础，确保对问题、利益相关者和解决方案有清晰的理解。这个阶段的目标是为后续的需求工程活动提供坚实的基础。</p>
+<ol>
+<li><strong>识别利益相关者（Identifying Stakeholders）</strong></li>
+</ol>
+<p>利益相关者是指与系统相关的所有个人或组织，包括客户、用户、开发团队、管理层等。识别利益相关者是需求工程的第一步，确保所有相关方的需求和期望被考虑。</p>
+<p><strong>关键活动</strong>：</p>
+<ul>
+<li><p>列出所有可能的利益相关者。</p>
+</li>
+<li><p>确定每个利益相关者的角色和职责。</p>
+</li>
+<li><p>确保利益相关者参与需求定义和确认。</p>
+</li>
+</ul>
+<ul>
+<li><strong>识别多重视角（Recognizing Multiple Viewpoints）</strong></li>
+</ul>
+<p>不同的利益相关者可能对系统有不同的需求和期望。需求工程师需要识别并协调这些不同的视角，确保所有需求被充分考虑。</p>
+<p><strong>关键活动</strong>：</p>
+<ul>
+<li><p>识别每个利益相关者的需求和期望。</p>
+</li>
+<li><p>分析不同需求之间的冲突和一致性。</p>
+</li>
+<li><p>通过沟通和协商，协调多重视角。</p>
+</li>
+</ul>
+<ul>
+<li><strong>促进协作（Working toward Collaboration）</strong></li>
+</ul>
+<p>有效的沟通和协作是需求工程成功的关键。通过促进利益相关者之间的协作，团队可以确保需求被正确理解并达成一致。</p>
+<p><strong>关键活动</strong>：</p>
+<ul>
+<li><p>建立沟通渠道，确保利益相关者能够有效交流。</p>
+</li>
+<li><p>组织会议或工作坊，促进利益相关者之间的协作。</p>
+</li>
+<li><p>使用协作工具（如共享文档、原型等）帮助利益相关者表达需求。</p>
+</li>
+</ul>
+<ul>
+<li><strong>提出初步问题（Asking the First Questions）</strong></li>
+</ul>
+<p>在项目初期，提出一些关键问题，帮助团队理解项目的范围、目标和约束。这些问题为后续的需求获取和分析提供方向。</p>
+<p><strong>关键问题</strong>：</p>
+<ul>
+<li><p>项目的业务目标是什么？</p>
+</li>
+<li><p>系统的主要功能是什么？</p>
+</li>
+<li><p>项目的技术约束和限制有哪些？</p>
+</li>
+<li><p>项目的预算和时间表如何？</p>
+</li>
+</ul>
+<ul>
+<li><strong>非功能性需求（Nonfunctional Requirements）</strong></li>
+</ul>
+<p>非功能性需求描述了系统的质量属性，如性能、安全性、可用性等。这些需求通常与功能性需求分开列出，但对系统的成功同样重要。</p>
+<p><strong>常见的非功能性需求</strong>：</p>
+<ul>
+<li><p><strong>性能</strong>：系统的响应时间、吞吐量等。</p>
+</li>
+<li><p><strong>安全性</strong>：系统的数据保护、访问控制等。</p>
+</li>
+<li><p><strong>可用性</strong>：系统的易用性、用户界面设计等。</p>
+</li>
+<li><p><strong>可维护性</strong>：系统的可扩展性、可修改性等。</p>
+</li>
+<li><p><strong>可靠性</strong>：系统的容错能力、恢复能力等。</p>
+</li>
+</ul>
+<p><strong>关键活动</strong>：</p>
+<ul>
+<li><p>与利益相关者讨论并记录非功能性需求。</p>
+</li>
+<li><p>确保非功能性需求在需求规格说明中明确列出。</p>
+</li>
+<li><p>在系统设计和实现中考虑非功能性需求。</p>
+</li>
+</ul>
+<h2 id="8-5-BUILDING-THE-ANALYSIS-MODEL-elaboration"><a href="#8-5-BUILDING-THE-ANALYSIS-MODEL-elaboration" class="headerlink" title="8.5 BUILDING THE ANALYSIS MODEL(elaboration)"></a>8.5 <strong>BUILDING THE ANALYSIS MODEL(elaboration)</strong></h2><h3 id="8-5-1-Elements-of-the-Analysis-Model"><a href="#8-5-1-Elements-of-the-Analysis-Model" class="headerlink" title="8.5.1 Elements of the Analysis Model"></a>8.5.1 <strong>Elements of the Analysis Model</strong></h3><p>分析模型的目的是描述基于计算机系统的信息域、功能域和行为域。为了全面理解系统的需求，分析模型通常包括以下三类元素：</p>
+<ol>
+<li><strong>功能元素（Function Elements）</strong></li>
+</ol>
+<p>功能元素描述系统的功能，即系统需要执行的任务或操作。功能元素通常通过活动图（Activity Diagram）来表示，活动图展示了系统功能的流程和逻辑。</p>
+<p><strong>关键点</strong>：</p>
+<ul>
+<li><p>活动图描述了系统功能的业务流程。</p>
+</li>
+<li><p>每个活动代表系统中的一个功能或任务。</p>
+</li>
+<li><p>活动图帮助团队理解系统的功能需求，并识别潜在的遗漏或不一致性。</p>
+</li>
+</ul>
+<p><strong>示例</strong>：<br>在家庭安全系统中，活动图可以描述用户如何通过系统设置警报、监控传感器和接收通知。</p>
+<ul>
+<li><strong>基于类的元素（Class-based Elements）</strong></li>
+</ul>
+<p>基于类的元素描述系统的信息或数据结构，通常通过类图（Class Diagram）来表示。类图展示了系统中的类、类的属性、方法以及类之间的关系。</p>
+<p><strong>关键点</strong>：</p>
+<ul>
+<li><p>类图描述了系统的信息域，即系统中的数据结构和关系。</p>
+</li>
+<li><p>每个类代表系统中的一个实体或概念。</p>
+</li>
+<li><p>类的属性描述了实体的特征，类的方法描述了实体的行为。</p>
+</li>
+<li><p>类之间的关系（如继承、关联、聚合等）描述了实体之间的交互。</p>
+</li>
+</ul>
+<p><strong>示例</strong>：<br>在家庭安全系统中，类图可以包括“传感器”、“用户”、“警报”等类，描述这些类之间的关系和交互。</p>
+<ul>
+<li><strong>行为元素（Behavioral Elements）</strong></li>
+</ul>
+<p>行为元素描述系统的行为，即系统如何响应外部事件或用户操作。行为元素通常通过状态图（State Diagram）和时序图（Sequence Diagram）来表示。</p>
+<p><strong>状态图（State Diagram）</strong>：</p>
+<ul>
+<li><p>状态图描述了系统或系统组件的状态变化。</p>
+</li>
+<li><p>每个状态代表系统的一个行为模式，状态之间的转换由事件触发。</p>
+</li>
+<li><p>状态图帮助团队理解系统的动态行为，并识别潜在的状态冲突或不一致性。</p>
+</li>
+</ul>
+<p><strong>时序图（Sequence Diagram）</strong>：</p>
+<ul>
+<li><p>顺序图描述了系统中对象之间的交互顺序。</p>
+</li>
+<li><p>顺序图展示了对象如何通过消息传递来执行特定的功能。</p>
+</li>
+<li><p>顺序图帮助团队理解系统的交互逻辑，并识别潜在的交互问题。</p>
+</li>
+</ul>
+<p><strong>示例</strong>：<br>在家庭安全系统中，状态图可以描述系统的“待机”、“警报”、“关闭”等状态及其转换；顺序图可以描述用户如何通过系统设置警报、系统如何响应传感器事件等。</p>
+<h2 id="8-6-Negotiating-Requirements"><a href="#8-6-Negotiating-Requirements" class="headerlink" title="8.6 Negotiating Requirements"></a>8.6 <strong>Negotiating Requirements</strong></h2><p><strong>Negotiating Requirements</strong>是解决利益相关者之间需求冲突的过程。由于不同的利益相关者可能对系统有不同的需求和期望，需求协商的目标是通过协商达成一致，确保所有利益相关者的需求得到平衡。Boehm 提出了一组需求协商活动，帮助团队有效地处理需求冲突。</p>
+<ol>
+<li><strong>识别关键利益相关者（Identification of the System or Subsystem’s Key Stakeholders）</strong></li>
+</ol>
+<p>在需求协商过程中，首先需要识别系统的关键利益相关者。这些利益相关者包括客户、用户、开发团队、管理层等，他们对系统的需求和期望可能不同。</p>
+<p><strong>关键活动</strong>：</p>
+<ul>
+<li><p>列出所有与系统相关的利益相关者。</p>
+</li>
+<li><p>确定每个利益相关者的角色和职责。</p>
+</li>
+<li><p>确保关键利益相关者参与需求协商过程。</p>
+</li>
+</ul>
+<ul>
+<li><strong>确定利益相关者的“赢条件”（Determination of the Stakeholders’ “Win Conditions”）</strong></li>
+</ul>
+<p>每个利益相关者都有其“赢条件”，即他们对系统的期望和目标。需求工程师需要与利益相关者沟通，明确他们的“赢条件”。</p>
+<p><strong>关键活动</strong>：</p>
+<ul>
+<li><p>与每个利益相关者讨论他们的需求和期望。</p>
+</li>
+<li><p>记录每个利益相关者的“赢条件”。</p>
+</li>
+<li><p>确保所有“赢条件”被明确表达和理解。</p>
+</li>
+</ul>
+<ul>
+<li><strong>协商利益相关者的“赢条件”（Negotiation of the Stakeholders’ Win Conditions to Reconcile Them into a Set of Win-Win Conditions）</strong></li>
+</ul>
+<p>在明确所有利益相关者的“赢条件”后，需求工程师需要通过协商，将这些“赢条件”协调为对所有相关方（包括软件团队）都有利的“双赢条件”。协商的目标是确保每个利益相关者的核心需求得到满足，同时避免需求冲突。</p>
+<p><strong>关键活动</strong>：</p>
+<ul>
+<li><p>让利益相关者对需求进行优先级排序。</p>
+</li>
+<li><p>评估每个需求的成本、风险和技术可行性。</p>
+</li>
+<li><p>通过迭代方法消除、合并或修改需求，确保各方达成一致。</p>
+</li>
+<li><p>确保最终的需求集对所有利益相关者都是可接受的。</p>
+</li>
+</ul>
+<h2 id="8-8-VALIDATING-REQUIREMENTS-validation"><a href="#8-8-VALIDATING-REQUIREMENTS-validation" class="headerlink" title="8.8 VALIDATING REQUIREMENTS(validation)"></a>8.8 <strong>VALIDATING REQUIREMENTS(validation)</strong></h2><p>validation是评估需求工程的工作产品，确保其质量和一致性的过程。通过需求验证，团队确保所有需求被正确理解、记录，并且符合项目的标准和目标。需求验证通常在需求规格说明完成后进行，以确保需求模型的完整性和准确性。</p>
+<p><strong>需求验证的关键问题</strong></p>
+<p>在验证需求时，团队需要回答以下关键问题，以确保需求模型的质量：</p>
+<ol>
+<li><p><strong>一致性（Consistency）</strong>：</p>
+<ul>
+<li><p>每个需求是否与系统的总体目标一致？</p>
+</li>
+<li><p>是否存在需求之间的冲突或不一致？</p>
+</li>
+</ul>
+</li>
+<li><p><strong>抽象层次（Level of Abstraction）</strong>：</p>
+<ul>
+<li><p>所有需求是否在适当的抽象层次上指定？</p>
+</li>
+<li><p>是否存在过于技术化或过于抽象的需求？</p>
+</li>
+</ul>
+</li>
+<li><p><strong>必要性（Necessity）</strong>：</p>
+<ul>
+<li><p>每个需求是否真正必要，还是只是一个附加功能？</p>
+</li>
+<li><p>是否存在可以省略的非核心需求？</p>
+</li>
+</ul>
+</li>
+<li><p><strong>明确性（Clarity）</strong>：</p>
+<ul>
+<li><p>每个需求是否明确且无歧义？</p>
+</li>
+<li><p>是否存在模糊或难以理解的需求？</p>
+</li>
+</ul>
+</li>
+<li><p><strong>可追溯性（Attribution）</strong>：</p>
+<ul>
+<li><p>每个需求是否有来源（即由谁提出）？</p>
+</li>
+<li><p>是否记录了每个需求的提出者和背景？</p>
+</li>
+</ul>
+</li>
+<li><p><strong>可实现性（Achievability）</strong>：</p>
+<ul>
+<li><p>每个需求在技术环境中是否可实现？</p>
+</li>
+<li><p>是否存在技术上不可行或不切实际的需求？</p>
+</li>
+</ul>
+</li>
+<li><p><strong>可测试性（Testability）</strong>：</p>
+<ul>
+<li><p>每个需求在实现后是否可测试？</p>
+</li>
+<li><p>是否存在难以验证或测试的需求？</p>
+</li>
+</ul>
+</li>
+<li><p><strong>完整性（Completeness）</strong>：</p>
+<ul>
+<li><p>需求模型是否正确反映了系统的信息、功能和行为？</p>
+</li>
+<li><p>是否存在遗漏的需求或功能？</p>
+</li>
+</ul>
+</li>
+<li><p><strong>分区性（Partitioning）</strong>：</p>
+<ul>
+<li><p>需求模型是否以逐步揭示更多细节的方式划分？</p>
+</li>
+<li><p>是否存在过于复杂或难以理解的需求分区？</p>
+</li>
+</ul>
+</li>
+<li><p><strong>模式使用（Pattern Usage）</strong>：</p>
+<ul>
+<li><p>是否使用了需求模式来简化需求模型？</p>
+</li>
+<li><p>所有模式是否经过验证并与客户需求一致？</p>
+</li>
+</ul>
+</li>
+</ol>
+<h1 id="第9章-REQUIREMENTS-MODELING-SCENARIO-BASED-METHODS"><a href="#第9章-REQUIREMENTS-MODELING-SCENARIO-BASED-METHODS" class="headerlink" title="第9章 REQUIREMENTS MODELING:SCENARIO BASED METHODS"></a>第9章 <strong>REQUIREMENTS MODELING:SCENARIO BASED METHODS</strong></h1><p>9.1(9.1.1~9.1.4),9.3(9.3.1~9.3.2很重要)</p>
+<h2 id="9-1-REQUIREMENTS-ANALYSIS"><a href="#9-1-REQUIREMENTS-ANALYSIS" class="headerlink" title="9.1 REQUIREMENTS ANALYSIS"></a>9.1 <strong>REQUIREMENTS ANALYSIS</strong></h2><p>需求分析的目标是通过建模技术，帮助团队理解系统的需求，并为后续的设计和实现提供基础。需求分析的结果通常包括以下几种模型：</p>
+<ol>
+<li><p><strong>基于场景的模型（Scenario-based Models）</strong>：从系统“参与者”的角度描述需求。</p>
+</li>
+<li><p><strong>类模型或数据模型（Class-oriented Models or Data Models）</strong>：描述问题的信息域，表示面向对象的类及其属性和操作。</p>
+</li>
+<li><p><strong>行为模型（Behavioral Models）</strong>：描述软件如何响应外部事件。</p>
+</li>
+<li><p><strong>功能模型或流模型（Function Models or Flow-oriented Models）</strong>：表示系统的功能元素及其如何转换数据。</p>
+</li>
+</ol>
+<h3 id="9-1-1-Overall-Objectives-and-Philosophy（总体目标和理念）"><a href="#9-1-1-Overall-Objectives-and-Philosophy（总体目标和理念）" class="headerlink" title="9.1.1 Overall Objectives and Philosophy（总体目标和理念）"></a>9.1.1 <strong>Overall Objectives and Philosophy（总体目标和理念）</strong></h3><p>需求模型必须实现三个主要目标：</p>
+<ol>
+<li><p><strong>描述客户的需求</strong>。</p>
+</li>
+<li><p><strong>为软件设计奠定基础</strong>。</p>
+</li>
+<li><p><strong>定义一组可以在软件构建后验证的需求</strong>。</p>
+</li>
+</ol>
+<p>需求模型是系统描述和设计模型之间的桥梁，分析和设计任务之间的界限并不总是清晰的，<strong>分析过程中可能会涉及一些设计，设计过程中也可能会进行一些分析。</strong></p>
+<h3 id="9-1-2-Analysis-Rules-of-Thumb-分析经验法则"><a href="#9-1-2-Analysis-Rules-of-Thumb-分析经验法则" class="headerlink" title="9.1.2 Analysis Rules of Thumb(分析经验法则)"></a>9.1.2 <strong>Analysis Rules of Thumb(分析经验法则)</strong></h3><p>Arlow 和 Neustadt 提出了一些在创建分析模型时应遵循的经验法则：</p>
+<ol>
+<li><p><strong>模型应关注问题或业务域中可见的需求</strong>，抽象层次应相对较高。</p>
+</li>
+<li><p><strong>需求模型的每个元素都应增加对软件需求的整体理解</strong>，并提供对信息域、功能和行为的洞察。</p>
+</li>
+<li><p><strong>延迟考虑基础设施和其他非功能性模型，直到设计阶段</strong>。</p>
+</li>
+<li><p><strong>尽量减少系统中的耦合</strong>。</p>
+</li>
+<li><p><strong>确保需求模型为所有利益相关者提供价值</strong>。</p>
+</li>
+<li><p><strong>保持模型尽可能简单</strong>。</p>
+</li>
+</ol>
+<h3 id="9-1-3-Domain-Analysis"><a href="#9-1-3-Domain-Analysis" class="headerlink" title="9.1.3 Domain Analysis"></a>9.1.3 <strong>Domain Analysis</strong></h3><p><strong>Domain Analysis&#x20;</strong>&#x7684;目标是找到或创建广泛适用的<strong>分析类</strong>和&#x2F;或<strong>分析模式</strong>，以便它们可以被重用。领域分析是软件过程中的一项持续性活动，不局限于某一个软件项目。</p>
+<p><strong>领域分析师的角色是发现和定义分析模式、分析类以及相关信息，供许多从事类似应用的人使用。</strong></p>
+<p><img src="/2025/01/01/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/image.png"></p>
+<h3 id="9-1-4-Requirements-Modeling-Approaches"><a href="#9-1-4-Requirements-Modeling-Approaches" class="headerlink" title="9.1.4 Requirements Modeling Approaches"></a>9.1.4 <strong>Requirements Modeling Approaches</strong></h3><ol>
+<li><strong>结构化分析（Structured Analysis）</strong></li>
+</ol>
+<p>结构化分析是一种传统的需求建模方法，它将数据和转换数据的过程视为独立的实体。结构化分析的核心思想是通过数据流图（Data Flow Diagrams, DFD）和实体关系图（Entity-Relationship Diagrams, ERD）等工具，描述系统中的数据流动和处理过程。</p>
+<p><strong>特点</strong>：</p>
+<ul>
+<li><p><strong>数据与过程分离</strong>：数据流图描述数据在系统中的流动，而实体关系图描述数据的结构。</p>
+</li>
+<li><p><strong>层次化分解</strong>：通过层次化的数据流图，逐步分解系统的功能。</p>
+</li>
+<li><p><strong>较少使用</strong>：随着面向对象方法的普及，结构化分析的使用逐渐减少。</p>
+</li>
+</ul>
+<p><strong>适用场景</strong>：</p>
+<ul>
+<li><p>适用于数据密集型系统，如数据库管理系统。</p>
+</li>
+<li><p>适合需要明确数据流动和处理逻辑的项目。</p>
+</li>
+</ul>
+<ul>
+<li><strong>&#x20;面向对象分析（Object-Oriented Analysis）</strong></li>
+</ul>
+<p>面向对象分析是一种现代的需求建模方法，它关注类的定义以及它们如何协作以实现客户需求。面向对象分析的核心思想是通过类图（Class Diagrams）、用例图（Use Case Diagrams）等工具，描述系统中的对象及其交互。</p>
+<p><strong>特点</strong>：</p>
+<ul>
+<li><p><strong>类与对象</strong>：类图描述系统中的类及其属性、方法和关系。</p>
+</li>
+<li><p><strong>用例驱动</strong>：用例图描述系统与外部参与者之间的交互。</p>
+</li>
+<li><p><strong>行为建模</strong>：通过状态图（State Diagrams）和顺序图（Sequence Diagrams）描述系统的行为。</p>
+</li>
+<li><p><strong>广泛使用</strong>：UML（统一建模语言）和统一过程（Unified Process）主要采用面向对象分析。</p>
+</li>
+</ul>
+<p><strong>适用场景</strong>：</p>
+<ul>
+<li><p>适用于复杂的、交互密集的系统，如现代软件应用。</p>
+</li>
+<li><p>适合需要高复用性和扩展性的项目。</p>
+</li>
+</ul>
+<p><img src="/2025/01/01/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/image-2.png"></p>
+<p>需求模型的每个元素（如上图所示）从不同的角度呈现问题。<strong>基于场景的元素</strong>描述了用户如何与系统交互，以及在使用软件时发生的具体活动序列。<strong>基于类的元素</strong>建模了系统将操作的对象、应用于这些对象的操作以实现操作、对象之间的关系（有些是层次化的），以及定义的类之间的协作。<strong>行为元素</strong>描述了外部事件如何改变系统或类内部的状态。最后，<strong>功能建模</strong>将系统表示为信息转换，描述了数据对象在流经各种系统功能时如何被转换。</p>
+<h2 id="9-3-UML-MODELS-THAT-SUPPLEMENT-THE-USE-CASE"><a href="#9-3-UML-MODELS-THAT-SUPPLEMENT-THE-USE-CASE" class="headerlink" title="9.3 UML MODELS THAT SUPPLEMENT THE USE CASE"></a>9.3 <strong>UML MODELS THAT SUPPLEMENT THE USE CASE</strong></h2><h3 id="9-3-1-Developing-an-Activity-Diagram"><a href="#9-3-1-Developing-an-Activity-Diagram" class="headerlink" title="9.3.1 Developing an Activity Diagram"></a>9.3.1 <strong>Developing an Activity Diagram</strong></h3><h3 id="9-3-2-Swimlane-Diagrams"><a href="#9-3-2-Swimlane-Diagrams" class="headerlink" title="9.3.2 Swimlane Diagrams"></a>9.3.2 <strong>Swimlane Diagrams</strong></h3><h1 id="第10章-REQUIREMENTS-MODELING-CLASS-BASED-METHODS"><a href="#第10章-REQUIREMENTS-MODELING-CLASS-BASED-METHODS" class="headerlink" title="第10章 REQUIREMENTS MODELING: CLASS-BASED METHODS"></a>第10章 <strong>REQUIREMENTS MODELING: CLASS-BASED METHODS</strong></h1><p>10.1,10.2,10.3,10.4,10.5,10.6</p>
+<h3 id="10-1-识别分析类（Identifying-Analysis-Classes）"><a href="#10-1-识别分析类（Identifying-Analysis-Classes）" class="headerlink" title="10.1 识别分析类（Identifying Analysis Classes）"></a><strong>10.1 识别分析类（Identifying Analysis Classes）</strong></h3><p>分析类是需求建模的基础，通常通过以下步骤识别：</p>
+<ol>
+<li><p><strong>从用例中提取名词</strong>：通过分析用例场景，提取名词或名词短语作为潜在的类。</p>
+</li>
+<li><p><strong>分类潜在类</strong>：将潜在类分为以下几类：</p>
+<ul>
+<li><p><strong>外部实体</strong>（如其他系统、设备、人）。</p>
+</li>
+<li><p><strong>事物</strong>（如报告、显示、信号）。</p>
+</li>
+<li><p><strong>事件或发生</strong>（如属性转移、机器人动作完成）。</p>
+</li>
+<li><p><strong>角色</strong>（如经理、工程师、销售人员）。</p>
+</li>
+<li><p><strong>组织单位</strong>（如部门、团队）。</p>
+</li>
+<li><p><strong>地点</strong>（如制造车间、装货码头）。</p>
+</li>
+<li><p><strong>结构</strong>（如传感器、车辆、计算机）。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>筛选类</strong>：使用Coad和Yourdon提出的六个特征来筛选潜在类：</p>
+<ul>
+<li><p><strong>保留信息</strong>：类是否需要存储信息以支持系统功能。</p>
+</li>
+<li><p><strong>所需服务</strong>：类是否有可识别的操作来改变其属性。</p>
+</li>
+<li><p><strong>多个属性</strong>：类是否具有多个属性。</p>
+</li>
+<li><p><strong>共同属性</strong>：类是否有一组适用于所有实例的属性。</p>
+</li>
+<li><p><strong>共同操作</strong>：类是否有一组适用于所有实例的操作。</p>
+</li>
+<li><p><strong>基本需求</strong>：类是否是问题空间中的外部实体，对系统操作至关重要。</p>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="10-2-指定属性（Specifying-Attributes）"><a href="#10-2-指定属性（Specifying-Attributes）" class="headerlink" title="10.2 指定属性（Specifying Attributes）"></a><strong>10.2 指定属性（Specifying Attributes）</strong></h3><p>属性是类的特征，用于描述类的状态。指定属性的步骤如下：</p>
+<ol>
+<li><p><strong>从用例中提取属性</strong>：分析用例，选择属于类的“事物”。</p>
+</li>
+<li><p><strong>定义复合数据项</strong>：将相关的数据项组合成复合属性。例如，系统的“识别信息”可以包括系统ID、验证电话号码和系统状态。</p>
+</li>
+</ol>
+<h3 id="10-3-定义操作（Defining-Operations）"><a href="#10-3-定义操作（Defining-Operations）" class="headerlink" title="10.3 定义操作（Defining Operations）"></a><strong>10.3 定义操作（Defining Operations）</strong></h3><p>操作定义了类的行为，通常分为四类：</p>
+<ol>
+<li><p><strong>数据操作</strong>：如添加、删除、格式化数据。</p>
+</li>
+<li><p><strong>计算操作</strong>：执行某种计算。</p>
+</li>
+<li><p><strong>查询操作</strong>：查询对象的状态。</p>
+</li>
+<li><p><strong>监控操作</strong>：监控对象以检测控制事件的发生。<br>通过分析用例中的动词，可以识别类的操作。例如，“传感器被分配编号和类型”表明<code>Sensor</code>类需要<code>assign()</code>操作。</p>
+</li>
+</ol>
+<h3 id="10-4-类-责任-协作者模型（CRC-Modeling）"><a href="#10-4-类-责任-协作者模型（CRC-Modeling）" class="headerlink" title="10.4 类-责任-协作者模型（CRC Modeling）"></a><strong>10.4 类-责任-协作者模型（CRC Modeling）</strong></h3><p>CRC模型通过索引卡的形式表示类及其责任和协作者：</p>
+<ol>
+<li><p><strong>责任（Responsibilities）</strong>：类的属性和操作。</p>
+</li>
+<li><p><strong>协作者（Collaborators）</strong>：类完成责任所需的其他类。<br>CRC模型帮助团队理解类之间的关系，并确保系统智能均匀分布。</p>
+</li>
+</ol>
+<p><strong>类的分类</strong>：</p>
+<ol>
+<li><p><strong>实体类（Entity Classes）</strong>：直接从问题陈述中提取，通常表示需要存储在数据库中的事物。</p>
+</li>
+<li><p><strong>边界类（Boundary Classes）</strong>：用于创建用户界面，管理实体对象的表示。</p>
+</li>
+<li><p><strong>控制类（Controller Classes）</strong>：管理“工作单元”，负责创建或更新实体对象、实例化边界对象、处理复杂通信和数据验证。</p>
+</li>
+</ol>
+<p><strong>分配责任的指南</strong>：</p>
+<ol>
+<li><p><strong>系统智能应均匀分布</strong>：避免某个类承担过多责任。</p>
+</li>
+<li><p><strong>责任应尽可能通用</strong>：通用责任应位于类层次结构的高层。</p>
+</li>
+<li><p><strong>信息与行为应封装在一起</strong>：数据及其操作应封装在同一个类中。</p>
+</li>
+<li><p><strong>信息应局部化</strong>：特定类型的信息应由单个类管理，避免分散。</p>
+</li>
+<li><p><strong>责任应在相关类之间共享</strong>：当多个相关类需要相同行为时，责任应共享。</p>
+</li>
+</ol>
+<p><strong>识别协作者</strong>：</p>
+<ol>
+<li><p><strong>部分关系（is-part-of）</strong>：类是否是另一个类的组成部分。</p>
+</li>
+<li><p><strong>知识关系（has-knowledge-of）</strong>：类是否需要从另一个类获取信息。</p>
+</li>
+<li><p><strong>依赖关系（depends-upon）</strong>：类是否依赖于另一个类。</p>
+</li>
+</ol>
+<h3 id="10-5-关联与依赖（Associations-and-Dependencies）"><a href="#10-5-关联与依赖（Associations-and-Dependencies）" class="headerlink" title="10.5 关联与依赖（Associations and Dependencies）"></a><strong>10.5 关联与依赖（Associations and Dependencies）</strong></h3><p>类之间的关系可以通过关联和依赖来表示：</p>
+<ol>
+<li><p><strong>关联（Associations）</strong>：表示类之间的静态关系，可以通过多重性（如1..*表示“一个或多个”）进一步定义。</p>
+</li>
+<li><p><strong>依赖（Dependencies）</strong>：表示类之间的动态关系，通常用于客户端-服务器关系。</p>
+</li>
+</ol>
+<h3 id="10-6-分析包（Analysis-Packages）"><a href="#10-6-分析包（Analysis-Packages）" class="headerlink" title="10.6 分析包（Analysis Packages）"></a><strong>10.6 分析包（Analysis Packages）</strong></h3><p>分析包用于对需求模型中的元素（如用例、分析类）进行分类和分组，以便在大型系统中更易于管理。例如，视频游戏的分析包可以包括“环境”、“角色”和“规则”等类别。</p>
+<h1 id="第11章"><a href="#第11章" class="headerlink" title="第11章"></a>第11章</h1><p>11.1,11.2,11.3,11.4,11.5(11.5.3~11.5.8)</p>
+<p>&#x20;</p>
+<h1 id="第12章"><a href="#第12章" class="headerlink" title="第12章"></a>第12章</h1><p>12.1,12.2(尤其是12.2.1，12.2.3),12.3(12.3.1~12.3.8,12.3.10,12.3.12(重点))</p>
+<p>&#x20;</p>
+<p><img src="/2025/01/01/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/image-4.png"></p>
+<p><img src="/2025/01/01/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/5d7236dcf138099c23d43183cd9ab91.jpg"></p>
+<ul>
+<li><p>最后一层应当是Design Class Diagram Design（得到分析类图，作为数据库设计基础）</p>
+</li>
+<li><p>倒数第二层是Software Architectural Design（属于architectural design，即概要设计）</p>
+</li>
+<li><p>完成体系结构设计后可以涉及到技术栈了（例如controller类设计）</p>
+</li>
+<li><p>接口设计时参考时序图（涉及到类之间接口）和状态图（涉及类内接口）</p>
+</li>
+<li><p>组件设计参考状态图（定义了内部方法）、时序图（如何跟其他类协作）、类图</p>
+</li>
+</ul>
+<p><strong>衡量设计质量的属性(FURPS)</strong></p>
+<ol>
+<li><p>Functionality：系统功能是否满足了需求</p>
+</li>
+<li><p>Usability：是否有设计感、导航一致性、使用说明或提示</p>
+</li>
+<li><p>Reliability：是否能平稳运行（MTTF）</p>
+</li>
+<li><p>Performance：性能是否达标（运行速度、响应时间、资源消耗、效率）</p>
+<ul>
+<li>影响因素：类方法数据结构不合适、数据库设计索引太多、类接口参数太复杂、体系结构设计不好、硬件确实不行</li>
+</ul>
+</li>
+<li><p>Supportability：包括可扩展性、可移植性、可服务性</p>
+</li>
+</ol>
+<p>对不同的系统，侧重的属性不同。</p>
+<h3 id="12-3-12-设计类（Design-Classes）-x20"><a href="#12-3-12-设计类（Design-Classes）-x20" class="headerlink" title="12.3.12 设计类（Design Classes）&#x20;"></a><strong>12.3.12 设计类（Design Classes）</strong>&#x20;</h3><p>是面向对象设计中的一个重要概念，用于将分析类（Analysis Classes）细化为可实现的类，为编码提供详细的指导。以下是这一部分的详细介绍：</p>
+<ol>
+<li><strong>设计类的定义</strong></li>
+</ol>
+<p>设计类是从分析类细化而来的，包含了更多的实现细节，用于指导编码。设计类不仅描述了类的属性和操作，还定义了类的接口、数据结构、算法等。</p>
+<ul>
+<li><strong>设计类的类型</strong></li>
+</ul>
+<p>在面向对象设计中，设计类通常分为以下五种类型，每种类型代表设计架构中的不同层次：</p>
+<ol>
+<li><strong>业务域类（Business Domain Classes）</strong></li>
+</ol>
+<ul>
+<li><p><strong>定义</strong>：也称为实体类（Entity Classes），用于实现业务逻辑。</p>
+</li>
+<li><p><strong>职责</strong>：封装业务数据和行为，通常与数据库交互。</p>
+</li>
+<li><p><strong>示例</strong>：在图书馆管理系统中，<code>Book</code> 类和 <code>Reader</code> 类是业务域类。</p>
+</li>
+</ul>
+<ul>
+<li><strong>用户界面类（User Interface Classes）</strong></li>
+</ul>
+<ul>
+<li><p><strong>定义</strong>：也称为边界类（Boundary Classes），用于实现用户与系统的交互。</p>
+</li>
+<li><p><strong>职责</strong>：处理用户输入和输出，通常与用户界面相关。</p>
+</li>
+<li><p><strong>示例</strong>：在图书馆管理系统中，<code>LoginScreen</code> 类和 <code>SearchForm</code> 类是用户界面类。</p>
+</li>
+</ul>
+<ul>
+<li><strong>过程类（Process Classes）</strong></li>
+</ul>
+<ul>
+<li><p><strong>定义</strong>：也称为控制类（Control Classes），用于实现业务逻辑的控制流程。</p>
+</li>
+<li><p><strong>职责</strong>：协调业务域类之间的交互，处理复杂的业务逻辑。</p>
+</li>
+<li><p><strong>示例</strong>：在图书馆管理系统中，<code>BorrowProcess</code> 类和 <code>ReturnProcess</code> 类是过程类。</p>
+</li>
+</ul>
+<ul>
+<li><strong>持久化类（Persistent Classes）</strong></li>
+</ul>
+<ul>
+<li><p><strong>定义</strong>：用于实现数据的持久化存储，通常与数据库交互。</p>
+</li>
+<li><p><strong>职责</strong>：封装数据的存储和检索逻辑。</p>
+</li>
+<li><p><strong>示例</strong>：在图书馆管理系统中，<code>BookDAO</code> 类和 <code>ReaderDAO</code> 类是持久化类。</p>
+</li>
+</ul>
+<ul>
+<li><strong>系统类（System Classes）</strong></li>
+</ul>
+<ul>
+<li><p><strong>定义</strong>：用于实现系统管理和控制功能。</p>
+</li>
+<li><p><strong>职责</strong>：处理系统级别的任务，如日志记录、异常处理、通信等。</p>
+</li>
+<li><p><strong>示例</strong>：在图书馆管理系统中，<code>Logger</code> 类和 <code>ExceptionHandler</code> 类是系统类。</p>
+</li>
+</ul>
+<p><strong>设计类的特征</strong></p>
+<p>为了确保设计类的质量，Arlow 和 Neustadt 提出了设计类的四个特征：</p>
+<ol>
+<li><strong>完整性和充分性（Complete and Sufficient）</strong></li>
+</ol>
+<ul>
+<li><p><strong>定义</strong>：设计类应完整封装所有相关的属性和方法，确保类的功能完备。</p>
+</li>
+<li><p><strong>示例</strong>：<code>Book</code> 类应包含所有与图书相关的属性和方法，如 <code>title</code>、<code>author</code>、<code>borrow()</code> 等。</p>
+</li>
+</ul>
+<ul>
+<li><strong>原始性（Primitiveness）</strong></li>
+</ul>
+<ul>
+<li><p><strong>定义</strong>：类的方法应专注于完成单一服务，避免提供多种方式实现相同功能。</p>
+</li>
+<li><p><strong>示例</strong>：<code>Book</code> 类的 <code>borrow()</code> 方法应只负责借书操作，不应包含还书逻辑。</p>
+</li>
+</ul>
+<ul>
+<li><strong>高内聚（High Cohesion）</strong></li>
+</ul>
+<ul>
+<li><p><strong>定义</strong>：类应具有明确的责任，所有属性和方法应紧密相关。</p>
+</li>
+<li><p><strong>示例</strong>：<code>Book</code> 类的所有方法都应围绕图书的管理操作，如借书、还书、查询等。</p>
+</li>
+</ul>
+<ul>
+<li><strong>低耦合（Low Coupling）</strong></li>
+</ul>
+<ul>
+<li><p><strong>定义</strong>：类之间的依赖应尽量减少，确保类的独立性。</p>
+</li>
+<li><p><strong>示例</strong>：<code>Book</code> 类与 <code>Reader</code> 类之间的交互应通过定义良好的接口进行，避免直接依赖。</p>
+</li>
+</ul>
+<p><strong>设计类的设计步骤</strong></p>
+<ul>
+<li><p><strong>从分析类到设计类</strong>：将分析类细化为设计类，添加实现细节。</p>
+</li>
+<li><p><strong>定义接口</strong>：明确类的接口，确保接口是高内聚的。</p>
+</li>
+<li><p><strong>设计数据结构</strong>：定义类的属性及其数据类型。</p>
+</li>
+<li><p><strong>实现算法</strong>：描述类的方法的处理逻辑，使用伪代码或活动图。</p>
+</li>
+<li><p><strong>优化设计</strong>：通过重构和迭代优化设计类，确保其满足质量特征。</p>
+</li>
+</ul>
+<p><strong>设计类的示例</strong></p>
+<p>以图书馆管理系统为例：</p>
+<ul>
+<li><p><strong>业务域类</strong>：<code>Book</code> 类（图书）、<code>Reader</code> 类（读者）。</p>
+</li>
+<li><p><strong>用户界面类</strong>：<code>LoginScreen</code> 类（登录界面）、<code>SearchForm</code> 类（搜索表单）。</p>
+</li>
+<li><p><strong>过程类</strong>：<code>BorrowProcess</code> 类（借书流程）、<code>ReturnProcess</code> 类（还书流程）。</p>
+</li>
+<li><p><strong>持久化类</strong>：<code>BookDAO</code> 类（图书数据访问）、<code>ReaderDAO</code> 类（读者数据访问）。</p>
+</li>
+<li><p><strong>系统类</strong>：<code>Logger</code> 类（日志记录）、<code>ExceptionHandler</code> 类（异常处理）。</p>
+</li>
+</ul>
+<h1 id="第13章"><a href="#第13章" class="headerlink" title="第13章"></a>第13章</h1><p>13.1.1,13.1.2,13.2,13.3.1,13.6(13.6.1重点)</p>
+<p>&#x20;</p>
+<h1 id="第14章"><a href="#第14章" class="headerlink" title="第14章"></a>第14章</h1><p>14.1.1,14.1.2,14.3（重中之重）</p>
+<h2 id="14-3-组件级设计的定义"><a href="#14-3-组件级设计的定义" class="headerlink" title="14.3 组件级设计的定义"></a>14.3 <strong>组件级设计的定义</strong></h2><ol>
+<li><strong>组件级设计的定义</strong></li>
+</ol>
+<p>组件级设计是对软件架构中的每个组件进行详细设计的过程，包括：</p>
+<ul>
+<li><p><strong>Data Structures（数据结构）</strong>：定义组件内部的数据结构。</p>
+</li>
+<li><p><strong>Algorithms（算法）</strong>：描述组件内部的处理逻辑。</p>
+</li>
+<li><p><strong>Interfaces（接口）</strong>：定义组件与其他组件或外部系统的交互方式。</p>
+</li>
+<li><p><strong>Communication Mechanisms（通信机制）</strong>：描述组件之间的通信方式。</p>
+</li>
+</ul>
+<ul>
+<li><strong>组件级设计的输入</strong></li>
+</ul>
+<ul>
+<li><p><strong>Requirements Model（需求模型）</strong>：包括用例、类图、状态图等，描述系统的功能和行为。</p>
+</li>
+<li><p><strong>Architectural Model（架构模型）</strong>：包括系统架构图、模块划分等，描述系统的整体结构。</p>
+</li>
+</ul>
+<ul>
+<li><strong>组件级设计的输出</strong></li>
+</ul>
+<ul>
+<li><p><strong>Component Design Document（组件设计文档）</strong>：包括组件的接口、属性、操作、数据结构、算法等详细描述。</p>
+</li>
+<li><p><strong>Design Diagrams（设计图）</strong>：如类图、序列图、活动图等，用于表示组件的内部结构和行为。</p>
+</li>
+</ul>
+<ul>
+<li><strong>组件级设计的步骤</strong></li>
+</ul>
+<h4 id="Step-1-Identify-Design-Classes-Related-to-the-Problem-Domain（识别与问题域相关的设计类）"><a href="#Step-1-Identify-Design-Classes-Related-to-the-Problem-Domain（识别与问题域相关的设计类）" class="headerlink" title="Step 1: Identify Design Classes Related to the Problem Domain（识别与问题域相关的设计类）"></a><strong>Step 1: Identify Design Classes Related to the Problem Domain（识别与问题域相关的设计类）</strong></h4><ul>
+<li><p><strong>任务</strong>：从需求模型和架构模型中识别出与问题域相关的设计类。</p>
+</li>
+<li><p><strong>方法</strong>：通过分析用例、类图和协作图，确定需要设计的类。</p>
+</li>
+<li><p><strong>输出</strong>：问题域设计类列表。</p>
+</li>
+</ul>
+<h4 id="Step-2-Identify-Design-Classes-Related-to-the-Infrastructure-Domain（识别与基础设施域相关的设计类）"><a href="#Step-2-Identify-Design-Classes-Related-to-the-Infrastructure-Domain（识别与基础设施域相关的设计类）" class="headerlink" title="Step 2: Identify Design Classes Related to the Infrastructure Domain（识别与基础设施域相关的设计类）"></a><strong>Step 2: Identify Design Classes Related to the Infrastructure Domain（识别与基础设施域相关的设计类）</strong></h4><ul>
+<li><p><strong>任务</strong>：识别与基础设施相关的设计类，如用户界面类、数据库管理类等。</p>
+</li>
+<li><p><strong>方法</strong>：分析系统的非功能性需求，确定需要的基础设施类。</p>
+</li>
+<li><p><strong>输出</strong>：基础设施域设计类列表。</p>
+</li>
+</ul>
+<h4 id="Step-3-Elaborate-Non-Reusable-Design-Classes（细化非可重用组件的设计类）"><a href="#Step-3-Elaborate-Non-Reusable-Design-Classes（细化非可重用组件的设计类）" class="headerlink" title="Step 3: Elaborate Non-Reusable Design Classes（细化非可重用组件的设计类）"></a><strong>Step 3: Elaborate Non-Reusable Design Classes（细化非可重用组件的设计类）</strong></h4><ul>
+<li><p><strong>任务</strong>：详细描述每个设计类的接口、属性和操作。</p>
+</li>
+<li><p><strong>方法</strong>：使用 UML 类图、序列图等工具，细化类的设计。</p>
+</li>
+<li><p><strong>子步骤</strong>：</p>
+<ul>
+<li><p><strong>Step 3a: Specify Message Details（指定消息细节）</strong>：使用协作图或序列图描述对象之间的消息传递。</p>
+</li>
+<li><p><strong>Step 3b: Identify Component Interfaces（识别组件的接口）</strong>：定义组件的接口，确保接口是高内聚的。</p>
+</li>
+<li><p><strong>Step 3c: Elaborate Attributes and Data Structures（细化属性和数据结构）</strong>：详细描述每个属性的数据类型和数据结构。</p>
+</li>
+<li><p><strong>Step 3d: Describe Operation Processing Flow（描述操作的处理流程）</strong>：使用伪代码或 UML 活动图描述操作的算法。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>输出</strong>：详细的设计类文档。</p>
+</li>
+</ul>
+<h4 id="Step-4-Describe-Persistent-Data-Sources（描述持久化数据源）"><a href="#Step-4-Describe-Persistent-Data-Sources（描述持久化数据源）" class="headerlink" title="Step 4: Describe Persistent Data Sources（描述持久化数据源）"></a><strong>Step 4: Describe Persistent Data Sources（描述持久化数据源）</strong></h4><ul>
+<li><p><strong>任务</strong>：详细描述数据库和文件的结构，并识别管理它们的类。</p>
+</li>
+<li><p><strong>方法</strong>：分析系统的数据需求，设计数据库表和文件结构。</p>
+</li>
+<li><p><strong>输出</strong>：持久化数据源设计文档。</p>
+</li>
+</ul>
+<h4 id="Step-5-Develop-Behavioral-Representations（开发行为表示）"><a href="#Step-5-Develop-Behavioral-Representations（开发行为表示）" class="headerlink" title="Step 5: Develop Behavioral Representations（开发行为表示）"></a><strong>Step 5: Develop Behavioral Representations（开发行为表示）</strong></h4><ul>
+<li><p><strong>任务</strong>：使用 UML 状态图描述类的行为。</p>
+</li>
+<li><p><strong>方法</strong>：分析类的生命周期和状态转换，绘制状态图。</p>
+</li>
+<li><p><strong>输出</strong>：类的状态图。</p>
+</li>
+</ul>
+<h4 id="Step-6-Refine-Deployment-Diagrams（细化部署图）"><a href="#Step-6-Refine-Deployment-Diagrams（细化部署图）" class="headerlink" title="Step 6: Refine Deployment Diagrams（细化部署图）"></a><strong>Step 6: Refine Deployment Diagrams（细化部署图）</strong></h4><ul>
+<li><p><strong>任务</strong>：描述组件在计算环境中的位置。</p>
+</li>
+<li><p><strong>方法</strong>：使用 UML 部署图表示组件的部署位置。</p>
+</li>
+<li><p><strong>输出</strong>：部署图。</p>
+</li>
+</ul>
+<h4 id="Step-7-Refactor-Design-Representations（重构设计表示）"><a href="#Step-7-Refactor-Design-Representations（重构设计表示）" class="headerlink" title="Step 7: Refactor Design Representations（重构设计表示）"></a><strong>Step 7: Refactor Design Representations（重构设计表示）</strong></h4><ul>
+<li><p><strong>任务</strong>：通过迭代和重构优化设计模型。</p>
+</li>
+<li><p><strong>方法</strong>：检查设计的完整性、一致性和准确性，进行必要的调整。</p>
+</li>
+<li><p><strong>输出</strong>：优化后的设计模型。</p>
+</li>
+</ul>
+<ul>
+<li><strong>组件级设计的关键原则</strong></li>
+</ul>
+<ul>
+<li><p><strong>High Cohesion（高内聚）</strong>：组件内部的元素应紧密相关，完成单一功能。</p>
+</li>
+<li><p><strong>Low Coupling（低耦合）</strong>：组件之间的依赖应尽量减少，确保组件的独立性。</p>
+</li>
+<li><p><strong>Information Hiding（信息隐藏）</strong>：组件的内部实现细节应对其他组件隐藏，只暴露必要的接口。</p>
+</li>
+<li><p><strong>Functional Independence（功能独立性）</strong>：组件应具有独立的功能，便于复用和维护。</p>
+</li>
+</ul>
+<ul>
+<li><strong>组件级设计的工具</strong></li>
+</ul>
+<ul>
+<li><p><strong>UML Class Diagrams（UML 类图）</strong>：用于表示类的属性和操作。</p>
+</li>
+<li><p><strong>UML Sequence Diagrams（UML 序列图）</strong>：用于表示对象之间的消息传递。</p>
+</li>
+<li><p><strong>UML Activity Diagrams（UML 活动图）</strong>：用于描述操作的流程。</p>
+</li>
+<li><p><strong>UML State Diagrams（UML 状态图）</strong>：用于表示类的状态转换。</p>
+</li>
+<li><p><strong>Pseudocode（伪代码）</strong>：用于描述算法的逻辑。</p>
+</li>
+</ul>
+<ul>
+<li><strong>组件级设计的输出示例</strong></li>
+</ul>
+<ul>
+<li><p><strong>Class Diagrams（类图）</strong>：表示类的属性和操作。</p>
+</li>
+<li><p><strong>Sequence Diagrams（序列图）</strong>：表示对象之间的交互。</p>
+</li>
+<li><p><strong>Activity Diagrams（活动图）</strong>：表示操作的流程。</p>
+</li>
+<li><p><strong>State Diagrams（状态图）</strong>：表示类的状态转换。</p>
+</li>
+<li><p><strong>Design Documents（设计文档）</strong>：详细描述组件的接口、属性、操作、数据结构和算法。</p>
+</li>
+</ul>
+<p><strong>总结</strong></p>
+<p><strong>14.3 进行组件级设计</strong> 是软件设计过程中的关键阶段，通过详细设计每个组件的内部结构、行为和接口，为编码和测试提供指导。其核心步骤包括：</p>
+<ul>
+<li><p><strong>Identifying Design Classes（识别设计类）</strong>：从需求模型和架构模型中识别问题域和基础设施域的设计类。</p>
+</li>
+<li><p><strong>Elaborating Design Classes（细化设计类）</strong>：详细描述每个设计类的接口、属性、操作、数据结构和算法。</p>
+</li>
+<li><p><strong>Describing Persistent Data Sources（描述持久化数据源）</strong>：设计数据库和文件结构。</p>
+</li>
+<li><p><strong>Developing Behavioral Representations（开发行为表示）</strong>：使用状态图描述类的行为。</p>
+</li>
+<li><p><strong>Refining Deployment Diagrams（细化部署图）</strong>：描述组件在计算环境中的位置。</p>
+</li>
+<li><p><strong>Refactoring Design Representations（重构设计表示）</strong>：通过迭代和重构优化设计模型。</p>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://bshtj.github.io">bshtj</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://bshtj.github.io/2025/01/01/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/">https://bshtj.github.io/2025/01/01/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://bshtj.github.io" target="_blank">bshtj_blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/">软件工程</a><a class="post-meta__tags" href="/tags/%E6%95%8F%E6%8D%B7%E5%BC%80%E5%8F%91/">敏捷开发</a></div><div class="post-share"><div class="social-share" data-image="/2025/01/01/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/baike.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2024/12/26/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/" title="软件设计模式期末复习"><img class="cover" src="/2024/12/26/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/guru.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">软件设计模式期末复习</div></div><div class="info-2"><div class="info-item-1">1 软件工程设计原则1.1 对象间关系  Dependency（依赖）：表示⼀个对象在某种程度上依赖于另⼀个对象。在⽂件中，它被⽤来描述“Professor（教授）” 和“Course（课程）”之间的关系，意味着教授依赖于课程来完成教学任务。&#x20;  Association（关联）：表示两个对象之间有某种联系，但这种联系不像依赖那样强烈。在这⾥，它被⽤来描述 “Professor（教授）”和“Student（学⽣）”之间的关系，表示教授和学⽣之间存在教学或指导的联系。&#x20;  Aggregation（聚合）：表示⼀种整体与部分的关系，但部分可以独⽴于整体存在。⽂件中⽤“Professor（教授）”和 “Department（系）”来说明这种关系，意味着教授是系的⼀部分，但教授不依赖于系⽽存在。&#x20;  Composition（组合）：也是⼀种整体与部分的关系，但与聚合不同的是，部分不能独⽴于整体存在。⽂件中⽤...</div></div></div></a><a class="pagination-related" href="/2025/02/05/JUC-%E5%90%8C%E6%AD%A5/" title="JUC_同步"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">JUC_同步</div></div><div class="info-2"><div class="info-item-1">同步临界区临界资源：一次仅允许一个进程使用的资源成为临界资源 临界区：访问临界资源的代码块 竞态条件：多个线程在临界区内执行，由于代码的执行序列不同而导致结果无法预测，称之为发生了竞态条件 一个程序运行多个线程是没有问题，多个线程读共享资源也没有问题，在多个线程对共享资源读写操作时发生指令交错，就会出现问题 为了避免临界区的竞态条件发生（解决线程安全问题）：  阻塞式的解决方案：synchronized，lock 非阻塞式的解决方案：原子变量  管程（monitor）：由局部于自己的若干公共变量和所有访问这些公共变量的过程所组成的软件模块，保证同一时刻只有一个进程在管程内活动，即管程内定义的操作在同一时刻只被一个进程调用（由编译器实现） synchronized：对象锁，保证了临界区内代码的原子性，采用互斥的方式让同一时刻至多只有一个线程能持有对象锁，其它线程获取这个对象锁时会阻塞，保证拥有锁的线程可以安全的执行临界区内的代码，不用担心线程上下文切换 互斥和同步都可以采用 synchronized...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/wuliannan.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">bshtj</div><div class="author-info-description">学术辣鸡，不定时更新</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">50</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">51</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC1%E7%AB%A0"><span class="toc-number">1.</span> <span class="toc-text">第1章</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-%E8%BD%AF%E4%BB%B6%E7%9A%84%E6%9C%AC%E8%B4%A8-the-nature-of-software"><span class="toc-number">1.1.</span> <span class="toc-text">1.1 (软件的本质)the nature of software</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-1-Defining-Software"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.1.1 Defining Software</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-2-Software-Application-Domains"><span class="toc-number">1.1.2.</span> <span class="toc-text">1.1.2 Software Application Domains</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-3-Legacy-Software%EF%BC%88%E5%B9%B4%E4%BB%A3%E9%81%97%E7%95%99%E8%BD%AF%E4%BB%B6%EF%BC%89"><span class="toc-number">1.1.3.</span> <span class="toc-text">1.1.3 Legacy Software（年代遗留软件）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-%EF%BC%88%E8%BD%AF%E4%BB%B6%E7%9A%84%E5%8F%98%E5%8C%96%EF%BC%89THE-CHANGING-NATURE-OF-SOFTWARE"><span class="toc-number">1.2.</span> <span class="toc-text">1.2 （软件的变化）THE CHANGING NATURE OF SOFTWARE</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-2-Mobile-Applications"><span class="toc-number">1.2.1.</span> <span class="toc-text">1.2.2 Mobile Applications</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-3-Cloud-Computing"><span class="toc-number">1.2.2.</span> <span class="toc-text">1.2.3 Cloud Computing</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC2%E7%AB%A0-software-engineering-x20"><span class="toc-number">2.</span> <span class="toc-text">第2章 software engineering  </span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E5%AE%9A%E4%B9%89-definition-for-software-engineering"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 软件工程定义(definition for software  engineering)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E8%BF%87%E7%A8%8B-software-process"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 软件工程过程(software process)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-1-the-process-framework"><span class="toc-number">2.2.1.</span> <span class="toc-text">2.2.1 the process framework</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-2-umbrella-activities"><span class="toc-number">2.2.2.</span> <span class="toc-text">2.2.2 umbrella activities</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-3-process-adaptation"><span class="toc-number">2.2.3.</span> <span class="toc-text">2.2.3 process adaptation</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-software-engineering-practice"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 software engineering practice</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-1-The-Essence-of-Practice"><span class="toc-number">2.3.1.</span> <span class="toc-text">2.3.1 The Essence of Practice</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-2-General-Principles-x20"><span class="toc-number">2.3.2.</span> <span class="toc-text">2.3.2 General Principles </span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-SOFTWARE-DEVELOPMENT-MYTHS"><span class="toc-number">2.4.</span> <span class="toc-text">2.4 SOFTWARE DEVELOPMENT MYTHS</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC3%E7%AB%A0-the-software-process"><span class="toc-number">3.</span> <span class="toc-text">第3章 the software process</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-a-generic-process-model"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 a generic process model</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2-define-a-framework-activity"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 define a framework activity</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3-identifying-a-task-set"><span class="toc-number">3.3.</span> <span class="toc-text">3.3 identifying a task set</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4-process-patterns"><span class="toc-number">3.4.</span> <span class="toc-text">3.4 process patterns</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC4%E7%AB%A0-process-models"><span class="toc-number">4.</span> <span class="toc-text">第4章 process models</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-PRESCRIPTIVE-PROCESS-MODELS"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 PRESCRIPTIVE PROCESS MODELS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-1-The-Waterfall-Model"><span class="toc-number">4.1.1.</span> <span class="toc-text">4.1.1 The Waterfall Model</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-2-Incremental-Process-Models"><span class="toc-number">4.1.2.</span> <span class="toc-text">4.1.2 Incremental Process Models</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-3-Evolutionary-Process-Models"><span class="toc-number">4.1.3.</span> <span class="toc-text">4.1.3 Evolutionary Process Models</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC5%E7%AB%A0-AGILE-DEVELOPMENT"><span class="toc-number">5.</span> <span class="toc-text">第5章 AGILE DEVELOPMENT</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#5-1-WHAT-IS-AGILITY"><span class="toc-number">5.1.</span> <span class="toc-text">5.1 WHAT IS AGILITY</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-2-AGILITY-AND-THE-COST-OF-CHANGE"><span class="toc-number">5.2.</span> <span class="toc-text">5.2 AGILITY AND THE COST OF CHANGE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-4-EXTREME-PROGRAMMING-%E6%9E%81%E9%99%90%E7%BC%96%E7%A8%8B"><span class="toc-number">5.3.</span> <span class="toc-text">5.4 EXTREME PROGRAMMING(极限编程)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-1-The-XP-Process"><span class="toc-number">5.3.1.</span> <span class="toc-text">5.4.1 The XP Process</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-5-OTHER-AGILE-PROCESS-MODELS"><span class="toc-number">5.4.</span> <span class="toc-text">5.5 OTHER AGILE PROCESS MODELS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-1-scrum"><span class="toc-number">5.4.1.</span> <span class="toc-text">5.5.1 scrum</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC7%E7%AB%A0-PRINCIPLES-THAT-GUIDE-PRACTICE"><span class="toc-number">6.</span> <span class="toc-text">第7章 PRINCIPLES THAT GUIDE PRACTICE</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#7-1-SOFTWARE-ENGINEERING-KNOWLEDGE"><span class="toc-number">6.1.</span> <span class="toc-text">7.1 SOFTWARE ENGINEERING KNOWLEDGE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-2-CORE-PRINCIPLES"><span class="toc-number">6.2.</span> <span class="toc-text">7.2 CORE PRINCIPLES</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-1-Principles-That-Guide-Process"><span class="toc-number">6.2.1.</span> <span class="toc-text">7.2.1 Principles That Guide Process</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-2-Principles-That-Guide-Practice"><span class="toc-number">6.2.2.</span> <span class="toc-text">7.2.2 Principles That Guide Practice</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-3-PRINCIPLES-THAT-GUIDE-EACH-FRAMEWORK-ACTIVITY"><span class="toc-number">6.3.</span> <span class="toc-text">7.3 PRINCIPLES THAT GUIDE EACH FRAMEWORK ACTIVITY</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-1-Communication-Principles"><span class="toc-number">6.3.1.</span> <span class="toc-text">7.3.1 Communication Principles</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-2-Planning-Principles"><span class="toc-number">6.3.2.</span> <span class="toc-text">7.3.2 Planning Principles</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-3-modeling-principle"><span class="toc-number">6.3.3.</span> <span class="toc-text">7.3.3 modeling principle</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Requirements-Modeling-Principles"><span class="toc-number">6.3.3.1.</span> <span class="toc-text">Requirements Modeling Principles:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Design-Modeling-Principles"><span class="toc-number">6.3.3.2.</span> <span class="toc-text">Design Modeling Principles:</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-4-Construction-principle"><span class="toc-number">6.3.4.</span> <span class="toc-text">7.3.4 Construction principle</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-5-Deployment-principle"><span class="toc-number">6.3.5.</span> <span class="toc-text">7.3.5 Deployment principle</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-4-WORK-PRACTICES"><span class="toc-number">6.4.</span> <span class="toc-text">7.4 WORK PRACTICES</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC8%E7%AB%A0-UNDERSTANDING-REQUIREMENTS"><span class="toc-number">7.</span> <span class="toc-text">第8章 UNDERSTANDING REQUIREMENTS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#8-1-REQUIREMENTS-ENGINEERING"><span class="toc-number">7.1.</span> <span class="toc-text">8.1 REQUIREMENTS ENGINEERING</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-2-ESTABLISHING-THE-GROUNDWORK-Inception"><span class="toc-number">7.2.</span> <span class="toc-text">8.2 ESTABLISHING THE GROUNDWORK(Inception)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-1-Identifying-Stakeholders"><span class="toc-number">7.2.1.</span> <span class="toc-text">8.2.1 Identifying Stakeholders</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-2-Recognizing-Multiple-Viewpoints-x20"><span class="toc-number">7.2.2.</span> <span class="toc-text">8.2.2 Recognizing Multiple Viewpoints </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-3-Working-toward-Collaboration-x20"><span class="toc-number">7.2.3.</span> <span class="toc-text">8.2.3 Working toward Collaboration </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-4-Asking-the-First-Questions-x20"><span class="toc-number">7.2.4.</span> <span class="toc-text">8.2.4 Asking the First Questions </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-5-Nonfunctional-Requirements"><span class="toc-number">7.2.5.</span> <span class="toc-text">8.2.5 Nonfunctional Requirements</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-5-BUILDING-THE-ANALYSIS-MODEL-elaboration"><span class="toc-number">7.3.</span> <span class="toc-text">8.5 BUILDING THE ANALYSIS MODEL(elaboration)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-5-1-Elements-of-the-Analysis-Model"><span class="toc-number">7.3.1.</span> <span class="toc-text">8.5.1 Elements of the Analysis Model</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-6-Negotiating-Requirements"><span class="toc-number">7.4.</span> <span class="toc-text">8.6 Negotiating Requirements</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-8-VALIDATING-REQUIREMENTS-validation"><span class="toc-number">7.5.</span> <span class="toc-text">8.8 VALIDATING REQUIREMENTS(validation)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC9%E7%AB%A0-REQUIREMENTS-MODELING-SCENARIO-BASED-METHODS"><span class="toc-number">8.</span> <span class="toc-text">第9章 REQUIREMENTS MODELING:SCENARIO BASED METHODS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#9-1-REQUIREMENTS-ANALYSIS"><span class="toc-number">8.1.</span> <span class="toc-text">9.1 REQUIREMENTS ANALYSIS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#9-1-1-Overall-Objectives-and-Philosophy%EF%BC%88%E6%80%BB%E4%BD%93%E7%9B%AE%E6%A0%87%E5%92%8C%E7%90%86%E5%BF%B5%EF%BC%89"><span class="toc-number">8.1.1.</span> <span class="toc-text">9.1.1 Overall Objectives and Philosophy（总体目标和理念）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-1-2-Analysis-Rules-of-Thumb-%E5%88%86%E6%9E%90%E7%BB%8F%E9%AA%8C%E6%B3%95%E5%88%99"><span class="toc-number">8.1.2.</span> <span class="toc-text">9.1.2 Analysis Rules of Thumb(分析经验法则)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-1-3-Domain-Analysis"><span class="toc-number">8.1.3.</span> <span class="toc-text">9.1.3 Domain Analysis</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-1-4-Requirements-Modeling-Approaches"><span class="toc-number">8.1.4.</span> <span class="toc-text">9.1.4 Requirements Modeling Approaches</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-3-UML-MODELS-THAT-SUPPLEMENT-THE-USE-CASE"><span class="toc-number">8.2.</span> <span class="toc-text">9.3 UML MODELS THAT SUPPLEMENT THE USE CASE</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#9-3-1-Developing-an-Activity-Diagram"><span class="toc-number">8.2.1.</span> <span class="toc-text">9.3.1 Developing an Activity Diagram</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-3-2-Swimlane-Diagrams"><span class="toc-number">8.2.2.</span> <span class="toc-text">9.3.2 Swimlane Diagrams</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC10%E7%AB%A0-REQUIREMENTS-MODELING-CLASS-BASED-METHODS"><span class="toc-number">9.</span> <span class="toc-text">第10章 REQUIREMENTS MODELING: CLASS-BASED METHODS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#10-1-%E8%AF%86%E5%88%AB%E5%88%86%E6%9E%90%E7%B1%BB%EF%BC%88Identifying-Analysis-Classes%EF%BC%89"><span class="toc-number">9.0.1.</span> <span class="toc-text">10.1 识别分析类（Identifying Analysis Classes）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-2-%E6%8C%87%E5%AE%9A%E5%B1%9E%E6%80%A7%EF%BC%88Specifying-Attributes%EF%BC%89"><span class="toc-number">9.0.2.</span> <span class="toc-text">10.2 指定属性（Specifying Attributes）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-3-%E5%AE%9A%E4%B9%89%E6%93%8D%E4%BD%9C%EF%BC%88Defining-Operations%EF%BC%89"><span class="toc-number">9.0.3.</span> <span class="toc-text">10.3 定义操作（Defining Operations）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-4-%E7%B1%BB-%E8%B4%A3%E4%BB%BB-%E5%8D%8F%E4%BD%9C%E8%80%85%E6%A8%A1%E5%9E%8B%EF%BC%88CRC-Modeling%EF%BC%89"><span class="toc-number">9.0.4.</span> <span class="toc-text">10.4 类-责任-协作者模型（CRC Modeling）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-5-%E5%85%B3%E8%81%94%E4%B8%8E%E4%BE%9D%E8%B5%96%EF%BC%88Associations-and-Dependencies%EF%BC%89"><span class="toc-number">9.0.5.</span> <span class="toc-text">10.5 关联与依赖（Associations and Dependencies）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-6-%E5%88%86%E6%9E%90%E5%8C%85%EF%BC%88Analysis-Packages%EF%BC%89"><span class="toc-number">9.0.6.</span> <span class="toc-text">10.6 分析包（Analysis Packages）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC11%E7%AB%A0"><span class="toc-number">10.</span> <span class="toc-text">第11章</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC12%E7%AB%A0"><span class="toc-number">11.</span> <span class="toc-text">第12章</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#12-3-12-%E8%AE%BE%E8%AE%A1%E7%B1%BB%EF%BC%88Design-Classes%EF%BC%89-x20"><span class="toc-number">11.0.1.</span> <span class="toc-text">12.3.12 设计类（Design Classes） </span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC13%E7%AB%A0"><span class="toc-number">12.</span> <span class="toc-text">第13章</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC14%E7%AB%A0"><span class="toc-number">13.</span> <span class="toc-text">第14章</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#14-3-%E7%BB%84%E4%BB%B6%E7%BA%A7%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="toc-number">13.1.</span> <span class="toc-text">14.3 组件级设计的定义</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Step-1-Identify-Design-Classes-Related-to-the-Problem-Domain%EF%BC%88%E8%AF%86%E5%88%AB%E4%B8%8E%E9%97%AE%E9%A2%98%E5%9F%9F%E7%9B%B8%E5%85%B3%E7%9A%84%E8%AE%BE%E8%AE%A1%E7%B1%BB%EF%BC%89"><span class="toc-number">13.1.0.1.</span> <span class="toc-text">Step 1: Identify Design Classes Related to the Problem Domain（识别与问题域相关的设计类）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Step-2-Identify-Design-Classes-Related-to-the-Infrastructure-Domain%EF%BC%88%E8%AF%86%E5%88%AB%E4%B8%8E%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD%E5%9F%9F%E7%9B%B8%E5%85%B3%E7%9A%84%E8%AE%BE%E8%AE%A1%E7%B1%BB%EF%BC%89"><span class="toc-number">13.1.0.2.</span> <span class="toc-text">Step 2: Identify Design Classes Related to the Infrastructure Domain（识别与基础设施域相关的设计类）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Step-3-Elaborate-Non-Reusable-Design-Classes%EF%BC%88%E7%BB%86%E5%8C%96%E9%9D%9E%E5%8F%AF%E9%87%8D%E7%94%A8%E7%BB%84%E4%BB%B6%E7%9A%84%E8%AE%BE%E8%AE%A1%E7%B1%BB%EF%BC%89"><span class="toc-number">13.1.0.3.</span> <span class="toc-text">Step 3: Elaborate Non-Reusable Design Classes（细化非可重用组件的设计类）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Step-4-Describe-Persistent-Data-Sources%EF%BC%88%E6%8F%8F%E8%BF%B0%E6%8C%81%E4%B9%85%E5%8C%96%E6%95%B0%E6%8D%AE%E6%BA%90%EF%BC%89"><span class="toc-number">13.1.0.4.</span> <span class="toc-text">Step 4: Describe Persistent Data Sources（描述持久化数据源）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Step-5-Develop-Behavioral-Representations%EF%BC%88%E5%BC%80%E5%8F%91%E8%A1%8C%E4%B8%BA%E8%A1%A8%E7%A4%BA%EF%BC%89"><span class="toc-number">13.1.0.5.</span> <span class="toc-text">Step 5: Develop Behavioral Representations（开发行为表示）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Step-6-Refine-Deployment-Diagrams%EF%BC%88%E7%BB%86%E5%8C%96%E9%83%A8%E7%BD%B2%E5%9B%BE%EF%BC%89"><span class="toc-number">13.1.0.6.</span> <span class="toc-text">Step 6: Refine Deployment Diagrams（细化部署图）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Step-7-Refactor-Design-Representations%EF%BC%88%E9%87%8D%E6%9E%84%E8%AE%BE%E8%AE%A1%E8%A1%A8%E7%A4%BA%EF%BC%89"><span class="toc-number">13.1.0.7.</span> <span class="toc-text">Step 7: Refactor Design Representations（重构设计表示）</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/05/13/%E4%B8%8D%E5%90%8C%E5%BD%A2%E5%BC%8F%E7%9A%84%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" title="不同形式的二分查找"><img src="/2025/05/13/%E4%B8%8D%E5%90%8C%E5%BD%A2%E5%BC%8F%E7%9A%84%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/home.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="不同形式的二分查找"/></a><div class="content"><a class="title" href="/2025/05/13/%E4%B8%8D%E5%90%8C%E5%BD%A2%E5%BC%8F%E7%9A%84%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" title="不同形式的二分查找">不同形式的二分查找</a><time datetime="2025-05-13T02:13:03.000Z" title="发表于 2025-05-13 10:13:03">2025-05-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/05/08/%E4%BB%8E%E8%95%BE%E7%BC%AA%E5%AE%89%E7%9A%84%E6%8A%80%E8%83%BD%E5%85%A5%E6%89%8B%E8%AE%BE%E6%83%B3%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" title="从蕾缪安的技能入手设想设计模式"><img src="/2025/05/08/%E4%BB%8E%E8%95%BE%E7%BC%AA%E5%AE%89%E7%9A%84%E6%8A%80%E8%83%BD%E5%85%A5%E6%89%8B%E8%AE%BE%E6%83%B3%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/home.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="从蕾缪安的技能入手设想设计模式"/></a><div class="content"><a class="title" href="/2025/05/08/%E4%BB%8E%E8%95%BE%E7%BC%AA%E5%AE%89%E7%9A%84%E6%8A%80%E8%83%BD%E5%85%A5%E6%89%8B%E8%AE%BE%E6%83%B3%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" title="从蕾缪安的技能入手设想设计模式">从蕾缪安的技能入手设想设计模式</a><time datetime="2025-05-08T15:48:03.000Z" title="发表于 2025-05-08 23:48:03">2025-05-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/04/28/bitset%E4%BD%BF%E7%94%A8/" title="1.3 计算机的性能指标"><img src="/2025/04/28/bitset%E4%BD%BF%E7%94%A8/home.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="1.3 计算机的性能指标"/></a><div class="content"><a class="title" href="/2025/04/28/bitset%E4%BD%BF%E7%94%A8/" title="1.3 计算机的性能指标">1.3 计算机的性能指标</a><time datetime="2025-04-28T12:08:48.000Z" title="发表于 2025-04-28 20:08:48">2025-04-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/04/27/%E6%89%8B%E5%86%99%E5%A4%A7%E5%B0%8F%E6%A0%B9%E5%A0%86/" title="手写大小根堆"><img src="/2025/04/27/%E6%89%8B%E5%86%99%E5%A4%A7%E5%B0%8F%E6%A0%B9%E5%A0%86/home.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="手写大小根堆"/></a><div class="content"><a class="title" href="/2025/04/27/%E6%89%8B%E5%86%99%E5%A4%A7%E5%B0%8F%E6%A0%B9%E5%A0%86/" title="手写大小根堆">手写大小根堆</a><time datetime="2025-04-27T07:43:56.000Z" title="发表于 2025-04-27 15:43:56">2025-04-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/04/27/%E9%9D%99%E6%80%81%E5%86%85%E9%83%A8%E7%B1%BB/" title="静态内部类"><img src="/2025/04/27/%E9%9D%99%E6%80%81%E5%86%85%E9%83%A8%E7%B1%BB/home.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="静态内部类"/></a><div class="content"><a class="title" href="/2025/04/27/%E9%9D%99%E6%80%81%E5%86%85%E9%83%A8%E7%B1%BB/" title="静态内部类">静态内部类</a><time datetime="2025-04-27T07:06:29.000Z" title="发表于 2025-04-27 15:06:29">2025-04-27</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By bshtj</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 6.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.3</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

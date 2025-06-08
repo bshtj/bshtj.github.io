@@ -1,0 +1,242 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>3.4 磁盘存储器与固态硬盘SSD | bshtj_blog</title><meta name="author" content="bshtj"><meta name="copyright" content="bshtj"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="磁盘存储器磁盘表面存储原理 磁盘、磁带都属于磁表面存储器。  通过磁头磁性的不同导致磁带上的磁图层产生不同的状态，表示0和1。  因此磁表面存储器每次只能读或写1bit，且读和写不能同时进行     磁盘设备组成 磁头数、柱面数、扇区数  实际上正反面都可以涂上磁性物质。   磁盘的性能指标（重要）磁盘的容量 记录密度（位密度、道密度、面密度） 平均存储时间（重要）  最前面的磁盘控制器延时指的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="3.4 磁盘存储器与固态硬盘SSD">
+<meta property="og:url" content="https://bshtj.github.io/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/index.html">
+<meta property="og:site_name" content="bshtj_blog">
+<meta property="og:description" content="磁盘存储器磁盘表面存储原理 磁盘、磁带都属于磁表面存储器。  通过磁头磁性的不同导致磁带上的磁图层产生不同的状态，表示0和1。  因此磁表面存储器每次只能读或写1bit，且读和写不能同时进行     磁盘设备组成 磁头数、柱面数、扇区数  实际上正反面都可以涂上磁性物质。   磁盘的性能指标（重要）磁盘的容量 记录密度（位密度、道密度、面密度） 平均存储时间（重要）  最前面的磁盘控制器延时指的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bshtj.github.io/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-14.png">
+<meta property="article:published_time" content="2025-06-08T14:28:30.000Z">
+<meta property="article:modified_time" content="2025-06-08T11:31:09.772Z">
+<meta property="article:author" content="bshtj">
+<meta property="article:tag" content="计算机组成原理">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bshtj.github.io/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-14.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "3.4 磁盘存储器与固态硬盘SSD",
+  "url": "https://bshtj.github.io/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/",
+  "image": "https://bshtj.github.io/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-14.png",
+  "datePublished": "2025-06-08T14:28:30.000Z",
+  "dateModified": "2025-06-08T11:31:09.772Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "bshtj",
+      "url": "https://bshtj.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/wuliannan.png"><link rel="canonical" href="https://bshtj.github.io/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: {"appId":"Z9MP5121BD","apiKey":"10b5fa00d61ba271dd1619df1cc5263e","indexName":"butterfly","hitsPerPage":6,"languages":{"input_placeholder":"Search...","hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，耗时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '3.4 磁盘存储器与固态硬盘SSD',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/wuliannan.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">57</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">54</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://www.helloimg.com/i/2025/03/02/67c3b864134af.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">bshtj_blog</span></a><a class="nav-page-title" href="/"><span class="site-name">3.4 磁盘存储器与固态硬盘SSD</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">3.4 磁盘存储器与固态硬盘SSD</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-06-08T14:28:30.000Z" title="发表于 2025-06-08 22:28:30">2025-06-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-06-08T11:31:09.772Z" title="更新于 2025-06-08 19:31:09">2025-06-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%AC%94%E8%AE%B0/">笔记</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%AC%94%E8%AE%B0/408/">408</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><img src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-14.png"></p>
+<h1 id="磁盘存储器"><a href="#磁盘存储器" class="headerlink" title="磁盘存储器"></a>磁盘存储器</h1><h2 id="磁盘表面存储原理"><a href="#磁盘表面存储原理" class="headerlink" title="磁盘表面存储原理"></a>磁盘表面存储原理</h2><ul>
+<li><p>磁盘、磁带都属于磁表面存储器。</p>
+</li>
+<li><p>通过磁头磁性的不同导致磁带上的磁图层产生不同的状态，表示0和1。</p>
+<ul>
+<li>因此磁表面存储器每次只能读或写1bit，且读和写不能同时进行</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-11.png"></p>
+<h2 id="磁盘设备组成"><a href="#磁盘设备组成" class="headerlink" title="磁盘设备组成"></a>磁盘设备组成</h2><p><img src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-13.png"></p>
+<h3 id="磁头数、柱面数、扇区数"><a href="#磁头数、柱面数、扇区数" class="headerlink" title="磁头数、柱面数、扇区数"></a>磁头数、柱面数、扇区数</h3><p><img src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-8.png"></p>
+<ul>
+<li>实际上正反面都可以涂上磁性物质。</li>
+</ul>
+<p><img src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-6.png"></p>
+<h2 id="磁盘的性能指标（重要）"><a href="#磁盘的性能指标（重要）" class="headerlink" title="磁盘的性能指标（重要）"></a>磁盘的性能指标（重要）</h2><h3 id="磁盘的容量"><a href="#磁盘的容量" class="headerlink" title="磁盘的容量"></a>磁盘的容量</h3><p><img src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-7.png"></p>
+<h3 id="记录密度（位密度、道密度、面密度）"><a href="#记录密度（位密度、道密度、面密度）" class="headerlink" title="记录密度（位密度、道密度、面密度）"></a>记录密度（位密度、道密度、面密度）</h3><p><img src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image.png"></p>
+<h3 id="平均存储时间（重要）"><a href="#平均存储时间（重要）" class="headerlink" title="平均存储时间（重要）"></a>平均存储时间（重要）</h3><p><img src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-12.png"></p>
+<ul>
+<li><p>最前面的磁盘控制器延时指的是接受主机的命令并且新磁盘控制器发送信号的时间。</p>
+</li>
+<li><p>如果没有给出明确的旋转延时时间，就默认为转半圈的时间</p>
+</li>
+</ul>
+<h3 id="数据传输率"><a href="#数据传输率" class="headerlink" title="数据传输率"></a>数据传输率</h3><p><img src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-10.png"></p>
+<h2 id="磁盘的地址"><a href="#磁盘的地址" class="headerlink" title="磁盘的地址"></a>磁盘的地址</h2><p><img src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-9.png"></p>
+<h2 id="硬盘的工作过程"><a href="#硬盘的工作过程" class="headerlink" title="硬盘的工作过程"></a>硬盘的工作过程</h2><p><img src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-5.png"></p>
+<ul>
+<li>读写是串行的，但是向外发送或者接收的时候是并行的</li>
+</ul>
+<p><img src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-3.png"></p>
+<h2 id="廉价磁盘冗余阵列（RAID）"><a href="#廉价磁盘冗余阵列（RAID）" class="headerlink" title="廉价磁盘冗余阵列（RAID）"></a>廉价磁盘冗余阵列（RAID）</h2><p><img src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-2.png"></p>
+<p><img src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-1.png"></p>
+<p>从上到下可靠性越高。</p>
+<ul>
+<li>主要关注两个阵列</li>
+</ul>
+<p><img src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-4.png"></p>
+<h3 id="RAID0（重要）"><a href="#RAID0（重要）" class="headerlink" title="RAID0（重要）"></a>RAID0（重要）</h3><ul>
+<li><strong>条带化</strong></li>
+</ul>
+<p><img src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-23.png"></p>
+<h3 id="RAID1（重要）"><a href="#RAID1（重要）" class="headerlink" title="RAID1（重要）"></a>RAID1（重要）</h3><p><img src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-20.png"></p>
+<h2 id="总结（重要）"><a href="#总结（重要）" class="headerlink" title="总结（重要）"></a>总结（重要）</h2><p><img src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-21.png"></p>
+<h1 id="固态硬盘"><a href="#固态硬盘" class="headerlink" title="固态硬盘"></a>固态硬盘</h1><p><img src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-22.png"></p>
+<h2 id="固态硬盘的结构"><a href="#固态硬盘的结构" class="headerlink" title="固态硬盘的结构"></a>固态硬盘的结构</h2><ul>
+<li><p>以页为单位。</p>
+</li>
+<li><p>以块为单位进行擦除并写入数据。</p>
+</li>
+<li><p>块对应一个磁盘的扇区，而固态硬盘的一个块相当于磁盘的一个扇区；一个页相当于一个磁道。</p>
+</li>
+</ul>
+<p><img src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-15.png"></p>
+<ul>
+<li><p>如果我只想写一个页怎么防止其他的页丢失？</p>
+</li>
+<li><p>只要保存到其他已经被擦除的块中即可。&#x20;</p>
+</li>
+<li><p>迁移之后，闪存翻译层需要重新对应这个映射关系。</p>
+</li>
+<li><p>所以读快写慢</p>
+</li>
+</ul>
+<p><img src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-17.png"></p>
+<ul>
+<li>通过电路直接定位到物理地址，所以支持随机访问。</li>
+</ul>
+<h2 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h2><p><img src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-18.png"></p>
+<h2 id="磨损均衡技术"><a href="#磨损均衡技术" class="headerlink" title="磨损均衡技术"></a>磨损均衡技术</h2><p><img src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-16.png"></p>
+<ul>
+<li><p>静态磨损均衡就是自动将一些很久没有动过的信息后续调整到老的块之中，防止对老的块的进一步损耗。</p>
+</li>
+<li><p>而动态磨损技术就是在写入数据的时候自动分配。</p>
+</li>
+</ul>
+<h2 id="理想情况下固态硬盘的寿命"><a href="#理想情况下固态硬盘的寿命" class="headerlink" title="理想情况下固态硬盘的寿命"></a>理想情况下固态硬盘的寿命</h2><p><img src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-19.png"></p>
+<p>就是平均到某一天即可。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://bshtj.github.io">bshtj</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://bshtj.github.io/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/">https://bshtj.github.io/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://bshtj.github.io" target="_blank">bshtj_blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></div><div class="post-share"><div class="social-share" data-image="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-14.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/06/08/3-3%E4%B8%BB%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8Ecpu%E4%B9%8B%E9%97%B4%E7%9A%84%E8%BF%9E%E6%8E%A5/" title="3.3 主存储器与cpu之间的连接"><img class="cover" src="/2025/06/08/3-3%E4%B8%BB%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8Ecpu%E4%B9%8B%E9%97%B4%E7%9A%84%E8%BF%9E%E6%8E%A5/image-10.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">3.3 主存储器与cpu之间的连接</div></div><div class="info-2"><div class="info-item-1">...</div></div></div></a><a class="pagination-related" href="/2025/06/08/3-5cache/" title="3.5 cache"><img class="cover" src="/2025/06/08/3-5cache/image-10.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">3.5 cache</div></div><div class="info-2"><div class="info-item-1">cache的基本原理 局部性原理 性能分析（命中率、缺失率、平均访问时间） 例题（重要，两种情况 ） 使用cache需要解决的问题基本概念  一些问题  总结 cache和主存的映射关系  如何区分cache中存放的是哪一个主存块？  答：可以给每一个cache块增加一个标记，记录对应的主存块号；还需要一个有效位。     都是通过硬件电路实现的。  全相联映射（每一个主存块随意放） 直接映射（主存块放到固定的位置） 可以优化标记的形式，将主存块号进行细化    如图，橙色的编码部分是行号，是主存块号的末尾3位，也对应着cache块中的对应行号。所以直接用cache的行号拼接上剩余的19位就可以作为主存块号了。  组相联映射（放到特定分组）  类似直接映射也可以对组相联映射进行主存块号的优化。  总结（优缺点） Cache...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/04/07/1-2%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84/" title="1.2 计算机系统层次结构"><img class="cover" src="/2025/04/07/1-2%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84/image.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-04-07</div><div class="info-item-2">1.2 计算机系统层次结构</div></div><div class="info-2"><div class="info-item-1"> 冯诺依曼计算机 传统冯诺依曼机（运算器为中心） 对于特点4，可以看本章笔记中的计算机运行过程，但是要注意有可能一条指令可以包含多个地址码，比如二地址指令。 特点5指的是指令和数据都会被提前存到主存里面。 类比以下这张图，可以发现以运算器为中心会导致效率低下。  现代计算机结构（存储器为中心） 现代计算机结构划分 重点看画圈部分  现代计算机由存储器为中心  cpu由运算器和控制器组成  主机包括cpu和主存  主机不是台式电脑的主机，而是由cpu和主存储器组成的  主存储器，又称主存（实际上就是内存）    I&#x2F;O设备除了包括输入和输出还包括辅存（例如磁盘这些）  存储器包括主存和辅存。   计算机各硬件部件工作原理 主存储器的基本组成 MAR(memory address register) 用于指明要读&#x2F;写哪个存储单元。  其位数反映存储单元数量。   MDR(memory data register) 用于暂存要读&#x2F;写的数据。  其位数 &#x3D;...</div></div></div></a><a class="pagination-related" href="/2025/04/07/1-3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9A%84%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87/" title="1.3 计算机的性能指标"><img class="cover" src="/2025/04/07/1-3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9A%84%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87/image-2.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-04-07</div><div class="info-item-2">1.3 计算机的性能指标</div></div><div class="info-2"><div class="info-item-1">存储器的性能指标根据MAR和MDR的大小来判断  2的次方大小速记  CPU的性能指标 CPU主频CPU内部数字脉冲信号的频率，单位HZ 时钟周期CPU主频 &#x3D; 1&#x2F;cCPU时钟周期 CPI(Clock cycle per Instruction)每个指令执行所需的时钟周期 IPS(Instructions per second)每秒执行多少条指令，IPS &#x3D; 指令数&#x2F;秒 IPS &#x3D; (1&#x2F;时钟周期大小)&#x2F;(时钟周期数&#x2F;指令数) &#x3D; 主频&#x2F;平均CPI FLOPS(Floating-point Operations per...</div></div></div></a><a class="pagination-related" href="/2025/04/21/2-1%E6%95%B0%E5%88%B6%E4%B8%8E%E7%BC%96%E7%A0%81/" title="2-1数制与编码"><img class="cover" src="/2025/04/21/2-1%E6%95%B0%E5%88%B6%E4%B8%8E%E7%BC%96%E7%A0%81/image-12.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-04-21</div><div class="info-item-2">2-1数制与编码</div></div><div class="info-2"><div class="info-item-1">进位计数制 任意进制转十进制采用r进制计数法  这里要注意小数部分的第一个数是-1次方开始的。 二进制转八进制、十六进制转换方式 书写方式 十进制转换任意进制标准做法表示整数部分使用r进制计数法取余数的形式 除基取余法  表示小数部分（重要）乘积取整法  可以看到0.3化成二进制是无限的。 对于有尽头的情况：  0.5×2&#x3D;1.00.5×2&#x3D;1.0（整数部分是 1，小数部分是 0）  因为小数部分是...</div></div></div></a><a class="pagination-related" href="/2025/04/21/2-2%E8%BF%90%E7%AE%97%E6%96%B9%E6%B3%95%E5%92%8C%E8%BF%90%E7%AE%97%E7%94%B5%E8%B7%AF/" title="2-2运算方法和运算电路"><img class="cover" src="/2025/04/21/2-2%E8%BF%90%E7%AE%97%E6%96%B9%E6%B3%95%E5%92%8C%E8%BF%90%E7%AE%97%E7%94%B5%E8%B7%AF/image-14.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-04-21</div><div class="info-item-2">2-2运算方法和运算电路</div></div><div class="info-2"><div class="info-item-1">加法器 FA(full...</div></div></div></a><a class="pagination-related" href="/2025/04/21/2-3%E6%B5%AE%E7%82%B9%E6%95%B0%E7%9A%84%E8%A1%A8%E7%A4%BA%E4%B8%8E%E8%BF%90%E7%AE%97/" title="2-3浮点数的表示与运算"><img class="cover" src="/2025/04/21/2-3%E6%B5%AE%E7%82%B9%E6%95%B0%E7%9A%84%E8%A1%A8%E7%A4%BA%E4%B8%8E%E8%BF%90%E7%AE%97/image-10.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-04-21</div><div class="info-item-2">2-3浮点数的表示与运算</div></div><div class="info-2"><div class="info-item-1">浮点数的表示 浮点数尾数的规格化 采用双符号位挽救溢出。   规格化浮点数的特点原码表示尾数 补码表示尾数 注意，规定补码表示为负数的时候，第二位（符号位之后的那一位）只能为零。  或者直接说：补码表示的尾数规格化的最高数值位必须和尾数符号位相反。    补码尾数规格化例子 溢出 浮点数表示总结 移码的基础含义 IEEE 754标准IEEE 754格式（重要）  理论上来说移码可以表示的范围是-128~127（也就是全零和全一的情况），但是实际上规定，阶数的真值只能为-126~127。  移码的范围是1~254  如下图所示，此时偏置值取得是2^(n-1)-1，而不是一般的2^(n-1)    转换示例例一 例二 特殊情况(阶码全1 or 0，位数全1 or...</div></div></div></a><a class="pagination-related" href="/2025/06/08/3-1%E5%AD%98%E5%82%A8%E5%99%A8%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" title="3.1存储器系统的基本概念"><img class="cover" src="/2025/06/08/3-1%E5%AD%98%E5%82%A8%E5%99%A8%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/image-10.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-08</div><div class="info-item-2">3.1存储器系统的基本概念</div></div><div class="info-2"><div class="info-item-1"> 现代计算机的结构 存储器的层次结构 最接近cpu的是寄存器  比如之前小结中提到的ACC，MQ等，速度比cache快的多   主存和辅存之间的交换（硬件+操作系统）  主存和cache之间的数据交换（硬件自己完成）    存储器的分类按照层次划分 按照存储介质划分 按存取方式分类（重要）  随机存取RAM、顺序存取SAM、直接存取DAM  随机存储比如有DRAM、SRAM、EPROM、ROM  直接存取比如有：光盘（CD-ROM），磁盘  顺序存储比如有磁带。    随机存取存储器的读写时间最快，其次是直接存取，最后是顺序存取。  指定存储地址然后去对应位置读或写  相联存储器（如快表）指定内容是什么，然后查找对应的位置在哪里   按信息的可更改性分类 按信息的可保存性分类 存储器的性能指标（重要）  存取时间和存取周期是不同的概念，因为存取周期由存取时间+恢复时间构成。  总结 课后习题为什么EPROM是随机存取，尽管它是ROM？为什么 EPROM 仍然是“ROM”？  ROM（Read-Only...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/wuliannan.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">bshtj</div><div class="author-info-description">学术辣鸡，不定时更新</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">57</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">54</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8"><span class="toc-number">1.</span> <span class="toc-text">磁盘存储器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A3%81%E7%9B%98%E8%A1%A8%E9%9D%A2%E5%AD%98%E5%82%A8%E5%8E%9F%E7%90%86"><span class="toc-number">1.1.</span> <span class="toc-text">磁盘表面存储原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A3%81%E7%9B%98%E8%AE%BE%E5%A4%87%E7%BB%84%E6%88%90"><span class="toc-number">1.2.</span> <span class="toc-text">磁盘设备组成</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A3%81%E5%A4%B4%E6%95%B0%E3%80%81%E6%9F%B1%E9%9D%A2%E6%95%B0%E3%80%81%E6%89%87%E5%8C%BA%E6%95%B0"><span class="toc-number">1.2.1.</span> <span class="toc-text">磁头数、柱面数、扇区数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A3%81%E7%9B%98%E7%9A%84%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87%EF%BC%88%E9%87%8D%E8%A6%81%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">磁盘的性能指标（重要）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A3%81%E7%9B%98%E7%9A%84%E5%AE%B9%E9%87%8F"><span class="toc-number">1.3.1.</span> <span class="toc-text">磁盘的容量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%B0%E5%BD%95%E5%AF%86%E5%BA%A6%EF%BC%88%E4%BD%8D%E5%AF%86%E5%BA%A6%E3%80%81%E9%81%93%E5%AF%86%E5%BA%A6%E3%80%81%E9%9D%A2%E5%AF%86%E5%BA%A6%EF%BC%89"><span class="toc-number">1.3.2.</span> <span class="toc-text">记录密度（位密度、道密度、面密度）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B9%B3%E5%9D%87%E5%AD%98%E5%82%A8%E6%97%B6%E9%97%B4%EF%BC%88%E9%87%8D%E8%A6%81%EF%BC%89"><span class="toc-number">1.3.3.</span> <span class="toc-text">平均存储时间（重要）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93%E7%8E%87"><span class="toc-number">1.3.4.</span> <span class="toc-text">数据传输率</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A3%81%E7%9B%98%E7%9A%84%E5%9C%B0%E5%9D%80"><span class="toc-number">1.4.</span> <span class="toc-text">磁盘的地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A1%AC%E7%9B%98%E7%9A%84%E5%B7%A5%E4%BD%9C%E8%BF%87%E7%A8%8B"><span class="toc-number">1.5.</span> <span class="toc-text">硬盘的工作过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BB%89%E4%BB%B7%E7%A3%81%E7%9B%98%E5%86%97%E4%BD%99%E9%98%B5%E5%88%97%EF%BC%88RAID%EF%BC%89"><span class="toc-number">1.6.</span> <span class="toc-text">廉价磁盘冗余阵列（RAID）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RAID0%EF%BC%88%E9%87%8D%E8%A6%81%EF%BC%89"><span class="toc-number">1.6.1.</span> <span class="toc-text">RAID0（重要）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RAID1%EF%BC%88%E9%87%8D%E8%A6%81%EF%BC%89"><span class="toc-number">1.6.2.</span> <span class="toc-text">RAID1（重要）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%88%E9%87%8D%E8%A6%81%EF%BC%89"><span class="toc-number">1.7.</span> <span class="toc-text">总结（重要）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98"><span class="toc-number">2.</span> <span class="toc-text">固态硬盘</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98%E7%9A%84%E7%BB%93%E6%9E%84"><span class="toc-number">2.1.</span> <span class="toc-text">固态硬盘的结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E6%AF%94"><span class="toc-number">2.2.</span> <span class="toc-text">对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A3%A8%E6%8D%9F%E5%9D%87%E8%A1%A1%E6%8A%80%E6%9C%AF"><span class="toc-number">2.3.</span> <span class="toc-text">磨损均衡技术</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%90%86%E6%83%B3%E6%83%85%E5%86%B5%E4%B8%8B%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98%E7%9A%84%E5%AF%BF%E5%91%BD"><span class="toc-number">2.4.</span> <span class="toc-text">理想情况下固态硬盘的寿命</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/06/08/3-5cache/" title="3.5 cache"><img src="/2025/06/08/3-5cache/image-10.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="3.5 cache"/></a><div class="content"><a class="title" href="/2025/06/08/3-5cache/" title="3.5 cache">3.5 cache</a><time datetime="2025-06-08T14:29:00.000Z" title="发表于 2025-06-08 22:29:00">2025-06-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/" title="3.4 磁盘存储器与固态硬盘SSD"><img src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-14.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="3.4 磁盘存储器与固态硬盘SSD"/></a><div class="content"><a class="title" href="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/" title="3.4 磁盘存储器与固态硬盘SSD">3.4 磁盘存储器与固态硬盘SSD</a><time datetime="2025-06-08T14:28:30.000Z" title="发表于 2025-06-08 22:28:30">2025-06-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/08/3-3%E4%B8%BB%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8Ecpu%E4%B9%8B%E9%97%B4%E7%9A%84%E8%BF%9E%E6%8E%A5/" title="3.3 主存储器与cpu之间的连接"><img src="/2025/06/08/3-3%E4%B8%BB%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8Ecpu%E4%B9%8B%E9%97%B4%E7%9A%84%E8%BF%9E%E6%8E%A5/image-10.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="3.3 主存储器与cpu之间的连接"/></a><div class="content"><a class="title" href="/2025/06/08/3-3%E4%B8%BB%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8Ecpu%E4%B9%8B%E9%97%B4%E7%9A%84%E8%BF%9E%E6%8E%A5/" title="3.3 主存储器与cpu之间的连接">3.3 主存储器与cpu之间的连接</a><time datetime="2025-06-08T14:26:44.000Z" title="发表于 2025-06-08 22:26:44">2025-06-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/08/3-2%E4%B8%BB%E5%AD%98%E5%82%A8%E5%99%A8%E7%9A%84%E7%BB%84%E6%88%90/" title="3.2 主存储器系统的组成"><img src="/2025/06/08/3-2%E4%B8%BB%E5%AD%98%E5%82%A8%E5%99%A8%E7%9A%84%E7%BB%84%E6%88%90/image-8.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="3.2 主存储器系统的组成"/></a><div class="content"><a class="title" href="/2025/06/08/3-2%E4%B8%BB%E5%AD%98%E5%82%A8%E5%99%A8%E7%9A%84%E7%BB%84%E6%88%90/" title="3.2 主存储器系统的组成">3.2 主存储器系统的组成</a><time datetime="2025-06-08T14:21:44.000Z" title="发表于 2025-06-08 22:21:44">2025-06-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/08/3-1%E5%AD%98%E5%82%A8%E5%99%A8%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" title="3.1存储器系统的基本概念"><img src="/2025/06/08/3-1%E5%AD%98%E5%82%A8%E5%99%A8%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/image-10.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="3.1存储器系统的基本概念"/></a><div class="content"><a class="title" href="/2025/06/08/3-1%E5%AD%98%E5%82%A8%E5%99%A8%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" title="3.1存储器系统的基本概念">3.1存储器系统的基本概念</a><time datetime="2025-06-08T14:20:44.000Z" title="发表于 2025-06-08 22:20:44">2025-06-08</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By bshtj</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 6.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.3</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/algoliasearch/dist/lite/builds/browser.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instantsearch.js/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js"></script></div></div></body></html>

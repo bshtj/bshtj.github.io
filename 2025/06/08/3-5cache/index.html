@@ -1,0 +1,274 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>3.5 cache | bshtj_blog</title><meta name="author" content="bshtj"><meta name="copyright" content="bshtj"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="cache的基本原理 局部性原理 性能分析（命中率、缺失率、平均访问时间） 例题（重要，两种情况 ） 使用cache需要解决的问题基本概念  一些问题  总结 cache和主存的映射关系  如何区分cache中存放的是哪一个主存块？  答：可以给每一个cache块增加一个标记，记录对应的主存块号；还需要一个有效位。     都是通过硬件电路实现的。  全相联映射（每一个主存块随意放） 直接映射（主">
+<meta property="og:type" content="article">
+<meta property="og:title" content="3.5 cache">
+<meta property="og:url" content="https://bshtj.github.io/2025/06/08/3-5cache/index.html">
+<meta property="og:site_name" content="bshtj_blog">
+<meta property="og:description" content="cache的基本原理 局部性原理 性能分析（命中率、缺失率、平均访问时间） 例题（重要，两种情况 ） 使用cache需要解决的问题基本概念  一些问题  总结 cache和主存的映射关系  如何区分cache中存放的是哪一个主存块？  答：可以给每一个cache块增加一个标记，记录对应的主存块号；还需要一个有效位。     都是通过硬件电路实现的。  全相联映射（每一个主存块随意放） 直接映射（主">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bshtj.github.io/2025/06/08/3-5cache/image-10.png">
+<meta property="article:published_time" content="2025-06-08T14:29:00.000Z">
+<meta property="article:modified_time" content="2025-06-08T11:30:54.489Z">
+<meta property="article:author" content="bshtj">
+<meta property="article:tag" content="计算机组成原理">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bshtj.github.io/2025/06/08/3-5cache/image-10.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "3.5 cache",
+  "url": "https://bshtj.github.io/2025/06/08/3-5cache/",
+  "image": "https://bshtj.github.io/2025/06/08/3-5cache/image-10.png",
+  "datePublished": "2025-06-08T14:29:00.000Z",
+  "dateModified": "2025-06-08T11:30:54.489Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "bshtj",
+      "url": "https://bshtj.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/wuliannan.png"><link rel="canonical" href="https://bshtj.github.io/2025/06/08/3-5cache/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: {"appId":"Z9MP5121BD","apiKey":"10b5fa00d61ba271dd1619df1cc5263e","indexName":"butterfly","hitsPerPage":6,"languages":{"input_placeholder":"Search...","hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，耗时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '3.5 cache',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/wuliannan.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">57</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">54</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://www.helloimg.com/i/2025/03/02/67c3b864134af.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">bshtj_blog</span></a><a class="nav-page-title" href="/"><span class="site-name">3.5 cache</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">3.5 cache</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-06-08T14:29:00.000Z" title="发表于 2025-06-08 22:29:00">2025-06-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-06-08T11:30:54.489Z" title="更新于 2025-06-08 19:30:54">2025-06-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%AC%94%E8%AE%B0/">笔记</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%AC%94%E8%AE%B0/408/">408</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="cache的基本原理"><a href="#cache的基本原理" class="headerlink" title="cache的基本原理"></a>cache的基本原理</h1><p><img src="/2025/06/08/3-5cache/image-10.png"></p>
+<h2 id="局部性原理"><a href="#局部性原理" class="headerlink" title="局部性原理"></a>局部性原理</h2><p><img src="/2025/06/08/3-5cache/image-14.png"></p>
+<h2 id="性能分析（命中率、缺失率、平均访问时间）"><a href="#性能分析（命中率、缺失率、平均访问时间）" class="headerlink" title="性能分析（命中率、缺失率、平均访问时间）"></a>性能分析（命中率、缺失率、平均访问时间）</h2><p><img src="/2025/06/08/3-5cache/image-11.png"></p>
+<h3 id="例题（重要，两种情况-）"><a href="#例题（重要，两种情况-）" class="headerlink" title="例题（重要，两种情况 ）"></a>例题（重要，两种情况 ）</h3><p><img src="/2025/06/08/3-5cache/image-13.png"></p>
+<h2 id="使用cache需要解决的问题"><a href="#使用cache需要解决的问题" class="headerlink" title="使用cache需要解决的问题"></a>使用cache需要解决的问题</h2><p>基本概念</p>
+<p><img src="/2025/06/08/3-5cache/image-12.png"></p>
+<p>一些问题</p>
+<p><img src="/2025/06/08/3-5cache/image.png"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><img src="/2025/06/08/3-5cache/image-1.png"></p>
+<h1 id="cache和主存的映射关系"><a href="#cache和主存的映射关系" class="headerlink" title="cache和主存的映射关系"></a>cache和主存的映射关系</h1><p><img src="/2025/06/08/3-5cache/image-2.png"></p>
+<ul>
+<li><p>如何区分cache中存放的是哪一个主存块？</p>
+</li>
+<li><p>答：可以给每一个cache块增加一个标记，记录对应的主存块号；还需要一个有效位。</p>
+</li>
+</ul>
+<p><img src="/2025/06/08/3-5cache/image-3.png"></p>
+<ul>
+<li>都是通过硬件电路实现的。</li>
+</ul>
+<h2 id="全相联映射（每一个主存块随意放）"><a href="#全相联映射（每一个主存块随意放）" class="headerlink" title="全相联映射（每一个主存块随意放）"></a>全相联映射（每一个主存块随意放）</h2><p><img src="/2025/06/08/3-5cache/image-4.png"></p>
+<h2 id="直接映射（主存块放到固定的位置）"><a href="#直接映射（主存块放到固定的位置）" class="headerlink" title="直接映射（主存块放到固定的位置）"></a>直接映射（主存块放到固定的位置）</h2><ul>
+<li>可以优化标记的形式，将主存块号进行细化</li>
+</ul>
+<p><img src="/2025/06/08/3-5cache/image-5.png"></p>
+<ul>
+<li>如图，橙色的编码部分是行号，是主存块号的末尾3位，也对应着cache块中的对应行号。所以直接用cache的行号拼接上剩余的19位就可以作为主存块号了。</li>
+</ul>
+<h2 id="组相联映射（放到特定分组）"><a href="#组相联映射（放到特定分组）" class="headerlink" title="组相联映射（放到特定分组）"></a>组相联映射（放到特定分组）</h2><p><img src="/2025/06/08/3-5cache/image-6.png"></p>
+<ul>
+<li>类似直接映射也可以对组相联映射进行主存块号的优化。</li>
+</ul>
+<h2 id="总结（优缺点）"><a href="#总结（优缺点）" class="headerlink" title="总结（优缺点）"></a>总结（优缺点）</h2><p><img src="/2025/06/08/3-5cache/image-7.png"></p>
+<h1 id="Cache-替换算法"><a href="#Cache-替换算法" class="headerlink" title="Cache 替换算法"></a>Cache 替换算法</h1><p><img src="/2025/06/08/3-5cache/image-8.png"></p>
+<h2 id="随机算法"><a href="#随机算法" class="headerlink" title="随机算法"></a>随机算法</h2><p><img src="/2025/06/08/3-5cache/image-9.png"></p>
+<h2 id="先进先出算法-FIFO"><a href="#先进先出算法-FIFO" class="headerlink" title="先进先出算法(FIFO)"></a>先进先出算法(FIFO)</h2><p><img src="/2025/06/08/3-5cache/image-29.png"></p>
+<h2 id="近期最少使用-LRU"><a href="#近期最少使用-LRU" class="headerlink" title="近期最少使用(LRU)"></a>近期最少使用(LRU)</h2><ul>
+<li>从“访问主存块”这一行从后往前看醉酒没有被访问过的是哪一个</li>
+</ul>
+<p><img src="/2025/06/08/3-5cache/image-28.png"></p>
+<ul>
+<li><p>硬件实现的时候硬件需要增加一个计数器</p>
+<ul>
+<li><p>计数器的值越小，越表明子在近期访问过</p>
+</li>
+<li><p>注意命中时计数器的操作，对于比原来清零的值大的值不用加1，因为没有意义，他还是最大的</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2025/06/08/3-5cache/image-27.png"></p>
+<ul>
+<li><p>考虑到时间局部性，实际运行中的cache命中效率更高。</p>
+</li>
+<li><p>依旧有可能发生抖动现象。</p>
+</li>
+</ul>
+<p><img src="/2025/06/08/3-5cache/image-25.png"></p>
+<h2 id="最不经常使用算法-LFU"><a href="#最不经常使用算法-LFU" class="headerlink" title="最不经常使用算法(LFU)"></a>最不经常使用算法(LFU)</h2><ul>
+<li>计算的是访问的次数而不是最近是否被访问过。</li>
+</ul>
+<p><img src="/2025/06/08/3-5cache/image-24.png"></p>
+<h2 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h2><p><img src="/2025/06/08/3-5cache/image-21.png"></p>
+<h1 id="cahce写策略"><a href="#cahce写策略" class="headerlink" title="cahce写策略"></a>cahce写策略</h1><ul>
+<li>保证数据一致性</li>
+</ul>
+<p><img src="/2025/06/08/3-5cache/image-23.png"></p>
+<h2 id="写命中-x20"><a href="#写命中-x20" class="headerlink" title="写命中&#x20;"></a>写命中&#x20;</h2><h3 id="写回法"><a href="#写回法" class="headerlink" title="写回法"></a>写回法</h3><p><img src="/2025/06/08/3-5cache/image-26.png"></p>
+<h3 id="全写法"><a href="#全写法" class="headerlink" title="全写法"></a>全写法</h3><p><img src="/2025/06/08/3-5cache/image-22.png"></p>
+<ul>
+<li>为了减少cpu访存的次数，加上<strong>写缓冲</strong>。之后由专门的控制电路将写缓冲之间的内容写到内存当中。</li>
+</ul>
+<p><img src="/2025/06/08/3-5cache/image-20.png"></p>
+<h2 id="写不命中"><a href="#写不命中" class="headerlink" title="写不命中"></a>写不命中</h2><h3 id="写分配法"><a href="#写分配法" class="headerlink" title="写分配法"></a>写分配法</h3><p><img src="/2025/06/08/3-5cache/image-17.png"></p>
+<ul>
+<li>写分配法通常和写回法配合使用</li>
+</ul>
+<p><img src="/2025/06/08/3-5cache/image-18.png"></p>
+<h3 id="非写分配法"><a href="#非写分配法" class="headerlink" title="非写分配法"></a>非写分配法</h3><ul>
+<li>不调入cache，直接在内存中写，和全写法搭配着使用。#</li>
+</ul>
+<p><img src="/2025/06/08/3-5cache/image-19.png"></p>
+<h2 id="各级cache的写策略"><a href="#各级cache的写策略" class="headerlink" title="各级cache的写策略"></a>各级cache的写策略</h2><p><img src="/2025/06/08/3-5cache/image-15.png"></p>
+<h2 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h2><p><img src="/2025/06/08/3-5cache/image-16.png"></p>
+<h1 id="总结（3个问题）"><a href="#总结（3个问题）" class="headerlink" title="总结（3个问题）"></a>总结（3个问题）</h1><p><img src="/2025/06/08/3-5cache/image-30.png"></p>
+<h1 id="课后习题"><a href="#课后习题" class="headerlink" title="课后习题"></a>课后习题</h1><h2 id="cache行的结构到底是怎么样的？"><a href="#cache行的结构到底是怎么样的？" class="headerlink" title="cache行的结构到底是怎么样的？"></a>cache行的结构到底是怎么样的？</h2><ul>
+<li><p>一个Cache行（也称为Cache块）通常包含以下几个字段：</p>
+<ul>
+<li><p>有效位（Valid Bit）​​：1位，表示该行是否包含有效数据（例如，<code>1</code>为有效，<code>0</code>为无效）。</p>
+</li>
+<li><p>标志位（Tag）​​：用于标识该行对应的主存地址的高位部分（地址匹配时使用）。</p>
+</li>
+<li><p>数据块（Data Block）​​：实际缓存的数据。</p>
+</li>
+<li><p>其他控制位​：如脏位（Dirty Bit，用于写回策略）、替换算法相关的位（如LRU位）等。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>具体什么时候需要用，见下图。</p>
+<p>参考：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Cbelieveyouself/article/details/129691552">https://blog.csdn.net/Cbelieveyouself/article/details/129691552</a></p>
+<p><img src="/2025/06/08/3-5cache/image-31.png"></p>
+<h2 id="如何理解内存地址到cache地址的映射？"><a href="#如何理解内存地址到cache地址的映射？" class="headerlink" title="如何理解内存地址到cache地址的映射？"></a>如何理解内存地址到cache地址的映射？</h2><p>参考：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Cbelieveyouself/article/details/129691552">https://blog.csdn.net/Cbelieveyouself/article/details/129691552</a></p>
+<p><img src="/2025/06/08/3-5cache/image-32.png"></p>
+<p>可以，直接将物理地址<code>页框号+页内偏移量</code>映射成cache地址。</p>
+<ul>
+<li>页内偏移量不变，然后将页框号的低n位(n表示cache有2^n行或者2^n组)表示cache行号或者组号；将剩下的作为标志位。</li>
+</ul>
+<h2 id="如何快速求出地址对应cache的行号"><a href="#如何快速求出地址对应cache的行号" class="headerlink" title="如何快速求出地址对应cache的行号"></a>如何快速求出地址对应cache的行号</h2><p>如果是10进制的话，假设页内偏移量有n位，那么cache对应的行号就是(地址&#x2F;2^n)%n。</p>
+<p>很好理解，页内偏移量就是最大取2^n-1所以地址&#x2F;2^n对应物理块号。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://bshtj.github.io">bshtj</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://bshtj.github.io/2025/06/08/3-5cache/">https://bshtj.github.io/2025/06/08/3-5cache/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://bshtj.github.io" target="_blank">bshtj_blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/">计算机组成原理</a></div><div class="post-share"><div class="social-share" data-image="/2025/06/08/3-5cache/image-10.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/" title="3.4 磁盘存储器与固态硬盘SSD"><img class="cover" src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-14.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">3.4 磁盘存储器与固态硬盘SSD</div></div><div class="info-2"><div class="info-item-1">...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/04/07/1-2%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84/" title="1.2 计算机系统层次结构"><img class="cover" src="/2025/04/07/1-2%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84/image.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-04-07</div><div class="info-item-2">1.2 计算机系统层次结构</div></div><div class="info-2"><div class="info-item-1"> 冯诺依曼计算机 传统冯诺依曼机（运算器为中心） 对于特点4，可以看本章笔记中的计算机运行过程，但是要注意有可能一条指令可以包含多个地址码，比如二地址指令。 特点5指的是指令和数据都会被提前存到主存里面。 类比以下这张图，可以发现以运算器为中心会导致效率低下。  现代计算机结构（存储器为中心） 现代计算机结构划分 重点看画圈部分  现代计算机由存储器为中心  cpu由运算器和控制器组成  主机包括cpu和主存  主机不是台式电脑的主机，而是由cpu和主存储器组成的  主存储器，又称主存（实际上就是内存）    I&#x2F;O设备除了包括输入和输出还包括辅存（例如磁盘这些）  存储器包括主存和辅存。   计算机各硬件部件工作原理 主存储器的基本组成 MAR(memory address register) 用于指明要读&#x2F;写哪个存储单元。  其位数反映存储单元数量。   MDR(memory data register) 用于暂存要读&#x2F;写的数据。  其位数 &#x3D;...</div></div></div></a><a class="pagination-related" href="/2025/04/07/1-3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9A%84%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87/" title="1.3 计算机的性能指标"><img class="cover" src="/2025/04/07/1-3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9A%84%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87/image-2.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-04-07</div><div class="info-item-2">1.3 计算机的性能指标</div></div><div class="info-2"><div class="info-item-1">存储器的性能指标根据MAR和MDR的大小来判断  2的次方大小速记  CPU的性能指标 CPU主频CPU内部数字脉冲信号的频率，单位HZ 时钟周期CPU主频 &#x3D; 1&#x2F;cCPU时钟周期 CPI(Clock cycle per Instruction)每个指令执行所需的时钟周期 IPS(Instructions per second)每秒执行多少条指令，IPS &#x3D; 指令数&#x2F;秒 IPS &#x3D; (1&#x2F;时钟周期大小)&#x2F;(时钟周期数&#x2F;指令数) &#x3D; 主频&#x2F;平均CPI FLOPS(Floating-point Operations per...</div></div></div></a><a class="pagination-related" href="/2025/04/21/2-1%E6%95%B0%E5%88%B6%E4%B8%8E%E7%BC%96%E7%A0%81/" title="2-1数制与编码"><img class="cover" src="/2025/04/21/2-1%E6%95%B0%E5%88%B6%E4%B8%8E%E7%BC%96%E7%A0%81/image-12.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-04-21</div><div class="info-item-2">2-1数制与编码</div></div><div class="info-2"><div class="info-item-1">进位计数制 任意进制转十进制采用r进制计数法  这里要注意小数部分的第一个数是-1次方开始的。 二进制转八进制、十六进制转换方式 书写方式 十进制转换任意进制标准做法表示整数部分使用r进制计数法取余数的形式 除基取余法  表示小数部分（重要）乘积取整法  可以看到0.3化成二进制是无限的。 对于有尽头的情况：  0.5×2&#x3D;1.00.5×2&#x3D;1.0（整数部分是 1，小数部分是 0）  因为小数部分是...</div></div></div></a><a class="pagination-related" href="/2025/04/21/2-2%E8%BF%90%E7%AE%97%E6%96%B9%E6%B3%95%E5%92%8C%E8%BF%90%E7%AE%97%E7%94%B5%E8%B7%AF/" title="2-2运算方法和运算电路"><img class="cover" src="/2025/04/21/2-2%E8%BF%90%E7%AE%97%E6%96%B9%E6%B3%95%E5%92%8C%E8%BF%90%E7%AE%97%E7%94%B5%E8%B7%AF/image-14.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-04-21</div><div class="info-item-2">2-2运算方法和运算电路</div></div><div class="info-2"><div class="info-item-1">加法器 FA(full...</div></div></div></a><a class="pagination-related" href="/2025/04/21/2-3%E6%B5%AE%E7%82%B9%E6%95%B0%E7%9A%84%E8%A1%A8%E7%A4%BA%E4%B8%8E%E8%BF%90%E7%AE%97/" title="2-3浮点数的表示与运算"><img class="cover" src="/2025/04/21/2-3%E6%B5%AE%E7%82%B9%E6%95%B0%E7%9A%84%E8%A1%A8%E7%A4%BA%E4%B8%8E%E8%BF%90%E7%AE%97/image-10.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-04-21</div><div class="info-item-2">2-3浮点数的表示与运算</div></div><div class="info-2"><div class="info-item-1">浮点数的表示 浮点数尾数的规格化 采用双符号位挽救溢出。   规格化浮点数的特点原码表示尾数 补码表示尾数 注意，规定补码表示为负数的时候，第二位（符号位之后的那一位）只能为零。  或者直接说：补码表示的尾数规格化的最高数值位必须和尾数符号位相反。    补码尾数规格化例子 溢出 浮点数表示总结 移码的基础含义 IEEE 754标准IEEE 754格式（重要）  理论上来说移码可以表示的范围是-128~127（也就是全零和全一的情况），但是实际上规定，阶数的真值只能为-126~127。  移码的范围是1~254  如下图所示，此时偏置值取得是2^(n-1)-1，而不是一般的2^(n-1)    转换示例例一 例二 特殊情况(阶码全1 or 0，位数全1 or...</div></div></div></a><a class="pagination-related" href="/2025/06/08/3-1%E5%AD%98%E5%82%A8%E5%99%A8%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" title="3.1存储器系统的基本概念"><img class="cover" src="/2025/06/08/3-1%E5%AD%98%E5%82%A8%E5%99%A8%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/image-10.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-08</div><div class="info-item-2">3.1存储器系统的基本概念</div></div><div class="info-2"><div class="info-item-1"> 现代计算机的结构 存储器的层次结构 最接近cpu的是寄存器  比如之前小结中提到的ACC，MQ等，速度比cache快的多   主存和辅存之间的交换（硬件+操作系统）  主存和cache之间的数据交换（硬件自己完成）    存储器的分类按照层次划分 按照存储介质划分 按存取方式分类（重要）  随机存取RAM、顺序存取SAM、直接存取DAM  随机存储比如有DRAM、SRAM、EPROM、ROM  直接存取比如有：光盘（CD-ROM），磁盘  顺序存储比如有磁带。    随机存取存储器的读写时间最快，其次是直接存取，最后是顺序存取。  指定存储地址然后去对应位置读或写  相联存储器（如快表）指定内容是什么，然后查找对应的位置在哪里   按信息的可更改性分类 按信息的可保存性分类 存储器的性能指标（重要）  存取时间和存取周期是不同的概念，因为存取周期由存取时间+恢复时间构成。  总结 课后习题为什么EPROM是随机存取，尽管它是ROM？为什么 EPROM 仍然是“ROM”？  ROM（Read-Only...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/wuliannan.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">bshtj</div><div class="author-info-description">学术辣鸡，不定时更新</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">57</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">54</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#cache%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">cache的基本原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B1%80%E9%83%A8%E6%80%A7%E5%8E%9F%E7%90%86"><span class="toc-number">1.1.</span> <span class="toc-text">局部性原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%EF%BC%88%E5%91%BD%E4%B8%AD%E7%8E%87%E3%80%81%E7%BC%BA%E5%A4%B1%E7%8E%87%E3%80%81%E5%B9%B3%E5%9D%87%E8%AE%BF%E9%97%AE%E6%97%B6%E9%97%B4%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">性能分析（命中率、缺失率、平均访问时间）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BE%8B%E9%A2%98%EF%BC%88%E9%87%8D%E8%A6%81%EF%BC%8C%E4%B8%A4%E7%A7%8D%E6%83%85%E5%86%B5-%EF%BC%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">例题（重要，两种情况 ）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8cache%E9%9C%80%E8%A6%81%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.3.</span> <span class="toc-text">使用cache需要解决的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.4.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#cache%E5%92%8C%E4%B8%BB%E5%AD%98%E7%9A%84%E6%98%A0%E5%B0%84%E5%85%B3%E7%B3%BB"><span class="toc-number">2.</span> <span class="toc-text">cache和主存的映射关系</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%A8%E7%9B%B8%E8%81%94%E6%98%A0%E5%B0%84%EF%BC%88%E6%AF%8F%E4%B8%80%E4%B8%AA%E4%B8%BB%E5%AD%98%E5%9D%97%E9%9A%8F%E6%84%8F%E6%94%BE%EF%BC%89"><span class="toc-number">2.1.</span> <span class="toc-text">全相联映射（每一个主存块随意放）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E6%98%A0%E5%B0%84%EF%BC%88%E4%B8%BB%E5%AD%98%E5%9D%97%E6%94%BE%E5%88%B0%E5%9B%BA%E5%AE%9A%E7%9A%84%E4%BD%8D%E7%BD%AE%EF%BC%89"><span class="toc-number">2.2.</span> <span class="toc-text">直接映射（主存块放到固定的位置）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%84%E7%9B%B8%E8%81%94%E6%98%A0%E5%B0%84%EF%BC%88%E6%94%BE%E5%88%B0%E7%89%B9%E5%AE%9A%E5%88%86%E7%BB%84%EF%BC%89"><span class="toc-number">2.3.</span> <span class="toc-text">组相联映射（放到特定分组）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%88%E4%BC%98%E7%BC%BA%E7%82%B9%EF%BC%89"><span class="toc-number">2.4.</span> <span class="toc-text">总结（优缺点）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Cache-%E6%9B%BF%E6%8D%A2%E7%AE%97%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">Cache 替换算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9A%8F%E6%9C%BA%E7%AE%97%E6%B3%95"><span class="toc-number">3.1.</span> <span class="toc-text">随机算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%88%E8%BF%9B%E5%85%88%E5%87%BA%E7%AE%97%E6%B3%95-FIFO"><span class="toc-number">3.2.</span> <span class="toc-text">先进先出算法(FIFO)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%91%E6%9C%9F%E6%9C%80%E5%B0%91%E4%BD%BF%E7%94%A8-LRU"><span class="toc-number">3.3.</span> <span class="toc-text">近期最少使用(LRU)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E4%B8%8D%E7%BB%8F%E5%B8%B8%E4%BD%BF%E7%94%A8%E7%AE%97%E6%B3%95-LFU"><span class="toc-number">3.4.</span> <span class="toc-text">最不经常使用算法(LFU)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-1"><span class="toc-number">3.5.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#cahce%E5%86%99%E7%AD%96%E7%95%A5"><span class="toc-number">4.</span> <span class="toc-text">cahce写策略</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%99%E5%91%BD%E4%B8%AD-x20"><span class="toc-number">4.1.</span> <span class="toc-text">写命中 </span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%99%E5%9B%9E%E6%B3%95"><span class="toc-number">4.1.1.</span> <span class="toc-text">写回法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%A8%E5%86%99%E6%B3%95"><span class="toc-number">4.1.2.</span> <span class="toc-text">全写法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%99%E4%B8%8D%E5%91%BD%E4%B8%AD"><span class="toc-number">4.2.</span> <span class="toc-text">写不命中</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%99%E5%88%86%E9%85%8D%E6%B3%95"><span class="toc-number">4.2.1.</span> <span class="toc-text">写分配法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%9E%E5%86%99%E5%88%86%E9%85%8D%E6%B3%95"><span class="toc-number">4.2.2.</span> <span class="toc-text">非写分配法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%84%E7%BA%A7cache%E7%9A%84%E5%86%99%E7%AD%96%E7%95%A5"><span class="toc-number">4.3.</span> <span class="toc-text">各级cache的写策略</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93-2"><span class="toc-number">4.4.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%883%E4%B8%AA%E9%97%AE%E9%A2%98%EF%BC%89"><span class="toc-number">5.</span> <span class="toc-text">总结（3个问题）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%BE%E5%90%8E%E4%B9%A0%E9%A2%98"><span class="toc-number">6.</span> <span class="toc-text">课后习题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#cache%E8%A1%8C%E7%9A%84%E7%BB%93%E6%9E%84%E5%88%B0%E5%BA%95%E6%98%AF%E6%80%8E%E4%B9%88%E6%A0%B7%E7%9A%84%EF%BC%9F"><span class="toc-number">6.1.</span> <span class="toc-text">cache行的结构到底是怎么样的？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E7%90%86%E8%A7%A3%E5%86%85%E5%AD%98%E5%9C%B0%E5%9D%80%E5%88%B0cache%E5%9C%B0%E5%9D%80%E7%9A%84%E6%98%A0%E5%B0%84%EF%BC%9F"><span class="toc-number">6.2.</span> <span class="toc-text">如何理解内存地址到cache地址的映射？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E6%B1%82%E5%87%BA%E5%9C%B0%E5%9D%80%E5%AF%B9%E5%BA%94cache%E7%9A%84%E8%A1%8C%E5%8F%B7"><span class="toc-number">6.3.</span> <span class="toc-text">如何快速求出地址对应cache的行号</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/06/08/3-5cache/" title="3.5 cache"><img src="/2025/06/08/3-5cache/image-10.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="3.5 cache"/></a><div class="content"><a class="title" href="/2025/06/08/3-5cache/" title="3.5 cache">3.5 cache</a><time datetime="2025-06-08T14:29:00.000Z" title="发表于 2025-06-08 22:29:00">2025-06-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/" title="3.4 磁盘存储器与固态硬盘SSD"><img src="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/image-14.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="3.4 磁盘存储器与固态硬盘SSD"/></a><div class="content"><a class="title" href="/2025/06/08/3-4%E7%A3%81%E7%9B%98%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8E%E5%9B%BA%E6%80%81%E7%A1%AC%E7%9B%98SSD/" title="3.4 磁盘存储器与固态硬盘SSD">3.4 磁盘存储器与固态硬盘SSD</a><time datetime="2025-06-08T14:28:30.000Z" title="发表于 2025-06-08 22:28:30">2025-06-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/08/3-3%E4%B8%BB%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8Ecpu%E4%B9%8B%E9%97%B4%E7%9A%84%E8%BF%9E%E6%8E%A5/" title="3.3 主存储器与cpu之间的连接"><img src="/2025/06/08/3-3%E4%B8%BB%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8Ecpu%E4%B9%8B%E9%97%B4%E7%9A%84%E8%BF%9E%E6%8E%A5/image-10.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="3.3 主存储器与cpu之间的连接"/></a><div class="content"><a class="title" href="/2025/06/08/3-3%E4%B8%BB%E5%AD%98%E5%82%A8%E5%99%A8%E4%B8%8Ecpu%E4%B9%8B%E9%97%B4%E7%9A%84%E8%BF%9E%E6%8E%A5/" title="3.3 主存储器与cpu之间的连接">3.3 主存储器与cpu之间的连接</a><time datetime="2025-06-08T14:26:44.000Z" title="发表于 2025-06-08 22:26:44">2025-06-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/08/3-2%E4%B8%BB%E5%AD%98%E5%82%A8%E5%99%A8%E7%9A%84%E7%BB%84%E6%88%90/" title="3.2 主存储器系统的组成"><img src="/2025/06/08/3-2%E4%B8%BB%E5%AD%98%E5%82%A8%E5%99%A8%E7%9A%84%E7%BB%84%E6%88%90/image-8.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="3.2 主存储器系统的组成"/></a><div class="content"><a class="title" href="/2025/06/08/3-2%E4%B8%BB%E5%AD%98%E5%82%A8%E5%99%A8%E7%9A%84%E7%BB%84%E6%88%90/" title="3.2 主存储器系统的组成">3.2 主存储器系统的组成</a><time datetime="2025-06-08T14:21:44.000Z" title="发表于 2025-06-08 22:21:44">2025-06-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/08/3-1%E5%AD%98%E5%82%A8%E5%99%A8%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" title="3.1存储器系统的基本概念"><img src="/2025/06/08/3-1%E5%AD%98%E5%82%A8%E5%99%A8%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/image-10.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="3.1存储器系统的基本概念"/></a><div class="content"><a class="title" href="/2025/06/08/3-1%E5%AD%98%E5%82%A8%E5%99%A8%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" title="3.1存储器系统的基本概念">3.1存储器系统的基本概念</a><time datetime="2025-06-08T14:20:44.000Z" title="发表于 2025-06-08 22:20:44">2025-06-08</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By bshtj</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 6.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.3</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/algoliasearch/dist/lite/builds/browser.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instantsearch.js/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js"></script></div></div></body></html>

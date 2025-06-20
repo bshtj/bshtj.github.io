@@ -1,0 +1,345 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>5.3 TCP协议 | bshtj_blog</title><meta name="author" content="bshtj"><meta name="copyright" content="bshtj"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="TCP协议的框架梳理TCP的三大阶段  挥手的发起者可以是客户端，也可以是服务端。  （重要）建立一次TCP连接可以传输多少报文如标题，这是一个重要的结论。   tcp是面向字节流的，这个指的是传输的是字节流，而不像UDP报文中封装的是一个完整的报文。（如上图一个TCP段中可以既包含报文Y，又包含报文Z）  MSS指的是最大段长（maximum segement size）：注意，TCP首部并不">
+<meta property="og:type" content="article">
+<meta property="og:title" content="5.3 TCP协议">
+<meta property="og:url" content="https://bshtj.github.io/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/index.html">
+<meta property="og:site_name" content="bshtj_blog">
+<meta property="og:description" content="TCP协议的框架梳理TCP的三大阶段  挥手的发起者可以是客户端，也可以是服务端。  （重要）建立一次TCP连接可以传输多少报文如标题，这是一个重要的结论。   tcp是面向字节流的，这个指的是传输的是字节流，而不像UDP报文中封装的是一个完整的报文。（如上图一个TCP段中可以既包含报文Y，又包含报文Z）  MSS指的是最大段长（maximum segement size）：注意，TCP首部并不">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bshtj.github.io/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-8.png">
+<meta property="article:published_time" content="2025-04-08T08:43:50.000Z">
+<meta property="article:modified_time" content="2025-06-20T09:07:04.154Z">
+<meta property="article:author" content="bshtj">
+<meta property="article:tag" content="计算机网络">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bshtj.github.io/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-8.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "5.3 TCP协议",
+  "url": "https://bshtj.github.io/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/",
+  "image": "https://bshtj.github.io/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-8.png",
+  "datePublished": "2025-04-08T08:43:50.000Z",
+  "dateModified": "2025-06-20T09:07:04.154Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "bshtj",
+      "url": "https://bshtj.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/wuliannan.png"><link rel="canonical" href="https://bshtj.github.io/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: {"appId":"Z9MP5121BD","apiKey":"10b5fa00d61ba271dd1619df1cc5263e","indexName":"butterfly","hitsPerPage":6,"languages":{"input_placeholder":"Search...","hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，耗时 ${time} 毫秒"}},
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '5.3 TCP协议',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/wuliannan.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">63</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">56</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://img.picui.cn/free/2025/03/09/67cd3dbf13b3b.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">bshtj_blog</span></a><a class="nav-page-title" href="/"><span class="site-name">5.3 TCP协议</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">5.3 TCP协议</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-04-08T08:43:50.000Z" title="发表于 2025-04-08 16:43:50">2025-04-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-06-20T09:07:04.154Z" title="更新于 2025-06-20 17:07:04">2025-06-20</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%AC%94%E8%AE%B0/">笔记</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%AC%94%E8%AE%B0/408/">408</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-8.png"></p>
+<h1 id="TCP协议的框架梳理"><a href="#TCP协议的框架梳理" class="headerlink" title="TCP协议的框架梳理"></a>TCP协议的框架梳理</h1><h2 id="TCP的三大阶段"><a href="#TCP的三大阶段" class="headerlink" title="TCP的三大阶段"></a>TCP的三大阶段</h2><p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-11.png"></p>
+<ul>
+<li>挥手的发起者可以是客户端，也可以是服务端。</li>
+</ul>
+<h2 id="（重要）建立一次TCP连接可以传输多少报文"><a href="#（重要）建立一次TCP连接可以传输多少报文" class="headerlink" title="（重要）建立一次TCP连接可以传输多少报文"></a>（重要）建立一次TCP连接可以传输多少报文</h2><p>如标题，这是一个重要的结论。</p>
+<p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-10.png"></p>
+<ul>
+<li><p>tcp是<strong>面向字节流的</strong>，这个指的是传输的是<strong>字节流</strong>，而不像UDP报文中封装的是一个完整的报文。（如上图一个TCP段中可以既包含报文Y，又包含报文Z）</p>
+</li>
+<li><p><strong>MSS指的是最大段长</strong>（maximum segement size）：注意，<strong>TCP首部并不算到这里面</strong>。</p>
+<ul>
+<li>MSS是单个TCP报文段能携带的应用层数据的最大字节数，表示TCP报文段（Segment）中应用层数据的最大长度（不包括TCP头部和IP头部）。</li>
+</ul>
+</li>
+<li><p>上图的这一次发送到接收方收到ACK是一个RTT内。</p>
+</li>
+</ul>
+<h1 id="TCP报文段"><a href="#TCP报文段" class="headerlink" title="TCP报文段"></a>TCP报文段</h1><h2 id="TCP段格式"><a href="#TCP段格式" class="headerlink" title="TCP段格式"></a>TCP段格式</h2><p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-14.png"></p>
+<ul>
+<li>与IP报文的首部结合记忆，两者首部的长度都是20B~60B（可变长度都是40B）。</li>
+</ul>
+<h3 id="ack与ACK（重要）"><a href="#ack与ACK（重要）" class="headerlink" title="ack与ACK（重要）"></a>ack与ACK（重要）</h3><p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-6.png"></p>
+<ul>
+<li>注意ack（确认号）也可以写作ack_seq，ACK指的是标志位。</li>
+</ul>
+<p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-7.png"></p>
+<ul>
+<li><p>假设现在接收方一件件接受了1,2两个报文段，2报文段以seq&#x3D;2499结尾，现在返回ack &#x3D; 2500表示的是seq &#x3D;2500之前的所有TCP报文段都已经被接受。</p>
+<ul>
+<li><p>整个TCP协议通信的过程中，<strong>只有握手1的ACK是0</strong>，也就是ack是无效的。</p>
+</li>
+<li><p>可见，<strong>ack由累计确认的作用</strong>。（类比<strong>后退N帧算法</strong>）</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="数据偏移部分"><a href="#数据偏移部分" class="headerlink" title="数据偏移部分"></a>数据偏移部分</h3><ul>
+<li><p>如下图所示，数据偏移字段表示的实际上是首部的长度。4B为单位。</p>
+</li>
+<li><p>保留字段目前没有什么用，用于未来扩展。</p>
+</li>
+</ul>
+<p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-12.png"></p>
+<ul>
+<li>TCP首部中没有一个字段表明TCP数据报的长度为多少。因为可以从ip数据报的长度减去ip数数据报的头部长度获得TCP数据报的长度。</li>
+</ul>
+<h3 id="剩余标志位（不常考）"><a href="#剩余标志位（不常考）" class="headerlink" title="剩余标志位（不常考）"></a>剩余标志位（不常考）</h3><p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-5.png"></p>
+<ul>
+<li>RST&#x3D;1说明出现严重差错主动释放连接。</li>
+</ul>
+<h3 id="重要的标志位（重要）"><a href="#重要的标志位（重要）" class="headerlink" title="重要的标志位（重要）"></a>重要的标志位（重要）</h3><p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-13.png"></p>
+<h3 id="窗口字段（重要）"><a href="#窗口字段（重要）" class="headerlink" title="窗口字段（重要）"></a>窗口字段（重要）</h3><p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-9.png"></p>
+<h3 id="TCP校验和计算（不常考）"><a href="#TCP校验和计算（不常考）" class="headerlink" title="TCP校验和计算（不常考）"></a>TCP校验和计算（不常考）</h3><p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-4.png"></p>
+<p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-2.png"></p>
+<p>&#x20;</p>
+<h3 id="选项字段（重要）"><a href="#选项字段（重要）" class="headerlink" title="选项字段（重要）"></a>选项字段（重要）</h3><p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-3.png"></p>
+<ul>
+<li>选项字段有很多功能，其中一个功能就是协商MSS的长度。</li>
+</ul>
+<h1 id="TCP连接管理"><a href="#TCP连接管理" class="headerlink" title="TCP连接管理"></a>TCP连接管理</h1><p>本节关注以下部分：</p>
+<p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image.png"></p>
+<h2 id="TCP建立连接"><a href="#TCP建立连接" class="headerlink" title="TCP建立连接"></a>TCP建立连接</h2><p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-1.png"></p>
+<ul>
+<li><p>握手3可以携带数据，也可以不携带数据。</p>
+</li>
+<li><p>即使不携带数据，握手1,2也要消耗一个序号，但是<strong>如果握手3不携带数据，那么不消耗序号</strong>。</p>
+</li>
+</ul>
+<h3 id="连接过程的状态转换"><a href="#连接过程的状态转换" class="headerlink" title="连接过程的状态转换"></a><strong>连接过程的状态转换</strong></h3><p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-27.png"></p>
+<p><strong>耗时分析：</strong></p>
+<p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-25.png"></p>
+<h2 id="TCP释放连接"><a href="#TCP释放连接" class="headerlink" title="TCP释放连接"></a>TCP释放连接</h2><p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-26.png"></p>
+<ul>
+<li><p>只有挥手1,3中的FIN标志位是1。</p>
+<ul>
+<li>这是因为服务机在第一次返回信息之后可能还要向客户端发送数据，所以此时喊没有主动finish这个tcp连接，所以到了挥手3才会FIN &#x3D; 1。</li>
+</ul>
+</li>
+<li><p>挥手即使不携带数据，但是序号还是要＋1。</p>
+</li>
+<li><p>除了挥手4不可以携带数据，其他挥手都可以携带数据，但是<strong>挥手4一定不能携带数据（因为双方都已经停止接受信息了）</strong>。</p>
+</li>
+</ul>
+<h3 id="释放连接阶段的状态转换"><a href="#释放连接阶段的状态转换" class="headerlink" title="释放连接阶段的状态转换"></a>释放连接阶段的<strong>状态转换</strong></h3><p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-28.png"></p>
+<h3 id="2MSL（Maximum-Segment-LifeTime）"><a href="#2MSL（Maximum-Segment-LifeTime）" class="headerlink" title="2MSL（Maximum Segment LifeTime）"></a>2MSL（Maximum Segment LifeTime）</h3><p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-23.png"></p>
+<ul>
+<li><p>MSL的作用是如果回收4对方没有收到，服务器会重新发送挥手3，要确保这个挥手3被客户端收到，重新发送挥手4，所以要设置MSL。</p>
+</li>
+<li><p>另一个原因是2MSL我那个那个可以让网络空间中大多数历史信息结束，不会造成老信息的重新连接。</p>
+</li>
+</ul>
+<h3 id="释放状态耗时分析"><a href="#释放状态耗时分析" class="headerlink" title="释放状态耗时分析"></a>释放状态耗时分析</h3><p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-29.png"></p>
+<p>问至少的情况，就假设FIN-WAIT2中所用的时间为0。</p>
+<p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-22.png"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-17.png"></p>
+<h1 id="TCP可靠传输"><a href="#TCP可靠传输" class="headerlink" title="TCP可靠传输"></a>TCP可靠传输</h1><p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-18.png"></p>
+<h2 id="确认"><a href="#确认" class="headerlink" title="确认"></a>确认</h2><p>确认基址就是通过</p>
+<h2 id="重传"><a href="#重传" class="headerlink" title="重传"></a>重传</h2><p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-20.png"></p>
+<h3 id="冗余确认"><a href="#冗余确认" class="headerlink" title="冗余确认"></a>冗余确认</h3><p><strong>冗余ACK(冗余确认)</strong>&#x662F;为了提升超时重传的等待时间。</p>
+<p>因为基本的求重传时间RTTs的方法是通过动态改变RTTs的时间（加权平均往返时间）。</p>
+<h3 id="快速重传"><a href="#快速重传" class="headerlink" title="快速重传"></a>快速重传</h3><ul>
+<li>发送方连续接收到3个<strong>对于报文段1的冗余报文段</strong>，此时认为报文段2丢失，重传报文段2。</li>
+</ul>
+<h1 id="TCP的流量控制"><a href="#TCP的流量控制" class="headerlink" title="TCP的流量控制"></a>TCP的流量控制</h1><p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-24.png"></p>
+<p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-21.png"></p>
+<h1 id="TCP拥塞控制"><a href="#TCP拥塞控制" class="headerlink" title="TCP拥塞控制"></a>TCP拥塞控制</h1><h2 id="TCP拥塞控制与TCP流量控制的区别"><a href="#TCP拥塞控制与TCP流量控制的区别" class="headerlink" title="TCP拥塞控制与TCP流量控制的区别"></a>TCP拥塞控制与TCP流量控制的区别</h2><p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-16.png"></p>
+<h2 id="TCP拥塞控制的4种算法"><a href="#TCP拥塞控制的4种算法" class="headerlink" title="TCP拥塞控制的4种算法"></a>TCP拥塞控制的4种算法</h2><p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-15.png"></p>
+<h3 id="1-慢开始和拥塞避免"><a href="#1-慢开始和拥塞避免" class="headerlink" title="1.慢开始和拥塞避免"></a>1.慢开始和拥塞避免</h3><p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-19.png"></p>
+<ul>
+<li><p>图中的横坐标（传输轮次指的是RTT）</p>
+</li>
+<li><p>慢开始阶段指的是开始的时候cwnd的指数级增长。之所以说慢，是因为慢开始通过从极小窗口（如1个MSS）逐步试探可用带宽，避免了一开始就冲击网络。这种“谨慎起步”相对于原先的激进方式显得“慢”。</p>
+</li>
+<li><p>ssthresh是慢开始门限。</p>
+</li>
+<li><p>新的门限值是发生拥塞的拥塞窗口的值&#x2F;2。</p>
+</li>
+<li><p>网络拥塞是接收方自己检测到的。</p>
+</li>
+</ul>
+<h3 id="2-快重传和快恢复"><a href="#2-快重传和快恢复" class="headerlink" title="2.快重传和快恢复"></a>2.快重传和快恢复</h3><ul>
+<li>快重传算法是当发送端收到了3个确认，将拥塞窗口&#x2F;2，再执行快恢复。（不用降到1）</li>
+</ul>
+<p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-33.png"></p>
+<h1 id="传输层总结"><a href="#传输层总结" class="headerlink" title="传输层总结"></a>传输层总结</h1><p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-32.png"></p>
+<p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-31.png"></p>
+<p><img src="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-30.png"></p>
+<h1 id="课后习题"><a href="#课后习题" class="headerlink" title="课后习题"></a>课后习题</h1><h2 id="慢开始于拥塞避免拥塞窗口的增长"><a href="#慢开始于拥塞避免拥塞窗口的增长" class="headerlink" title="慢开始于拥塞避免拥塞窗口的增长"></a>慢开始于拥塞避免拥塞窗口的增长</h2><table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>窗口增长公式</th>
+<th>增长类型</th>
+<th>触发条件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>慢开始（Slow Start）</td>
+<td>cwnd +&#x3D; 1（每ACK）</td>
+<td>指数增长</td>
+<td>cwnd &lt; ssthresh</td>
+</tr>
+<tr>
+<td>拥塞避免（Congestion Avoidance）</td>
+<td>cwnd +&#x3D; 1&#x2F;cwnd（每ACK）</td>
+<td>线性增长</td>
+<td>cwnd &gt;&#x3D; ssthresh</td>
+</tr>
+</tbody></table>
+<p>单位为一个MSS，每一个传输轮次。</p>
+<p>如：初始<code>cwnd=1 MSS</code>，发送1个报文后：</p>
+<ul>
+<li><p>收到1个ACK → <code>cwnd=2</code>（发送2个报文）</p>
+</li>
+<li><p>收到2个ACK → <code>cwnd=4</code>（发送4个报文）</p>
+</li>
+</ul>
+<p>以上对应两个RTT。</p>
+<h2 id="MSS是什么？"><a href="#MSS是什么？" class="headerlink" title="MSS是什么？"></a>MSS是什么？</h2><p>MSS 是TCP协议中的一个关键参数，表示TCP报文段（Segment）中应用层数据的最大长度（不包括TCP头部和IP头部）。以下是详细解释：</p>
+<ul>
+<li><p>定义​：</p>
+<ul>
+<li><p>MSS是单个TCP报文段能携带的应用层数据的最大字节数​（单位通常是字节）。</p>
+</li>
+<li><p>例如：若MSS&#x3D;1460字节，则每个TCP报文的数据部分最多为1460字节。</p>
+</li>
+</ul>
+</li>
+<li><p>计算公式​：<code>MSS = MTU - IP头部（20字节） - TCP头部（20字节）  </code></p>
+</li>
+<li><p>典型以太网MTU（Maximum Transmission Unit）&#x3D;1500字节 → MSS&#x3D;1460字节。</p>
+</li>
+<li><p>作用​：</p>
+<ul>
+<li><p>避免IP分片：确保TCP报文（数据+头部）不超过链路的MTU。</p>
+</li>
+<li><p>提高传输效率：通过合理分段，平衡延迟和吞吐量。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="拥塞控制的开始时间"><a href="#拥塞控制的开始时间" class="headerlink" title="拥塞控制的开始时间"></a>拥塞控制的开始时间</h2><p>从第0轮次开始，发生拥塞时变为1也是认为第0轮次（RTT）。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://bshtj.github.io">bshtj</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://bshtj.github.io/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/">https://bshtj.github.io/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://bshtj.github.io" target="_blank">bshtj_blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></div><div class="post-share"><div class="social-share" data-image="/2025/04/08/5-3TCP%E5%8D%8F%E8%AE%AE/image-8.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/04/08/4-4%E8%B7%AF%E7%94%B1%E7%AE%97%E6%B3%95%E4%B8%8E%E8%B7%AF%E7%94%B1%E5%8D%8F%E8%AE%AE/" title="4.4 路由算法与路由协议"><img class="cover" src="/2025/04/08/4-4%E8%B7%AF%E7%94%B1%E7%AE%97%E6%B3%95%E4%B8%8E%E8%B7%AF%E7%94%B1%E5%8D%8F%E8%AE%AE/image-6.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">4.4 路由算法与路由协议</div></div><div class="info-2"><div class="info-item-1"> 画圈的这两种是用在自治系统AS内部的协议  RIP (Routing Information Protocol) - 路由信息协议  OSPF (Open Shortest Path First) - 开放最短路径优先协议   而BGP（Border Gateway Protocol边界网关协议）是在自治系统外部的协议。  如图所示，画圈的属于一个自治系统，边界网关之间的连接属于BGP协议。 RIP(routing information...</div></div></div></a><a class="pagination-related" href="/2025/04/11/%E9%81%97%E4%BC%A0%E7%AE%97%E6%B3%95%E6%8E%92%E8%AF%BE/" title="遗传算法排课"><img class="cover" src="/2025/04/11/%E9%81%97%E4%BC%A0%E7%AE%97%E6%B3%95%E6%8E%92%E8%AF%BE/home.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">遗传算法排课</div></div><div class="info-2"><div class="info-item-1">本文笔记基于github项目:Course-Arrangement 编码结构1.定义排课信息结构 CoursePlan以下是排课计划的结构，将基于这些结构进行排课的操作。 123456789101112131415161718192021222324252627282930313233343536373839@Getter@Setter@TableName(&quot;course_plan&quot;)@ApiModel(value = &quot;CoursePlan对象&quot;, description = &quot;&quot;)public class CoursePlan implements Serializable &#123;    private static final long serialVersionUID = 1L;      @ApiModelProperty(&quot;id&quot;)      @TableId(value = &quot;id&quot;, type = IdType.AUTO)      private...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/03/03/3-6%E5%B1%80%E5%9F%9F%E7%BD%91%E4%B8%8EIEEE802/" title="3.6局域网与IEEE802"><img class="cover" src="/2025/03/03/3-6%E5%B1%80%E5%9F%9F%E7%BD%91%E4%B8%8EIEEE802/image-12.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-03</div><div class="info-item-2">3.6局域网与IEEE802</div></div><div class="info-2"><div class="info-item-1">3.6 局域网 与 IEEE 802本章概述 什么是IEEE 802？ 802委员会和各种局域网技术的关系 IEEE 802是IEEE下属的一个委员会，他下属有一些工作组。一开始的时候某些科技公司的局域网技术会受到大众的认可，如IBM公司之前发明了令牌环网技术，然后802.5工作组就成立来推进该技术的标准化工作技术使其普及。  802.3 以太网技术（局域网），802.11 WIFI技术（无线局域网）   IEEE 802的层次划分将数据链路层拆分成了两个子层  MAC子层（介质访问控制）: 与访问截止相关（组帧、差错控制、透明传输、介质访问控制）  LLC子层（逻辑链路控制）: 兼容各种局域网技术，对上层网络层暴露出相同的结点。但是目前已经被有线和无线局域网所垄断，已经名存实亡。   IEEE...</div></div></div></a><a class="pagination-related" href="/2025/03/07/4-2IPv4/" title="4.2 IPv4"><img class="cover" src="/2025/03/07/4-2IPv4/image-12.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-07</div><div class="info-item-2">4.2 IPv4</div></div><div class="info-2"><div class="info-item-1">第四章 网络层 了解：4.1 重点 4.2,4.4,4,7 快速学习：4.5.4.6.4.3（不用死磕概念，做课后小题即可）  4.1 网络层的功能  异构网络互联  物理层&amp;链路层实现不同——802.11,以太网，令牌环网。  主机类型不同，如以太网连电脑；802.11无线以太网连手机或者电脑。  TCP&#x2F;IP中，路由器又称为“网关”。    路由与转发  路由是各个路由之间的相互配合；而转发指的是单个路由器。  路由需要运行各自的“路由协议”，生成各自的“路由表”。  转发表&#x3D;精简的路由表。    拥塞控制方法  开环控制（静态方法）：在部署网络之前就做好预防拥塞的方法。  闭环控制（动态方法）：动态监视网路状态，通过ICMP协议专递给相关路由器，相应路由器调整路由表。     4.2 IPV4IP——Internet protocol version 4 4.2.1...</div></div></div></a><a class="pagination-related" href="/2025/06/20/5-1%E4%BC%A0%E8%BE%93%E5%B1%82%E6%8F%90%E4%BE%9B%E7%9A%84%E6%9C%8D%E5%8A%A1/" title="5.1 传输层提供的服务"><img class="cover" src="/2025/06/20/5-1%E4%BC%A0%E8%BE%93%E5%B1%82%E6%8F%90%E4%BE%9B%E7%9A%84%E6%9C%8D%E5%8A%A1/image-6.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-20</div><div class="info-item-2">5.1 传输层提供的服务</div></div><div class="info-2"><div class="info-item-1"> 传输层“端口号”的概念  传输层的端口号指的是——进程和进程之间的通信。  进程、端口号与传输层协议的关系  TCP和UDP的端口号是独立的（也就是可以相同），这是因为他们在传输层使用的协议不一样（进程不一样）。  每一个协议的端口号是相互独立的（可以不相同）  套接字（一个数据结构）：指明接下来要和该进程通信的进程它的IP地址以及端口号是什么。   传输层概述  打叉的标准目前已经不流行了。但是打星号的还在使用（0-1023不能使用）。  复用是数据从应用层往传输层的过程；而分用则是数据从传输层到应用层（对应进程）的过程。   熟知的端口号 总结 传输层支持的协议（重要） </div></div></div></a><a class="pagination-related" href="/2025/04/08/4-4%E8%B7%AF%E7%94%B1%E7%AE%97%E6%B3%95%E4%B8%8E%E8%B7%AF%E7%94%B1%E5%8D%8F%E8%AE%AE/" title="4.4 路由算法与路由协议"><img class="cover" src="/2025/04/08/4-4%E8%B7%AF%E7%94%B1%E7%AE%97%E6%B3%95%E4%B8%8E%E8%B7%AF%E7%94%B1%E5%8D%8F%E8%AE%AE/image-6.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-04-08</div><div class="info-item-2">4.4 路由算法与路由协议</div></div><div class="info-2"><div class="info-item-1"> 画圈的这两种是用在自治系统AS内部的协议  RIP (Routing Information Protocol) - 路由信息协议  OSPF (Open Shortest Path First) - 开放最短路径优先协议   而BGP（Border Gateway Protocol边界网关协议）是在自治系统外部的协议。  如图所示，画圈的属于一个自治系统，边界网关之间的连接属于BGP协议。 RIP(routing information...</div></div></div></a><a class="pagination-related" href="/2025/06/20/5-2UDP%E5%8D%8F%E8%AE%AE/" title="5.2 UDP协议"><img class="cover" src="/2025/06/20/5-2UDP%E5%8D%8F%E8%AE%AE/image-6.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-20</div><div class="info-item-2">5.2 UDP协议</div></div><div class="info-2"><div class="info-item-1">...</div></div></div></a><a class="pagination-related" href="/2025/03/02/media-access-control/" title="介质访问控制"><img class="cover" src="/2025/03/02/media-access-control/media-access-control.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-02</div><div class="info-item-2">介质访问控制</div></div><div class="info-2"><div class="info-item-1">3.5 介质访问控制本节总览：包括：信道划分、随机访问、轮询访问。  介质访问控制（Medium Access Control MAC）:多个节点访问一个”总线型“广播网络的时候，可能发生信号冲突。  如：  集线器连接多个节点。 一个同轴电缆链接多个节点。  介质访问控制就是为了解决信号冲突的问题。 复习一下：网络的拓扑结构可以分为：总线型、星型、环形、网状。 复习一下：什么是冲突域？两台主机同时发送数据数据导致冲突。（注意集线器不会隔离中途与，交换机可以隔离冲突域）  集线器和中继器不能无限串联。 集线器弱连接网段的速率不同，会使速率向下兼容。  3.5.1 信道划分介质访问控制1. 时分复用（TDM）Time Division...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/wuliannan.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">bshtj</div><div class="author-info-description">学术辣鸡，不定时更新</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">63</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">56</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#TCP%E5%8D%8F%E8%AE%AE%E7%9A%84%E6%A1%86%E6%9E%B6%E6%A2%B3%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">TCP协议的框架梳理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP%E7%9A%84%E4%B8%89%E5%A4%A7%E9%98%B6%E6%AE%B5"><span class="toc-number">1.1.</span> <span class="toc-text">TCP的三大阶段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EF%BC%88%E9%87%8D%E8%A6%81%EF%BC%89%E5%BB%BA%E7%AB%8B%E4%B8%80%E6%AC%A1TCP%E8%BF%9E%E6%8E%A5%E5%8F%AF%E4%BB%A5%E4%BC%A0%E8%BE%93%E5%A4%9A%E5%B0%91%E6%8A%A5%E6%96%87"><span class="toc-number">1.2.</span> <span class="toc-text">（重要）建立一次TCP连接可以传输多少报文</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#TCP%E6%8A%A5%E6%96%87%E6%AE%B5"><span class="toc-number">2.</span> <span class="toc-text">TCP报文段</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP%E6%AE%B5%E6%A0%BC%E5%BC%8F"><span class="toc-number">2.1.</span> <span class="toc-text">TCP段格式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ack%E4%B8%8EACK%EF%BC%88%E9%87%8D%E8%A6%81%EF%BC%89"><span class="toc-number">2.1.1.</span> <span class="toc-text">ack与ACK（重要）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%81%8F%E7%A7%BB%E9%83%A8%E5%88%86"><span class="toc-number">2.1.2.</span> <span class="toc-text">数据偏移部分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%A9%E4%BD%99%E6%A0%87%E5%BF%97%E4%BD%8D%EF%BC%88%E4%B8%8D%E5%B8%B8%E8%80%83%EF%BC%89"><span class="toc-number">2.1.3.</span> <span class="toc-text">剩余标志位（不常考）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E8%A6%81%E7%9A%84%E6%A0%87%E5%BF%97%E4%BD%8D%EF%BC%88%E9%87%8D%E8%A6%81%EF%BC%89"><span class="toc-number">2.1.4.</span> <span class="toc-text">重要的标志位（重要）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AA%97%E5%8F%A3%E5%AD%97%E6%AE%B5%EF%BC%88%E9%87%8D%E8%A6%81%EF%BC%89"><span class="toc-number">2.1.5.</span> <span class="toc-text">窗口字段（重要）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP%E6%A0%A1%E9%AA%8C%E5%92%8C%E8%AE%A1%E7%AE%97%EF%BC%88%E4%B8%8D%E5%B8%B8%E8%80%83%EF%BC%89"><span class="toc-number">2.1.6.</span> <span class="toc-text">TCP校验和计算（不常考）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%89%E9%A1%B9%E5%AD%97%E6%AE%B5%EF%BC%88%E9%87%8D%E8%A6%81%EF%BC%89"><span class="toc-number">2.1.7.</span> <span class="toc-text">选项字段（重要）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#TCP%E8%BF%9E%E6%8E%A5%E7%AE%A1%E7%90%86"><span class="toc-number">3.</span> <span class="toc-text">TCP连接管理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5"><span class="toc-number">3.1.</span> <span class="toc-text">TCP建立连接</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E8%BF%87%E7%A8%8B%E7%9A%84%E7%8A%B6%E6%80%81%E8%BD%AC%E6%8D%A2"><span class="toc-number">3.1.1.</span> <span class="toc-text">连接过程的状态转换</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP%E9%87%8A%E6%94%BE%E8%BF%9E%E6%8E%A5"><span class="toc-number">3.2.</span> <span class="toc-text">TCP释放连接</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8A%E6%94%BE%E8%BF%9E%E6%8E%A5%E9%98%B6%E6%AE%B5%E7%9A%84%E7%8A%B6%E6%80%81%E8%BD%AC%E6%8D%A2"><span class="toc-number">3.2.1.</span> <span class="toc-text">释放连接阶段的状态转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2MSL%EF%BC%88Maximum-Segment-LifeTime%EF%BC%89"><span class="toc-number">3.2.2.</span> <span class="toc-text">2MSL（Maximum Segment LifeTime）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8A%E6%94%BE%E7%8A%B6%E6%80%81%E8%80%97%E6%97%B6%E5%88%86%E6%9E%90"><span class="toc-number">3.2.3.</span> <span class="toc-text">释放状态耗时分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">3.3.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#TCP%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93"><span class="toc-number">4.</span> <span class="toc-text">TCP可靠传输</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A1%AE%E8%AE%A4"><span class="toc-number">4.1.</span> <span class="toc-text">确认</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E4%BC%A0"><span class="toc-number">4.2.</span> <span class="toc-text">重传</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%97%E4%BD%99%E7%A1%AE%E8%AE%A4"><span class="toc-number">4.2.1.</span> <span class="toc-text">冗余确认</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%AB%E9%80%9F%E9%87%8D%E4%BC%A0"><span class="toc-number">4.2.2.</span> <span class="toc-text">快速重传</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#TCP%E7%9A%84%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6"><span class="toc-number">5.</span> <span class="toc-text">TCP的流量控制</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#TCP%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6"><span class="toc-number">6.</span> <span class="toc-text">TCP拥塞控制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6%E4%B8%8ETCP%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">6.1.</span> <span class="toc-text">TCP拥塞控制与TCP流量控制的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6%E7%9A%844%E7%A7%8D%E7%AE%97%E6%B3%95"><span class="toc-number">6.2.</span> <span class="toc-text">TCP拥塞控制的4种算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%85%A2%E5%BC%80%E5%A7%8B%E5%92%8C%E6%8B%A5%E5%A1%9E%E9%81%BF%E5%85%8D"><span class="toc-number">6.2.1.</span> <span class="toc-text">1.慢开始和拥塞避免</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%BF%AB%E9%87%8D%E4%BC%A0%E5%92%8C%E5%BF%AB%E6%81%A2%E5%A4%8D"><span class="toc-number">6.2.2.</span> <span class="toc-text">2.快重传和快恢复</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BC%A0%E8%BE%93%E5%B1%82%E6%80%BB%E7%BB%93"><span class="toc-number">7.</span> <span class="toc-text">传输层总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%BE%E5%90%8E%E4%B9%A0%E9%A2%98"><span class="toc-number">8.</span> <span class="toc-text">课后习题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%85%A2%E5%BC%80%E5%A7%8B%E4%BA%8E%E6%8B%A5%E5%A1%9E%E9%81%BF%E5%85%8D%E6%8B%A5%E5%A1%9E%E7%AA%97%E5%8F%A3%E7%9A%84%E5%A2%9E%E9%95%BF"><span class="toc-number">8.1.</span> <span class="toc-text">慢开始于拥塞避免拥塞窗口的增长</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MSS%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">8.2.</span> <span class="toc-text">MSS是什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6%E7%9A%84%E5%BC%80%E5%A7%8B%E6%97%B6%E9%97%B4"><span class="toc-number">8.3.</span> <span class="toc-text">拥塞控制的开始时间</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/06/20/5-2UDP%E5%8D%8F%E8%AE%AE/" title="5.2 UDP协议"><img src="/2025/06/20/5-2UDP%E5%8D%8F%E8%AE%AE/image-6.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="5.2 UDP协议"/></a><div class="content"><a class="title" href="/2025/06/20/5-2UDP%E5%8D%8F%E8%AE%AE/" title="5.2 UDP协议">5.2 UDP协议</a><time datetime="2025-06-20T07:53:50.000Z" title="发表于 2025-06-20 15:53:50">2025-06-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/20/5-1%E4%BC%A0%E8%BE%93%E5%B1%82%E6%8F%90%E4%BE%9B%E7%9A%84%E6%9C%8D%E5%8A%A1/" title="5.1 传输层提供的服务"><img src="/2025/06/20/5-1%E4%BC%A0%E8%BE%93%E5%B1%82%E6%8F%90%E4%BE%9B%E7%9A%84%E6%9C%8D%E5%8A%A1/image-6.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="5.1 传输层提供的服务"/></a><div class="content"><a class="title" href="/2025/06/20/5-1%E4%BC%A0%E8%BE%93%E5%B1%82%E6%8F%90%E4%BE%9B%E7%9A%84%E6%9C%8D%E5%8A%A1/" title="5.1 传输层提供的服务">5.1 传输层提供的服务</a><time datetime="2025-06-20T07:43:50.000Z" title="发表于 2025-06-20 15:43:50">2025-06-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/19/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" title="正则表达式基本使用"><img src="/2025/06/19/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/home.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="正则表达式基本使用"/></a><div class="content"><a class="title" href="/2025/06/19/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" title="正则表达式基本使用">正则表达式基本使用</a><time datetime="2025-06-19T08:12:24.000Z" title="发表于 2025-06-19 16:12:24">2025-06-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/14/%E5%A6%82%E4%BD%95%E5%AE%8C%E6%95%B4%E9%83%A8%E7%BD%B2%E4%B8%80%E4%B8%AA%E9%A1%B9%E7%9B%AE%E4%B8%8A%E7%BA%BF%EF%BC%9F/" title="如何完整部署一个项目上线？"><img src="/2025/06/14/%E5%A6%82%E4%BD%95%E5%AE%8C%E6%95%B4%E9%83%A8%E7%BD%B2%E4%B8%80%E4%B8%AA%E9%A1%B9%E7%9B%AE%E4%B8%8A%E7%BA%BF%EF%BC%9F/image.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="如何完整部署一个项目上线？"/></a><div class="content"><a class="title" href="/2025/06/14/%E5%A6%82%E4%BD%95%E5%AE%8C%E6%95%B4%E9%83%A8%E7%BD%B2%E4%B8%80%E4%B8%AA%E9%A1%B9%E7%9B%AE%E4%B8%8A%E7%BA%BF%EF%BC%9F/" title="如何完整部署一个项目上线？">如何完整部署一个项目上线？</a><time datetime="2025-06-14T09:33:52.000Z" title="发表于 2025-06-14 17:33:52">2025-06-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/06/09/%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98%EF%BC%88%E5%AD%97%E5%85%B8%E5%BA%8F%EF%BC%89/" title="每日一题（字典序）">每日一题（字典序）</a><time datetime="2025-06-09T13:53:03.000Z" title="发表于 2025-06-09 21:53:03">2025-06-09</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By bshtj</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 6.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.3</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="algolia-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="search-wrap"><div id="algolia-search-input"></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-info"><div class="algolia-stats"></div><div class="algolia-poweredBy"></div></div></div></div></div><div id="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/algoliasearch/dist/lite/builds/browser.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instantsearch.js/dist/instantsearch.production.min.js"></script><script src="/js/search/algolia.js"></script></div></div></body></html>
